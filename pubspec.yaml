@@ -35,6 +35,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.9
+  flutter_redux: ^0.10.0
+  redux: ^5.0.0
+  async: ^2.11.0
+  star_rating: ^0.11.0
 
 dev_dependencies:
   flutter_test:
@@ -46,7 +51,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-
+  redux_epics: ^0.15.1
+  rxdart: ^0.27.7
+  transparent_image: ^2.0.1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -59,9 +66,24 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/image-avatar.png
+    - assets/images/facebook.png
+    - assets/images/instagram.png
+    - assets/images/twitter.png
+    - assets/images/wikidata.png
+    - assets/images/external_link_outline.png
+    - assets/images/logo.svg
+    - assets/images/movie_main.svg
+    - assets/images/movie_active.svg
+    - assets/images/tv_main.svg
+    - assets/images/tv_active.svg
+    - assets/images/home_main.svg
+    - assets/images/home_active.svg
+    - assets/images/search_outline.svg
+    - assets/images/user_circle.svg
+    - assets/images/user.svg
+    # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
