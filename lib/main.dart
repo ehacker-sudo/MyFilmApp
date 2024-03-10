@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/home',
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => const Home(),
+        '/home': (BuildContext context) => Home(),
         // '/movie': (BuildContext context) => const Movie(),
         // "/tv": (BuildContext context) => const Tv(),
       },

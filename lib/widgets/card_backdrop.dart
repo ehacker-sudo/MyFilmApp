@@ -32,7 +32,7 @@ class _CardBackdropState extends State<CardBackdrop> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Image.network(
-                "https://image.tmdb.org/t/p/w500/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
                 height: widget.height ?? 180,
                 width: (widget.height ?? 180) * 900 / 500,
                 fit: BoxFit.cover,
