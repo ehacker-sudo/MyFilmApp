@@ -500,8 +500,8 @@ class _EpisodeState extends State<Episode> {
                           scrollDirection: Axis.horizontal,
                           itemCount: 3,
                           itemBuilder: (context, index) {
-                            return CardBackdrop(
-                              width: MediaQuery.of(context).size.width / 1.4,
+                            return const CardBackdrop(
+                              // width: MediaQuery.of(context).size.width / 1.4,
                               backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
                               title: "True Detective",
                             );

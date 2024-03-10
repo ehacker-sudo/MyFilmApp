@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LogoApp extends StatefulWidget {
-  const LogoApp({Key? key}) : super(key: key);
+  final bool? isRotate;
+  final double? width;
+  const LogoApp({Key? key, this.isRotate, this.width}) : super(key: key);
 
   @override
   State<LogoApp> createState() => _LogoAppState();
@@ -41,21 +43,30 @@ class _LogoAppState extends State<LogoApp> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return MatrixTransition(
-      animation: _animation,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SvgPicture.asset(
-          'assets/images/logo.svg',
-          semanticsLabel: 'My SVG Image',
-          width: 45,
-        ),
-      ),
-      onTransform: (double value) {
-        return Matrix4.identity()
-          ..setEntry(3, 2, 0.004)
-          ..rotateY(pi * 2.0 * value);
-      },
-    );
+    return (widget.isRotate ?? false)
+        ? MatrixTransition(
+            animation: _animation,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SvgPicture.asset(
+                'assets/images/logo.svg',
+                semanticsLabel: 'My SVG Image',
+                width: 45,
+              ),
+            ),
+            onTransform: (double value) {
+              return Matrix4.identity()
+                ..setEntry(3, 2, 0.004)
+                ..rotateY(pi * 2.0 * value);
+            },
+          )
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SvgPicture.asset(
+              'assets/images/logo.svg',
+              semanticsLabel: 'My SVG Image',
+              width: widget.width ?? 45,
+            ),
+          );
   }
 }

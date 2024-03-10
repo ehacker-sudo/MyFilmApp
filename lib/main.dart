@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/screens/home/home.dart';
-import 'package:myfilmapp/screens/movie/movie.dart';
-import 'package:myfilmapp/screens/tv/tv.dart';
+// import 'package:myfilmapp/screens/movie/movie.dart';
+// import 'package:myfilmapp/screens/tv/tv.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/home',
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => const Home(),
-        '/movie': (BuildContext context) => const Movie(),
-        "/tv": (BuildContext context) => const Tv(),
+        // '/movie': (BuildContext context) => const Movie(),
+        // "/tv": (BuildContext context) => const Tv(),
       },
     );
   }

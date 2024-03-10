@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/screens/auth/profile.dart';
+import 'package:myfilmapp/screens/search/search.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
 
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
   final String? currentPage;
   final bool? backButton;
+  final bool? searchBar;
   final String? title;
-  const Navbar({Key? key, this.currentPage, this.backButton, this.title})
+  final bool? rotatedLogo;
+  const Navbar(
+      {Key? key,
+      this.currentPage,
+      this.backButton,
+      this.title,
+      this.searchBar,
+      this.rotatedLogo})
       : super(key: key);
 
-  final double _prefferedHeight = 100.0;
+  final double _prefferedHeight = 90.0;
 
   @override
   // TODO: implement preferredSize
@@ -24,124 +33,176 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
 class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: widget._prefferedHeight,
-      decoration: const BoxDecoration(color: MyFilmAppColors.header),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+    return Opacity(
+      opacity: 1,
+      child: Container(
+        height: !(widget.backButton ?? false)
+            ? widget._prefferedHeight
+            : widget._prefferedHeight,
+        decoration: const BoxDecoration(color: MyFilmAppColors.body),
+        child: SafeArea(
           child: !(widget.backButton ?? false)
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const LogoApp(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (widget.currentPage != "Home") {
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                          },
-                          child: (widget.currentPage == "Home")
-                              ? SvgPicture.asset(
-                                  'assets/images/home_active.svg',
-                                  height: 25,
-                                )
-                              : SvgPicture.asset(
-                                  'assets/images/home_main.svg',
-                                  height: 25,
-                                ),
-                        ),
-                        const SizedBox(width: 15),
-                        GestureDetector(
-                          onTap: () {
-                            if (widget.currentPage != "Movie") {
-                              Navigator.pushReplacementNamed(context, '/movie');
-                            }
-                          },
-                          child: (widget.currentPage == "Movie")
-                              ? SvgPicture.asset(
-                                  'assets/images/movie_active.svg',
-                                  height: 25,
-                                )
-                              : SvgPicture.asset(
-                                  'assets/images/movie_main.svg',
-                                  height: 25,
-                                ),
-                        ),
-                        const SizedBox(width: 15),
-                        GestureDetector(
-                          onTap: () {
-                            if (widget.currentPage != "Tv") {
-                              Navigator.pushReplacementNamed(context, '/tv');
-                            }
-                          },
-                          child: (widget.currentPage == "Tv")
-                              ? SvgPicture.asset(
-                                  'assets/images/tv_active.svg',
-                                  height: 25,
-                                )
-                              : SvgPicture.asset(
-                                  'assets/images/tv_main.svg',
-                                  height: 25,
-                                ),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Profile()),
-                        );
-                      },
-                      child: Image.asset(
-                        'assets/images/image-avatar.png',
+              ? Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const LogoApp(
                         width: 40,
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => const Search()),
+                          // );
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (BuildContext context, _, __) {
+                                return Search();
+                              }, transitionsBuilder: (_,
+                                      Animation<double> animation,
+                                      __,
+                                      Widget child) {
+                                return SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(1.0, 0.0),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                );
+                              }));
+                        },
+                        child: SizedBox(
+                          width: 25,
+                          child: SvgPicture.asset(
+                            'assets/images/search_outline.svg',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
-              : Stack(
-                  children: <Widget>[
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: FractionallySizedBox(
-                        widthFactor: 0.7,
-                        alignment: AlignmentDirectional.center,
+              : Padding(
+                  padding: const EdgeInsets.only(
+                    left: 2.0,
+                    right: 2.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: AlignmentDirectional.centerStart,
+                        width: 30,
                         child: Center(
-                          child: Text(
-                            widget.title ?? "True Detective",
-                            style: const TextStyle(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
                               color: MyFilmAppColors.white,
-                              fontSize: 30,
-                              overflow: TextOverflow.ellipsis,
+                              size: 25,
                             ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      alignment: AlignmentDirectional.centerStart,
-                      width: 30,
-                      child: Center(
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: MyFilmAppColors.white,
-                            size: 30,
+                      Expanded(
+                        child: Container(
+                          padding:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          // child: TextField(
+                          //   cursorColor: MyFilmAppColors.submain,
+                          //   style: const TextStyle(
+                          //       fontSize: 13.0, color: MyFilmAppColors.white),
+                          //   // textAlignVertical: const TextAlignVertical(y: 0.6),
+                          //   decoration: InputDecoration(
+                          //       filled: true,
+                          //       fillColor: MyFilmAppColors.gray,
+                          //       hintStyle: const TextStyle(
+                          //         color: MyFilmAppColors.gray,
+                          //       ),
+                          //       suffixIcon: null,
+                          //       // prefixIcon: prefixIcon,
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10.0),
+                          //         // borderSide: BorderSide(
+                          //         //     color: borderColor ?? NowUIColors.border,
+                          //         //     width: 1.0,
+                          //         //     style: BorderStyle.solid),
+                          //       ),
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(10.0),
+                          //         // borderSide: BorderSide(
+                          //         //     color: borderColor ?? NowUIColors.border,
+                          //         //     width: 1.0,
+                          //         //     style: BorderStyle.solid),
+                          //       ),
+                          //       hintText:
+                          //           "Tìm kiếm phim ảnh ,phim truyền hình hoặc diễn viên  "),
+                          // ),
+                          child: Stack(
+                            alignment: AlignmentDirectional.center,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 40,
+                                child: TextField(
+                                  cursorColor: MyFilmAppColors.white,
+                                  onTap: () {},
+                                  onChanged: (String text) {},
+                                  controller: null,
+                                  autofocus: true,
+                                  textAlignVertical:
+                                      const TextAlignVertical(y: 0.9),
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      color: MyFilmAppColors.white),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: const Color(0xFF404040),
+                                    prefixIcon: Stack(
+                                      alignment: AlignmentDirectional.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 30,
+                                          child: SvgPicture.asset(
+                                            'assets/images/prefix_search_outline.svg',
+                                            width: 30,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    suffixIcon: const Icon(Icons.clear),
+                                    hintText: 'Tìm kiếm phim, diễn viên , ...',
+                                    hintStyle: const TextStyle(
+                                      fontSize: 15,
+                                      color: MyFilmAppColors.gray,
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      borderSide: const BorderSide(
+                                        width: 0.0,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      borderSide: const BorderSide(
+                                        width: 0.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
         ),
       ),

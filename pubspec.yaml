@@ -40,6 +40,7 @@ dependencies:
   redux: ^5.0.0
   async: ^2.11.0
   star_rating: ^0.11.0
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +81,10 @@ flutter:
     - assets/images/tv_active.svg
     - assets/images/home_main.svg
     - assets/images/home_active.svg
+    - assets/images/home_black_active.svg
     - assets/images/search_outline.svg
+    - assets/images/suffix_search_outline.svg
+    - assets/images/prefix_search_outline.svg
     - assets/images/user_circle.svg
     - assets/images/user.svg
     # - images/a_dot_ham.jpeg
