@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
@@ -18,8 +19,8 @@ class _EpisodeState extends State<Episode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const Navbar(
-        currentPage: "Home",
+      appBar: Navbar(
+        backButton: true,
       ),
       body: SizedBox.expand(
         child: SingleChildScrollView(
@@ -502,8 +503,11 @@ class _EpisodeState extends State<Episode> {
                           itemBuilder: (context, index) {
                             return const CardBackdrop(
                               // width: MediaQuery.of(context).size.width / 1.4,
-                              backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                              title: "True Detective",
+                              film: Film(
+                                backdropPath:
+                                    "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                                title: "True Detective",
+                              ),
                             );
                           },
                         ),

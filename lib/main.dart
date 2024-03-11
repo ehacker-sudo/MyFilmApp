@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/screens/home/home.dart';
 // import 'package:myfilmapp/screens/movie/movie.dart';
 // import 'package:myfilmapp/screens/tv/tv.dart';
@@ -23,8 +24,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/home',
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => Home(),
-        // '/movie': (BuildContext context) => const Movie(),
+        '/home': (BuildContext context) => const Home(),
+        '/filmDetail': (BuildContext context) => const FilmDetail(),
         // "/tv": (BuildContext context) => const Tv(),
       },
     );

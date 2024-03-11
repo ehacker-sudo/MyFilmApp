@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
+import 'package:myfilmapp/database/database.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
 import 'package:star_rating/star_rating.dart';
 
 class FilmDetail extends StatefulWidget {
+  static const routeName = '/filmDetail';
   const FilmDetail({Key? key}) : super(key: key);
 
   @override
@@ -16,7 +19,16 @@ class FilmDetail extends StatefulWidget {
 
 class _FilmDetailState extends State<FilmDetail> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    MyFilmAppDatabase().historyStore();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Film;
+
     return Scaffold(
       backgroundColor: MyFilmAppColors.body,
       appBar: const Navbar(
@@ -33,10 +45,12 @@ class _FilmDetailState extends State<FilmDetail> {
                     Container(
                       margin: const EdgeInsets.only(top: 20),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(10.0),
                         child: Image.network(
-                          "https://image.tmdb.org/t/p/w500/cuV2O5ZyDLHSOWzg3nLVljp1ubw.jpg",
-                          width: MediaQuery.of(context).size.width / 2,
+                          "https://image.tmdb.org/t/p/original/cuV2O5ZyDLHSOWzg3nLVljp1ubw.jpg",
+                          height: 250 * 790 / 500,
+                          width: 250,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -515,8 +529,11 @@ class _FilmDetailState extends State<FilmDetail> {
                           itemBuilder: (context, index) {
                             return const CardBackdrop(
                               // width: MediaQuery.of(context).size.width / 1.4,
-                              backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                              title: "True Detective",
+                              film: Film(
+                                backdropPath:
+                                    "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                                title: "True Detective",
+                              ),
                             );
                           },
                         ),

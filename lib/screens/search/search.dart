@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 
@@ -14,8 +15,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const Navbar(
-        currentPage: "Home",
+      appBar: Navbar(
         backButton: true,
         searchBar: true,
       ),
@@ -46,20 +46,28 @@ class _SearchState extends State<Search> {
                   crossAxisCount: 2,
                   children: const <Widget>[
                     CardBackdrop(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+                      film: Film(
+                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                        title: "True Detective",
+                      ),
                     ),
                     CardBackdrop(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+                      film: Film(
+                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                        title: "True Detective",
+                      ),
                     ),
                     CardBackdrop(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+                      film: Film(
+                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                        title: "True Detective",
+                      ),
                     ),
                     CardBackdrop(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+                      film: Film(
+                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                        title: "True Detective",
+                      ),
                     ),
                   ],
                 ),

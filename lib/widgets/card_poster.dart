@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/widgets/item_info.dart';
 
@@ -33,9 +34,11 @@ class _CardPosterState extends State<CardPoster> {
             SizedBox(
               width: MediaQuery.of(context).size.width / 2.3,
               child: const ItemInfo(
-                title: "aasas",
-                releaseDate: "2014",
-                mediaType: "tv",
+                film: Film(
+                  title: "aasas",
+                  releaseDate: "2014",
+                  mediaType: "tv",
+                ),
               ),
             ),
           ],

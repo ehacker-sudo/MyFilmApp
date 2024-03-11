@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfilmapp/api/movie_api.dart';
+import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
-import 'package:myfilmapp/model/movie.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/auth/profile.dart';
 import 'package:myfilmapp/widgets/card_banner.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
@@ -106,19 +106,31 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 250,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return const CardBanner(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+              FutureBuilder<ListFilm>(
+                future: api.fetchResults(
+                    "trending/all/day?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      height: 250,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.items.length,
+                        itemBuilder: (context, index) {
+                          return CardBanner(
+                            film: snapshot.data!.items[index],
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                },
               ),
             ],
           ),
@@ -160,7 +172,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              FutureBuilder<ListMovie>(
+              FutureBuilder<ListFilm>(
                 future: api.fetchResults(
                     "movie/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
@@ -173,9 +185,7 @@ class _HomeState extends State<Home> {
                         itemCount: snapshot.data!.items.length,
                         itemBuilder: (context, index) {
                           return CardBackdrop(
-                            backdropPath:
-                                snapshot.data!.items[index].backdropPath,
-                            title: snapshot.data!.items[index].title,
+                            film: snapshot.data!.items[index],
                           );
                         },
                       ),
@@ -208,7 +218,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              FutureBuilder<ListMovie>(
+              FutureBuilder<ListFilm>(
                 future: api.fetchResults(
                     "movie/upcoming?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
@@ -221,9 +231,7 @@ class _HomeState extends State<Home> {
                         itemCount: snapshot.data!.items.length,
                         itemBuilder: (context, index) {
                           return CardBackdrop(
-                            backdropPath:
-                                snapshot.data!.items[index].backdropPath,
-                            title: snapshot.data!.items[index].title,
+                            film: snapshot.data!.items[index],
                           );
                         },
                       ),
@@ -256,7 +264,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              FutureBuilder<ListMovie>(
+              FutureBuilder<ListFilm>(
                 future: api.fetchResults(
                     "movie/now_playing?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
@@ -269,9 +277,7 @@ class _HomeState extends State<Home> {
                         itemCount: snapshot.data!.items.length,
                         itemBuilder: (context, index) {
                           return CardBackdrop(
-                            backdropPath:
-                                snapshot.data!.items[index].backdropPath,
-                            title: snapshot.data!.items[index].title,
+                            film: snapshot.data!.items[index],
                           );
                         },
                       ),
@@ -313,19 +319,31 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 180 + 50,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return const CardBackdrop(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+              FutureBuilder<ListFilm>(
+                future: api.fetchResults(
+                    "tv/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      height: 180 + 50,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.items.length,
+                        itemBuilder: (context, index) {
+                          return CardBackdrop(
+                            film: snapshot.data!.items[index],
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                },
               ),
             ],
           ),
@@ -347,22 +365,31 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 180 + 50,
-                child: Scrollbar(
-                  thickness: 1,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return const CardBackdrop(
-                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                        title: "True Detective",
-                      );
-                    },
-                  ),
-                ),
+              FutureBuilder<ListFilm>(
+                future: api.fetchResults(
+                    "tv/on_the_air?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      height: 180 + 50,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.items.length,
+                        itemBuilder: (context, index) {
+                          return CardBackdrop(
+                            film: snapshot.data!.items[index],
+                          );
+                        },
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                },
               ),
             ],
           ),
@@ -384,19 +411,30 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 180 + 50,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return const CardBackdrop(
-                      backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                      title: "True Detective",
+              FutureBuilder<ListFilm>(
+                future: api.fetchResults(
+                    "tv/airing_today?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      height: 180 + 50,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.items.length,
+                        itemBuilder: (context, index) {
+                          return CardBackdrop(
+                            film: snapshot.data!.items[index],
+                          );
+                        },
+                      ),
                     );
-                  },
-                ),
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                },
               ),
             ],
           ),
@@ -409,9 +447,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       // extendBodyBehindAppBar: true,
-      appBar: const Navbar(
-        currentPage: "Home",
-      ),
+      appBar: Navbar(),
       body: home(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

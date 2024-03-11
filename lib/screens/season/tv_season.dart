@@ -15,7 +15,7 @@ class _TvSeasonState extends State<TvSeason> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const Navbar(
+      appBar: Navbar(
         backButton: true,
       ),
       body: Container(

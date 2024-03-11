@@ -1,4 +1,4 @@
-class Film {
+class Person {
   final int id;
   final String title;
   final String backdropPath;
@@ -8,7 +8,7 @@ class Film {
   final String mediaType;
   final String posterPath;
 
-  const Film({
+  const Person({
     int? id,
     String? title,
     String? name,
@@ -24,19 +24,18 @@ class Film {
         posterPath = posterPath ?? "",
         releaseDate = releaseDate ?? "",
         firstAirDate = firstAirDate ?? "",
-        mediaType = mediaType ?? "";
+        mediaType = firstAirDate ?? "";
 
-  factory Film.fromJson(Map<String, dynamic> json) {
+  factory Person.fromJson(Map<String, dynamic> json) {
     String validatedMediaType = json["media_type"] ?? "";
     if (validatedMediaType == "") {
-      if (json["name"] == null) {
+      if (json["name"] == "") {
         validatedMediaType = "tv";
-      } else if (json["title"] == null) {
+      } else if (json["title"] == "") {
         validatedMediaType = "movie";
       }
     }
-
-    return Film(
+    return Person(
       id: json["id"] ?? 0,
       title: json["title"] ?? "",
       name: json["name"] ?? "",
@@ -49,17 +48,17 @@ class Film {
   }
 }
 
-class ListFilm {
-  final List<Film> items;
+class ListPerson {
+  final List<Person> items;
 
-  const ListFilm(
+  const ListPerson(
     this.items,
   );
 
-  factory ListFilm.fromJson(List<Map<String, dynamic>> list) {
-    final items = [for (final item in list) Film.fromJson(item)];
+  factory ListPerson.fromJson(List<Map<String, dynamic>> list) {
+    final items = [for (final item in list) Person.fromJson(item)];
 
-    return ListFilm(
+    return ListPerson(
       items,
     );
   }
