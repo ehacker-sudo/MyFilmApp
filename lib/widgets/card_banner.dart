@@ -7,10 +7,10 @@ import 'package:myfilmapp/widgets/item_info.dart';
 class CardBanner extends StatefulWidget {
   final Film film;
 
-  const CardBanner({
+  CardBanner({
     super.key,
     Film? film,
-  }) : film = film ?? const Film();
+  }) : film = film ?? Film();
 
   @override
   State<CardBanner> createState() => _CardBannerState();

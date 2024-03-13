@@ -7,12 +7,12 @@ class CardBackdrop extends StatefulWidget {
   final double height;
   final Film film;
 
-  const CardBackdrop({
+  CardBackdrop({
     super.key,
     double? height,
     Film? film,
   })  : height = height ?? 180,
-        film = film ?? const Film();
+        film = film ?? Film();
 
   @override
   State<CardBackdrop> createState() => _CardBackdropState();
@@ -23,9 +23,10 @@ class _CardBackdropState extends State<CardBackdrop> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(builder: (context) => const FilmDetail()),
+          FilmDetail.routeName,
+          arguments: widget.film,
         );
       },
       child: Container(

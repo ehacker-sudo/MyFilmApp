@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
-import 'package:myfilmapp/screens/episode/episode.dart';
 
 class CardHorizontal extends StatefulWidget {
-  const CardHorizontal({Key? key}) : super(key: key);
+  final String backdropPath;
+  final String name;
+  final String overview;
+  final double voteAverage;
+  final String airDate;
+  final int episodeCount;
+  final Function() onTap;
+  const CardHorizontal({
+    super.key,
+    String? backdropPath,
+    String? name,
+    String? overview,
+    double? voteAverage,
+    String? airDate,
+    int? episodeCount,
+    Function()? onTap,
+  })  : name = name ?? "asasasas",
+        backdropPath = backdropPath ?? "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+        voteAverage = voteAverage ?? 0.0,
+        episodeCount = episodeCount ?? 0,
+        airDate = airDate ?? "",
+        overview = overview ?? "",
+        onTap = onTap ?? defaultOnTap;
 
   @override
   State<CardHorizontal> createState() => _CardHorizontalState();
@@ -13,12 +34,7 @@ class _CardHorizontalState extends State<CardHorizontal> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Episode()),
-        );
-      },
+      onTap: widget.onTap,
       child: Column(
         children: [
           Row(
@@ -27,20 +43,20 @@ class _CardHorizontalState extends State<CardHorizontal> {
                 width: MediaQuery.of(context).size.width / 2.2,
                 height: (MediaQuery.of(context).size.width * 500) / (2.2 * 750),
                 child: Image.network(
-                  "https://image.tmdb.org/t/p/w500/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+                  "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
                 ),
               ),
               const SizedBox(
                 width: 10,
               ),
-              const Expanded(
+              Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "asasasas",
-                      style: TextStyle(
+                      widget.name,
+                      style: const TextStyle(
                         color: MyFilmAppColors.white,
                       ),
                     ),
@@ -50,27 +66,29 @@ class _CardHorizontalState extends State<CardHorizontal> {
                       children: [
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.star,
                               color: MyFilmAppColors.white,
                             ),
                             Text(
-                              "4.444",
-                              style: TextStyle(
+                              "${widget.voteAverage}",
+                              style: const TextStyle(
                                   color: MyFilmAppColors.white,
                                   fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
                         Text(
-                          "2019",
-                          style: TextStyle(
+                          (widget.airDate == "")
+                              ? ""
+                              : widget.airDate.substring(0, 4),
+                          style: const TextStyle(
                             color: MyFilmAppColors.white,
                           ),
                         ),
                         Text(
-                          "21m",
-                          style: TextStyle(
+                          "${widget.episodeCount} tập",
+                          style: const TextStyle(
                             color: MyFilmAppColors.white,
                           ),
                         ),
@@ -81,9 +99,9 @@ class _CardHorizontalState extends State<CardHorizontal> {
               ),
             ],
           ),
-          const Text(
-            "asaaaaaaaaaaaaaaaaaaaaaaaaaaaasasaasasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            style: TextStyle(
+          Text(
+            widget.overview,
+            style: const TextStyle(
               color: MyFilmAppColors.gray,
             ),
           ),
@@ -91,4 +109,10 @@ class _CardHorizontalState extends State<CardHorizontal> {
       ),
     );
   }
+}
+
+Function defaultOnTap() {
+  return () {
+    print("On Tap");
+  };
 }

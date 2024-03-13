@@ -147,7 +147,7 @@ class _NavbarState extends State<Navbar> {
                                 widget.title,
                                 style: const TextStyle(
                                   color: MyFilmAppColors.white,
-                                  fontSize: 30,
+                                  fontSize: 20,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),

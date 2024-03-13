@@ -45,6 +45,7 @@ dependencies:
   sqflite: ^2.3.2
   synchronized: ^3.1.0+1
   path: ^1.8.3
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,7 @@ flutter:
     - assets/images/instagram.png
     - assets/images/twitter.png
     - assets/images/wikidata.png
+    - assets/images/imdb.png
     - assets/images/external_link_outline.png
     - assets/images/logo.svg
     - assets/images/movie_main.svg

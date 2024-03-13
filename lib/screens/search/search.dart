@@ -44,7 +44,7 @@ class _SearchState extends State<Search> {
                   crossAxisSpacing: 0,
                   mainAxisSpacing: 0,
                   crossAxisCount: 2,
-                  children: const <Widget>[
+                  children: <Widget>[
                     CardBackdrop(
                       film: Film(
                         backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",

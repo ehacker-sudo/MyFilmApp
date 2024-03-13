@@ -125,7 +125,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
 
                   // By default, show a loading spinner.
@@ -191,7 +194,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
 
                   // By default, show a loading spinner.
@@ -237,7 +243,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
 
                   // By default, show a loading spinner.
@@ -283,7 +292,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
 
                   // By default, show a loading spinner.
@@ -338,7 +350,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
 
                   // By default, show a loading spinner.
@@ -384,7 +399,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
 
                   // By default, show a loading spinner.
@@ -430,7 +448,10 @@ class _HomeState extends State<Home> {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: MyFilmAppColors.white),
+                    );
                   }
                   // By default, show a loading spinner.
                   return const CircularProgressIndicator();
@@ -447,7 +468,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       // extendBodyBehindAppBar: true,
-      appBar: Navbar(),
+      appBar: const Navbar(),
       body: home(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -477,40 +498,6 @@ class _HomeState extends State<Home> {
             ),
             label: 'Trang chủ',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Container(
-          //     padding: const EdgeInsets.only(bottom: 3, top: 4),
-          //     child: SvgPicture.asset(
-          //       'assets/images/movie_main.svg',
-          //       height: 23,
-          //     ),
-          //   ),
-          //   activeIcon: Container(
-          //     padding: const EdgeInsets.only(bottom: 3, top: 4),
-          //     child: SvgPicture.asset(
-          //       'assets/images/movie_active.svg',
-          //       height: 23,
-          //     ),
-          //   ),
-          //   label: 'Phim ảnh',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: Container(
-          //     padding: const EdgeInsets.only(bottom: 3, top: 4),
-          //     child: SvgPicture.asset(
-          //       'assets/images/tv_main.svg',
-          //       height: 23,
-          //     ),
-          //   ),
-          //   activeIcon: Container(
-          //     padding: const EdgeInsets.only(bottom: 3, top: 4),
-          //     child: SvgPicture.asset(
-          //       'assets/images/tv_active.svg',
-          //       height: 23,
-          //     ),
-          //   ),
-          //   label: 'Phim truyền hình',
-          // ),
           BottomNavigationBarItem(
             icon: Container(
               height: 30,

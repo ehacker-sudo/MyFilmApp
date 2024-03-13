@@ -1,65 +1,87 @@
 class Person {
   final int id;
-  final String title;
-  final String backdropPath;
   final String name;
-  final String releaseDate;
-  final String firstAirDate;
+  final String imdbId;
+  final String birthday;
+  final String profilePath;
+  final String placeOfBirth;
+  final int gender;
+  final String originalName;
+  final String character;
   final String mediaType;
-  final String posterPath;
 
+  final String job;
+  final String department;
+  final String creditId;
+  final String knownForDepartment;
   const Person({
     int? id,
-    String? title,
     String? name,
-    String? backdropPath,
-    String? posterPath,
-    String? releaseDate,
-    String? firstAirDate,
+    String? imdbId,
+    String? birthday,
+    String? profilePath,
+    String? placeOfBirth,
+    int? gender,
+    String? originalName,
+    String? character,
     String? mediaType,
+    String? job,
+    String? department,
+    String? creditId,
+    String? knownForDepartment,
   })  : id = id ?? 0,
-        title = title ?? "",
         name = name ?? "",
-        backdropPath = backdropPath ?? "",
-        posterPath = posterPath ?? "",
-        releaseDate = releaseDate ?? "",
-        firstAirDate = firstAirDate ?? "",
-        mediaType = firstAirDate ?? "";
+        imdbId = imdbId ?? "",
+        birthday = birthday ?? "",
+        profilePath = profilePath ?? "",
+        placeOfBirth = placeOfBirth ?? "",
+        originalName = originalName ?? "",
+        character = character ?? "",
+        gender = gender ?? 0,
+        mediaType = mediaType ?? "person",
+        job = job ?? "",
+        department = department ?? "",
+        creditId = creditId ?? "",
+        knownForDepartment = knownForDepartment ?? "";
 
   factory Person.fromJson(Map<String, dynamic> json) {
-    String validatedMediaType = json["media_type"] ?? "";
-    if (validatedMediaType == "") {
-      if (json["name"] == "") {
-        validatedMediaType = "tv";
-      } else if (json["title"] == "") {
-        validatedMediaType = "movie";
-      }
-    }
     return Person(
       id: json["id"] ?? 0,
-      title: json["title"] ?? "",
       name: json["name"] ?? "",
-      backdropPath: json["backdrop_path"] ?? "",
-      posterPath: json["poster_path"] ?? "",
-      releaseDate: json["release_date"] ?? "",
-      firstAirDate: json["first_air_date"] ?? "",
-      mediaType: validatedMediaType,
+      imdbId: json["imdb_id"] ?? "",
+      birthday: json["birthday"] ?? "",
+      profilePath: json["profile_path"] ?? "",
+      placeOfBirth: json["place_of_birth"] ?? "",
+      originalName: json["original_name"] ?? "",
+      gender: json["gender"] ?? 0,
+      character: json["character"] ?? "",
+      job: json["job"] ?? "",
+      department: json["department"] ?? "",
+      creditId: json["credit_id"] ?? "",
+      knownForDepartment: json["known_for_department"] ?? "",
     );
   }
 }
 
-class ListPerson {
-  final List<Person> items;
+class ListCredit {
+  final List<Person> listCast;
+  final List<Person> listCrew;
 
-  const ListPerson(
-    this.items,
+  const ListCredit(
+    this.listCast,
+    this.listCrew,
   );
 
-  factory ListPerson.fromJson(List<Map<String, dynamic>> list) {
-    final items = [for (final item in list) Person.fromJson(item)];
+  factory ListCredit.fromJson(
+    List<Map<String, dynamic>> listCast,
+    List<Map<String, dynamic>> listCrew,
+  ) {
+    final casts = [for (final item in listCast) Person.fromJson(item)];
+    final crews = [for (final item in listCrew) Person.fromJson(item)];
 
-    return ListPerson(
-      items,
+    return ListCredit(
+      casts,
+      crews,
     );
   }
 }

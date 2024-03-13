@@ -33,7 +33,7 @@ class _CardPosterState extends State<CardPoster> {
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2.3,
-              child: const ItemInfo(
+              child: ItemInfo(
                 film: Film(
                   title: "aasas",
                   releaseDate: "2014",
