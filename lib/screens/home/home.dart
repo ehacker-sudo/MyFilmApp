@@ -6,6 +6,7 @@ import 'package:myfilmapp/screens/auth/profile.dart';
 import 'package:myfilmapp/widgets/card_banner.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_poster.dart';
+import 'package:myfilmapp/widgets/drawer.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -61,6 +62,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late bool showNavigationDrawer;
   late TheMovieDbClient api;
   int screenIndex = 0;
   int _selectedIndex = 0;
@@ -464,11 +466,21 @@ class _HomeState extends State<Home> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildDrawerScaffold(BuildContext context) {
     return Scaffold(
-      // extendBodyBehindAppBar: true,
-      appBar: const Navbar(),
+      extendBodyBehindAppBar: true,
+      appBar: Navbar(),
+      body: home(),
+      drawer: const MyDrawer(currentPage: "Home"),
+    );
+  }
+
+  Widget buildBottomBarScaffold() {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: Navbar(
+        mobileMode: true,
+      ),
       body: home(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -507,7 +519,9 @@ class _HomeState extends State<Home> {
                 top: 2,
               ),
               decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(4.0),
+                ),
                 image: DecorationImage(
                   image: NetworkImage(
                       "https://www.gravatar.com/avatar/ec9c0f2cf7bc38cbc05b23b87c27fcc9?d=monsterid"),
@@ -520,5 +534,18 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    showNavigationDrawer = MediaQuery.of(context).size.width >= 500;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return showNavigationDrawer
+        ? buildDrawerScaffold(context)
+        : buildBottomBarScaffold();
   }
 }

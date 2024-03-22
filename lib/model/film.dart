@@ -6,6 +6,7 @@ class Film {
   final int id;
   final String title;
   final String backdropPath;
+  final String profilePath;
   final String name;
   final int revenue;
   final String releaseDate;
@@ -32,6 +33,7 @@ class Film {
     String? title,
     String? name,
     String? backdropPath,
+    String? profilePath,
     String? posterPath,
     String? releaseDate,
     String? firstAirDate,
@@ -55,6 +57,7 @@ class Film {
         title = title ?? "",
         name = name ?? "",
         backdropPath = backdropPath ?? "",
+        profilePath = profilePath ?? "",
         posterPath = posterPath ?? "",
         releaseDate = releaseDate ?? "",
         firstAirDate = firstAirDate ?? "",
@@ -130,6 +133,7 @@ class Film {
       title: json["title"] ?? "",
       name: json["name"] ?? "",
       backdropPath: json["backdrop_path"] ?? "",
+      profilePath: json["profile_path"] ?? "",
       posterPath: json["poster_path"] ?? "",
       releaseDate: json["release_date"] ?? "",
       originalLanguage: json["original_language"] ?? "",
@@ -155,23 +159,29 @@ class Film {
 
 class ListFilm {
   final List<Film> items;
+  final List<Film> cast;
   final List<Film> keywords;
 
   ListFilm(
     List<Film>? items,
+    List<Film>? cast,
     List<Film>? keywords,
   )   : items = items ?? [],
+        cast = cast ?? [],
         keywords = keywords ?? [];
 
   factory ListFilm.fromJson(
     List<Map<String, dynamic>> list,
+    List<Map<String, dynamic>> listCast,
     List<Map<String, dynamic>> listKeyword,
   ) {
     final items = [for (final item in list) Film.fromJson(item)];
+    final cast = [for (final item in listCast) Film.fromJson(item)];
     final keywords = [for (final item in listKeyword) Film.fromJson(item)];
 
     return ListFilm(
       items,
+      cast,
       keywords,
     );
   }

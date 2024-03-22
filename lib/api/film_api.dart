@@ -36,6 +36,25 @@ class TheMovieDbClient {
     }
   }
 
+  Future<Person> fetchPersonResults(String term) async {
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl$term',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      return Person.fromJson(results);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load Person');
+    }
+  }
+
   Future<Season> fetchSeasonResults(String term) async {
     final response = await http.get(
       Uri.parse(
@@ -106,14 +125,18 @@ class TheMovieDbClient {
       final results = jsonDecode(response.body) as Map<String, dynamic>;
       List<Map<String, dynamic>> keywords;
       List<Map<String, dynamic>> items;
-      keywords = items = [];
+      List<Map<String, dynamic>> casts;
+      keywords = items = casts = [];
       if (results['results'] != null) {
         items = (results['results'] as List).cast<Map<String, dynamic>>();
       }
       if (results['keywords'] != null) {
         keywords = (results['keywords'] as List).cast<Map<String, dynamic>>();
       }
-      return ListFilm.fromJson(items, keywords);
+      if (results['cast'] != null) {
+        casts = (results['cast'] as List).cast<Map<String, dynamic>>();
+      }
+      return ListFilm.fromJson(items, casts, keywords);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -153,11 +176,17 @@ class TheMovieDbClient {
         stills = (results['stills'] as List).cast<ImageModel>();
       }
 
+      List<ImageModel> profiles = [];
+      if (results['profiles'] != null) {
+        profiles = (results['profiles'] as List).cast<ImageModel>();
+      }
+
       return ListImage.fromJson(
         backdrops.cast<Map<String, dynamic>>(),
         logos.cast<Map<String, dynamic>>(),
         posters.cast<Map<String, dynamic>>(),
         stills.cast<Map<String, dynamic>>(),
+        profiles.cast<Map<String, dynamic>>(),
       );
     } else {
       // If the server did not return a 200 OK response,

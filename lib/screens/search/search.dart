@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
+import 'package:myfilmapp/widgets/card_horizontal.dart';
+import 'package:myfilmapp/widgets/card_vertical.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 
 class Search extends StatefulWidget {
@@ -12,12 +15,18 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  String searchText = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Navbar(
         backButton: true,
         searchBar: true,
+        onSubmit: (text) {
+          setState(() {
+            searchText = text;
+          });
+        },
       ),
       body: Container(
         decoration: const BoxDecoration(color: MyFilmAppColors.body),
@@ -27,49 +36,84 @@ class _SearchState extends State<Search> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 15, bottom: 10),
-                  child: const Text(
-                    "Đề xuât",
-                    style: TextStyle(
-                      color: MyFilmAppColors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                GridView.count(
-                  primary: false,
-                  shrinkWrap: true,
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 0,
-                  crossAxisCount: 2,
-                  children: <Widget>[
-                    CardBackdrop(
-                      film: Film(
-                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                        title: "True Detective",
-                      ),
-                    ),
-                    CardBackdrop(
-                      film: Film(
-                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                        title: "True Detective",
-                      ),
-                    ),
-                    CardBackdrop(
-                      film: Film(
-                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                        title: "True Detective",
-                      ),
-                    ),
-                    CardBackdrop(
-                      film: Film(
-                        backdropPath: "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
-                        title: "True Detective",
-                      ),
-                    ),
-                  ],
+                // Container(
+                //   padding: const EdgeInsets.only(left: 15, bottom: 10),
+                //   child: const Text(
+                //     "Đề xuât",
+                //     style: TextStyle(
+                //       color: MyFilmAppColors.white,
+                //       fontSize: 20,
+                //       fontWeight: FontWeight.w400,
+                //     ),
+                //   ),
+                // ),
+                FutureBuilder<ListFilm>(
+                  future: TheMovieDbClient().fetchResults(
+                      "search/multi?page=1&api_key=7bb0f209157f0bb4788ecb54be635d14&query=$searchText"),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final searchResult = snapshot.data!.items;
+                      return ListView.builder(
+                        itemCount: searchResult.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (content, index) {
+                          if (searchResult[index].mediaType == "person") {
+                            return Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: CardVertical(
+                                name: searchResult[index].name,
+                                posterPath: searchResult[index].profilePath,
+                                // backdropPath: args.seasons[index].posterPath,
+                                // overview: args.seasons[index].overview,
+                                // airDate: args.seasons[index].airDate,
+                                // episodeCount: args.seasons[index].episodeCount,
+                                // voteAverage: args.seasons[index].voteAverage,
+                                // onTap: () {
+                                //   Navigator.pushNamed(
+                                //     context,
+                                //     TvEpisode.routeName,
+                                //     arguments: args.seasons[index],
+                                //   );
+                                // },
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: CardVertical(
+                                name:
+                                    "${searchResult[index].name}${searchResult[index].title}",
+                                posterPath: searchResult[index].posterPath,
+                                // backdropPath: args.seasons[index].posterPath,
+                                // overview: args.seasons[index].overview,
+                                // airDate: args.seasons[index].airDate,
+                                // episodeCount: args.seasons[index].episodeCount,
+                                // voteAverage: args.seasons[index].voteAverage,
+                                // onTap: () {
+                                //   Navigator.pushNamed(
+                                //     context,
+                                //     TvEpisode.routeName,
+                                //     arguments: args.seasons[index],
+                                //   );
+                                // },
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        '${snapshot.error}',
+                        style: const TextStyle(color: MyFilmAppColors.white),
+                      );
+                    }
+
+                    // By default, show a loading spinner.
+                    return const CircularProgressIndicator();
+                  },
                 ),
               ],
             )

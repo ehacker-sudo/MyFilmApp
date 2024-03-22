@@ -41,12 +41,14 @@ class ListImage {
   final List<ImageModel> listLogo;
   final List<ImageModel> listPosters;
   final List<ImageModel> listStills;
+  final List<ImageModel> listProfiles;
 
   const ListImage(
     this.listBackdrop,
     this.listLogo,
     this.listPosters,
     this.listStills,
+    this.listProfiles,
   );
 
   factory ListImage.fromJson(
@@ -54,6 +56,7 @@ class ListImage {
     List<Map<String, dynamic>> listLogo,
     List<Map<String, dynamic>> listPosters,
     List<Map<String, dynamic>> listStills,
+    List<Map<String, dynamic>> listProfiles,
   ) {
     final backdrops = [
       for (final item in listBackdrop) ImageModel.fromJson(item)
@@ -61,12 +64,16 @@ class ListImage {
     final logos = [for (final item in listLogo) ImageModel.fromJson(item)];
     final posters = [for (final item in listPosters) ImageModel.fromJson(item)];
     final stills = [for (final item in listStills) ImageModel.fromJson(item)];
+    final profiles = [
+      for (final item in listProfiles) ImageModel.fromJson(item)
+    ];
 
     return ListImage(
       backdrops,
       logos,
       posters,
       stills,
+      profiles,
     );
   }
 }

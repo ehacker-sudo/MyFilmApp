@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 
-class CardHorizontal extends StatefulWidget {
-  final String backdropPath;
+class CardVertical extends StatefulWidget {
+  final String posterPath;
   final String name;
   final String overview;
   final double voteAverage;
   final String airDate;
   final int episodeCount;
   final Function() onTap;
-  const CardHorizontal({
+  const CardVertical({
     super.key,
-    String? backdropPath,
+    String? posterPath,
     String? name,
     String? overview,
     double? voteAverage,
@@ -19,7 +19,7 @@ class CardHorizontal extends StatefulWidget {
     int? episodeCount,
     Function()? onTap,
   })  : name = name ?? "asasasas",
-        backdropPath = backdropPath ?? "/4MCKNAc6AbWjEsM2h9Xc29owo4z.jpg",
+        posterPath = posterPath ?? "/vuZrgFo96FGiTJC489aPtWyTDt2.jpg",
         voteAverage = voteAverage ?? 0.0,
         episodeCount = episodeCount ?? 0,
         airDate = airDate ?? "",
@@ -27,10 +27,10 @@ class CardHorizontal extends StatefulWidget {
         onTap = onTap ?? defaultOnTap;
 
   @override
-  State<CardHorizontal> createState() => _CardHorizontalState();
+  State<CardVertical> createState() => _CardVerticalState();
 }
 
-class _CardHorizontalState extends State<CardHorizontal> {
+class _CardVerticalState extends State<CardVertical> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -40,10 +40,10 @@ class _CardHorizontalState extends State<CardHorizontal> {
           Row(
             children: [
               SizedBox(
-                width: 100 * 1.778,
-                height: 100,
+                width: 150 * 0.667,
+                height: 150,
                 child: Image.network(
-                  "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
+                  "https://image.tmdb.org/t/p/w500${widget.posterPath}",
                 ),
               ),
               const SizedBox(

@@ -321,8 +321,8 @@ class _FilmDetailState extends State<FilmDetail> {
                               } else if (snapshot.hasError) {
                                 return Text(
                                   '${snapshot.error}',
-                                  style:
-                                      TextStyle(color: MyFilmAppColors.white),
+                                  style: const TextStyle(
+                                      color: MyFilmAppColors.white),
                                 );
                               }
 
@@ -392,8 +392,8 @@ class _FilmDetailState extends State<FilmDetail> {
                               } else if (snapshot.hasError) {
                                 return Text(
                                   '${snapshot.error}',
-                                  style:
-                                      TextStyle(color: MyFilmAppColors.white),
+                                  style: const TextStyle(
+                                      color: MyFilmAppColors.white),
                                 );
                               }
 
@@ -488,11 +488,19 @@ class _FilmDetailState extends State<FilmDetail> {
                           ),
                           FutureBuilder<ListFilm>(
                             future: TheMovieDbClient().fetchResults(
-                                "${film.mediaType}/${film.id}/keywords?api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                              "${film.mediaType}/${film.id}/keywords?api_key=7bb0f209157f0bb4788ecb54be635d14",
+                            ),
                             builder: (context, snapshot) {
+                              print(
+                                  "${film.mediaType}/${film.id}/keywords?api_key=7bb0f209157f0bb4788ecb54be635d14");
                               if (snapshot.hasData) {
-                                final keywords =
-                                    snapshot.data?.keywords as List<Film>;
+                                var keywords;
+                                if (film.mediaType == "movie") {
+                                  keywords =
+                                      snapshot.data?.keywords as List<Film>;
+                                } else if (film.mediaType == "tv") {
+                                  keywords = snapshot.data?.items as List<Film>;
+                                }
                                 return Container(
                                   alignment: AlignmentDirectional.centerStart,
                                   height: 35,
@@ -528,8 +536,8 @@ class _FilmDetailState extends State<FilmDetail> {
                               } else if (snapshot.hasError) {
                                 return Text(
                                   '${snapshot.error}',
-                                  style:
-                                      TextStyle(color: MyFilmAppColors.white),
+                                  style: const TextStyle(
+                                      color: MyFilmAppColors.white),
                                 );
                               }
 
@@ -653,8 +661,8 @@ class _FilmDetailState extends State<FilmDetail> {
                               } else if (snapshot.hasError) {
                                 return Text(
                                   '${snapshot.error}',
-                                  style:
-                                      TextStyle(color: MyFilmAppColors.white),
+                                  style: const TextStyle(
+                                      color: MyFilmAppColors.white),
                                 );
                               }
 
@@ -877,8 +885,8 @@ class _FilmDetailState extends State<FilmDetail> {
                               } else if (snapshot.hasError) {
                                 return Text(
                                   '${snapshot.error}',
-                                  style:
-                                      TextStyle(color: MyFilmAppColors.white),
+                                  style: const TextStyle(
+                                      color: MyFilmAppColors.white),
                                 );
                               }
 
@@ -896,7 +904,7 @@ class _FilmDetailState extends State<FilmDetail> {
           } else if (snapshot.hasError) {
             return Text(
               '${snapshot.error}',
-              style: TextStyle(color: MyFilmAppColors.white),
+              style: const TextStyle(color: MyFilmAppColors.white),
             );
           }
 

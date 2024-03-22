@@ -7,13 +7,16 @@ import 'package:url_launcher/url_launcher.dart';
 class ItemExternalSource extends StatefulWidget {
   final String name;
   final String externalId;
+  final String mediaType;
 
   const ItemExternalSource({
     super.key,
     String? name,
     String? externalId,
+    String? mediaType,
   })  : name = name ?? "",
-        externalId = externalId ?? "";
+        externalId = externalId ?? "",
+        mediaType = mediaType ?? "";
 
   @override
   State<ItemExternalSource> createState() => _ItemExternalSourceState();
@@ -48,11 +51,19 @@ class _ItemExternalSourceState extends State<ItemExternalSource> {
     Uri toLaunch = Uri(scheme: 'https', host: 'flutter.dev', path: '/');
     String logo = "";
     if (widget.name == "Imdb") {
-      toLaunch = Uri(
-        scheme: 'https',
-        host: 'www.imdb.com',
-        path: '/title/${widget.externalId}',
-      );
+      if (widget.mediaType == "person") {
+        toLaunch = Uri(
+          scheme: 'https',
+          host: 'www.imdb.com',
+          path: '/name/${widget.externalId}',
+        );
+      } else {
+        toLaunch = Uri(
+          scheme: 'https',
+          host: 'www.imdb.com',
+          path: '/title/${widget.externalId}',
+        );
+      }
 
       logo = 'assets/images/imdb.png';
     }

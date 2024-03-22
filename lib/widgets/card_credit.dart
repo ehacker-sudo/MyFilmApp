@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/person.dart';
+import 'package:myfilmapp/screens/detail/person_detail.dart';
 
 class CardCredit extends StatefulWidget {
   final Person? person;
 
-  const CardCredit({
+  CardCredit({
     super.key,
     Person? person,
-  }) : person = person ?? const Person();
+  }) : person = person ?? Person();
 
   @override
   State<CardCredit> createState() => _CardCreditState();
@@ -18,7 +19,13 @@ class _CardCreditState extends State<CardCredit> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          PersonDetail.routeName,
+          arguments: widget.person,
+        );
+      },
       child: Container(
         width: 180,
         padding: const EdgeInsets.only(left: 11.0),

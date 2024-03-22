@@ -48,8 +48,6 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
           if (snapshot.hasData) {
             final episode = snapshot.data as Episode;
             episode.seriesId = args.seriesId;
-            print(
-                "tv/${episode.seriesId}/season/${episode.seasonNumber}/episode/${episode.episodeNumber}/credits?api_key=7bb0f209157f0bb4788ecb54be635d14");
             return SizedBox.expand(
               child: SingleChildScrollView(
                 child: Container(
@@ -346,30 +344,30 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 150,
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: stills.length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              width: 150 *
-                                                  stills[index].aspectRatio,
-                                              margin: const EdgeInsets.only(
-                                                  left: 10.0),
-                                              child: Image.network(
-                                                "https://image.tmdb.org/t/p/original${stills[index].filePath}",
-                                                height: 150,
-                                                width: 150 *
-                                                    stills[index].aspectRatio,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      )
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 150,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: stills.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width:
+                                              150 * stills[index].aspectRatio,
+                                          margin:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Image.network(
+                                            "https://image.tmdb.org/t/p/original${stills[index].filePath}",
+                                            height: 150,
+                                            width:
+                                                150 * stills[index].aspectRatio,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ],
                               );
