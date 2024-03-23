@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/film.dart';
+import 'package:myfilmapp/model/person.dart';
+import 'package:myfilmapp/screens/detail/film_detail.dart';
+import 'package:myfilmapp/screens/detail/person_detail.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_horizontal.dart';
 import 'package:myfilmapp/widgets/card_vertical.dart';
@@ -59,24 +62,29 @@ class _SearchState extends State<Search> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (content, index) {
                           if (searchResult[index].mediaType == "person") {
+                            Person person = Person(
+                              id: searchResult[index].id,
+                              name: searchResult[index].name,
+                              profilePath: searchResult[index].profilePath,
+                            );
                             return Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: CardVertical(
-                                name: searchResult[index].name,
-                                posterPath: searchResult[index].profilePath,
+                                name: person.name,
+                                posterPath: person.profilePath,
                                 // backdropPath: args.seasons[index].posterPath,
                                 // overview: args.seasons[index].overview,
                                 // airDate: args.seasons[index].airDate,
                                 // episodeCount: args.seasons[index].episodeCount,
                                 // voteAverage: args.seasons[index].voteAverage,
-                                // onTap: () {
-                                //   Navigator.pushNamed(
-                                //     context,
-                                //     TvEpisode.routeName,
-                                //     arguments: args.seasons[index],
-                                //   );
-                                // },
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    PersonDetail.routeName,
+                                    arguments: person,
+                                  );
+                                },
                               ),
                             );
                           } else {
@@ -92,13 +100,13 @@ class _SearchState extends State<Search> {
                                 // airDate: args.seasons[index].airDate,
                                 // episodeCount: args.seasons[index].episodeCount,
                                 // voteAverage: args.seasons[index].voteAverage,
-                                // onTap: () {
-                                //   Navigator.pushNamed(
-                                //     context,
-                                //     TvEpisode.routeName,
-                                //     arguments: args.seasons[index],
-                                //   );
-                                // },
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    FilmDetail.routeName,
+                                    arguments: searchResult[index],
+                                  );
+                                },
                               ),
                             );
                           }

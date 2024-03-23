@@ -3,13 +3,13 @@ import 'package:myfilmapp/constants/theme.dart';
 
 class DrawerTile extends StatefulWidget {
   final String title;
-  final Function onTap;
+  final Function() onTap;
   final bool isSelected;
 
   const DrawerTile({
     super.key,
     String? title,
-    Function? onTap,
+    Function()? onTap,
     bool? isSelected,
     Color? iconColor,
   })  : title = title ?? "",
@@ -25,7 +25,7 @@ class _DrawerTileState extends State<DrawerTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: widget.onTap,
       onHover: (isHover) {
         setState(() {
           itemIsHover = isHover;
