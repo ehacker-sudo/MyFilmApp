@@ -7,15 +7,71 @@ import 'package:myfilmapp/model/episode.dart';
 import 'package:myfilmapp/model/external_id.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
+import 'package:myfilmapp/model/message.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/model/season.dart';
+import 'package:myfilmapp/model/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TheMovieDbClient {
   final String baseUrl;
-
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   TheMovieDbClient({
     this.baseUrl = 'https://api.themoviedb.org/3/',
   });
+
+  Future<Message> login(User user) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/auth/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': user.email,
+        'password': user.password,
+      }),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      if (results["access_token"] != null) {
+        final SharedPreferences pref = await _prefs;
+        pref.setString('token', results["access_token"]);
+      }
+      return Message.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create Login.');
+    }
+  }
+
+  Future<Message> register(User user) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/auth/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': user.name,
+        'email': user.email,
+        'password': user.password,
+        'confirm_password': user.confirmPassword,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      return Message.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create Register.');
+    }
+  }
 
   Future<Film> fetchDetailsResults(String term) async {
     final response = await http.get(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/auth/login.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
 
@@ -11,6 +13,11 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController conformPasswordController = TextEditingController();
+
   bool isChecked = false;
   @override
   Widget build(BuildContext context) {
@@ -44,8 +51,9 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
                       // prefixIcon: Icon(Icons.email),
                       // suffixIcon: Icon(Icons.clear),
                       labelText: 'Họ và tên',
@@ -55,8 +63,9 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
                       // prefixIcon: Icon(Icons.email),
                       // suffixIcon: Icon(Icons.clear),
                       labelText: 'Email',
@@ -67,6 +76,7 @@ class _RegisterState extends State<Register> {
                     height: 10,
                   ),
                   TextField(
+                    controller: passwordController,
                     obscureText: !isChecked,
                     decoration: const InputDecoration(
                       labelText: 'Mật khẩu',
@@ -78,6 +88,7 @@ class _RegisterState extends State<Register> {
                     height: 10,
                   ),
                   TextField(
+                    controller: conformPasswordController,
                     obscureText: !isChecked,
                     decoration: const InputDecoration(
                       labelText: 'Xác nhận mật khẩu',
@@ -112,7 +123,16 @@ class _RegisterState extends State<Register> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          TheMovieDbClient().register(User(
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            confirmPassword: conformPasswordController.text,
+                          ));
+                        });
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MyFilmAppColors.submain,
                         textStyle: const TextStyle(fontSize: 14.0),

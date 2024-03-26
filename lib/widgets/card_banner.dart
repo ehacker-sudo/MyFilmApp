@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/widgets/item_info.dart';

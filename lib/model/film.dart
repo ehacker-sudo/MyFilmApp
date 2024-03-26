@@ -128,8 +128,15 @@ class Film {
       listSeasons = [for (final item in json['seasons']) Season.fromJson(item)];
     }
 
+    int id = 0;
+    if (json["id"] != null) {
+      id = json["id"] ?? 0;
+    } else if (json["film_id"] != null) {
+      id = json["film_id"] ?? 0;
+    }
+
     return Film(
-      id: json["id"] ?? 0,
+      id: id,
       title: json["title"] ?? "",
       name: json["name"] ?? "",
       backdropPath: json["backdrop_path"] ?? "",

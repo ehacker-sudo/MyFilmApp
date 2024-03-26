@@ -21,6 +21,7 @@ class _TvEpisodeState extends State<TvEpisode> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Season;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: Navbar(
         backButton: true,
         title: args.name,

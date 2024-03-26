@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:star_rating/star_rating.dart';
 
 class StarRatingModal extends StatefulWidget {
-  const StarRatingModal({Key? key}) : super(key: key);
+  final Film film;
+
+  StarRatingModal({
+    super.key,
+    Film? film,
+  }) : film = film ?? Film();
 
   @override
   State<StarRatingModal> createState() => _StarRatingModalState();
@@ -25,13 +31,13 @@ class _StarRatingModalState extends State<StarRatingModal> {
             height: 40,
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width / 2.5,
-            height: (MediaQuery.of(context).size.width * 750) / (2.5 * 500),
+            width: 250 * 0.667,
+            height: 250,
             child: Stack(
               alignment: AlignmentDirectional.center,
               children: <Widget>[
                 Image.network(
-                  "https://image.tmdb.org/t/p/w500/cuV2O5ZyDLHSOWzg3nLVljp1ubw.jpg",
+                  "https://image.tmdb.org/t/p/w500${widget.film.posterPath}",
                   // width: MediaQuery.of(context).size.width / 2.5,
                 ),
                 if (_rating != 0)
@@ -42,7 +48,7 @@ class _StarRatingModalState extends State<StarRatingModal> {
                   Text(
                     "${_rating.toInt()}",
                     style: const TextStyle(
-                      fontSize: 80,
+                      fontSize: 70,
                       color: MyFilmAppColors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -55,9 +61,10 @@ class _StarRatingModalState extends State<StarRatingModal> {
           ),
           Container(
             padding: const EdgeInsets.only(top: 10),
-            child: const Text(
-              "One Piece",
-              style: TextStyle(fontSize: 20, color: MyFilmAppColors.white),
+            child: Text(
+              "${widget.film.name}${widget.film.title}",
+              style:
+                  const TextStyle(fontSize: 20, color: MyFilmAppColors.white),
             ),
           ),
           const SizedBox(

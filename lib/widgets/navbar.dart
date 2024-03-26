@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myfilmapp/screens/auth/profile.dart';
 import 'package:myfilmapp/screens/search/search.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
 
@@ -38,6 +37,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _NavbarState extends State<Navbar> {
+  String searchText = "";
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -87,6 +87,11 @@ class _NavbarState extends State<Navbar> {
                                   height: 40,
                                   child: TextField(
                                     cursorColor: MyFilmAppColors.white,
+                                    onChanged: (text) {
+                                      setState(() {
+                                        searchText = text;
+                                      });
+                                    },
                                     onSubmitted: widget.onSubmit,
                                     controller: searchController,
                                     autofocus: true,
@@ -110,16 +115,20 @@ class _NavbarState extends State<Navbar> {
                                           ),
                                         ],
                                       ),
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              searchController.text = "";
-                                            });
-                                          },
-                                          icon: const Icon(
-                                            Icons.cancel,
-                                            color: Color(0xFF9A9A9A),
-                                          )),
+                                      suffixIcon: (searchText != "")
+                                          ? IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  searchController.text = "";
+                                                  searchText = "";
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                Icons.cancel,
+                                                color: Color(0xFF9A9A9A),
+                                              ),
+                                            )
+                                          : null,
                                       hintText:
                                           'Tìm kiếm phim, diễn viên , ...',
                                       hintStyle: const TextStyle(

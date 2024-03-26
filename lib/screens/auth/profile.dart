@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfilmapp/model/auth.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/auth/login.dart';
+import 'package:myfilmapp/widgets/card_backdrop.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -76,22 +80,85 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 15, bottom: 10),
+                  child: const Text(
                     "Lịch sử xem",
-                    style:
-                        TextStyle(color: MyFilmAppColors.white, fontSize: 15),
-                  )
-                ],
-              ),
+                    style: TextStyle(
+                      color: MyFilmAppColors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 180 + 50,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return CardBackdrop(
+                          // film: snapshot.data!.items[index],
+                          );
+                    },
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
-              height: 30,
+              height: 20,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 15, bottom: 10),
+                  child: const Text(
+                    "Danh sách xem",
+                    style: TextStyle(
+                      color: MyFilmAppColors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                FutureBuilder<ListMember>(
+                  future: AdminClient().watchlistUser(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Film> films = snapshot.data!.results;
+                      return SizedBox(
+                        height: 180 + 50,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: films.length,
+                          itemBuilder: (context, index) {
+                            return CardBackdrop(
+                              // film: snapshot.data!.items[index],
+                              film: films[index],
+                            );
+                          },
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        '${snapshot.error}',
+                        style: const TextStyle(color: MyFilmAppColors.white),
+                      );
+                    }
+
+                    // By default, show a loading spinner.
+                    return const CircularProgressIndicator();
+                  },
+                ),
+              ],
             ),
           ],
         ),

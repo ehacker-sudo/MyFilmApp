@@ -23,6 +23,7 @@ class _MovieCollectionsState extends State<MovieCollections> {
     final args = ModalRoute.of(context)!.settings.arguments as Film;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: Navbar(
         backButton: true,
         title: "${args.name}${args.title}",

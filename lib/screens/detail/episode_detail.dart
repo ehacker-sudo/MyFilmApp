@@ -32,8 +32,6 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Episode;
-    // print(
-    //     "tv/${args.seriesId}/season/${args.seasonNumber}/episode/${args.episodeNumber}");
     return Scaffold(
       backgroundColor: MyFilmAppColors.body,
       appBar: Navbar(
@@ -236,7 +234,13 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                                   isScrollControlled: true,
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return const StarRatingModal();
+                                    return StarRatingModal(
+                                      film: Film(
+                                        id: episode.id,
+                                        name: episode.name,
+                                        posterPath: episode.stillPath,
+                                      ),
+                                    );
                                   },
                                 );
                               },

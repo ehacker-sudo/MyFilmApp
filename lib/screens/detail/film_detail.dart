@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/film_api.dart';
+import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/external_id.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
@@ -8,6 +10,7 @@ import 'package:myfilmapp/model/original.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/screens/season/movie_collections.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
+import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_detail.dart';
@@ -30,7 +33,7 @@ class _FilmDetailState extends State<FilmDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    MyFilmAppDatabase().historyStore();
+    // MyFilmAppDatabase().historyStore();
   }
 
   @override
@@ -45,7 +48,8 @@ class _FilmDetailState extends State<FilmDetail> {
       ),
       body: FutureBuilder<Film>(
         future: TheMovieDbClient().fetchDetailsResults(
-            "${args.mediaType}/${args.id}?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+          "${args.mediaType}/${args.id}?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14",
+        ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final film = snapshot.data as Film;
@@ -241,6 +245,12 @@ class _FilmDetailState extends State<FilmDetail> {
                       const SizedBox(
                         height: 15,
                       ),
+                      ButtonWatchlist(
+                        film: film,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       Container(
                         padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                         child: Row(
@@ -260,7 +270,9 @@ class _FilmDetailState extends State<FilmDetail> {
                                   isScrollControlled: true,
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return const StarRatingModal();
+                                    return StarRatingModal(
+                                      film: film,
+                                    );
                                   },
                                 );
                               },
@@ -310,7 +322,7 @@ class _FilmDetailState extends State<FilmDetail> {
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: 3,
+                                    itemCount: casts.length,
                                     itemBuilder: (context, index) {
                                       return CardCredit(
                                         person: casts[index],

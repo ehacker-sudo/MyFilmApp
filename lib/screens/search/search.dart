@@ -22,6 +22,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyFilmAppColors.body,
       appBar: Navbar(
         backButton: true,
         searchBar: true,

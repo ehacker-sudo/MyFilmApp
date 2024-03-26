@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/message.dart';
+import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/auth/register.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -11,8 +15,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   bool isChecked = false;
-
+  Future<Message>? _futureAlbum;
   @override
   Widget build(BuildContext context) {
     Color getColor(Set<MaterialState> states) {
@@ -57,7 +63,8 @@ class _LoginState extends State<Login> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const TextField(
+                  TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       // prefixIcon: Icon(Icons.email),
                       // suffixIcon: Icon(Icons.clear),
@@ -67,6 +74,7 @@ class _LoginState extends State<Login> {
                   ),
                   TextField(
                     obscureText: !isChecked,
+                    controller: passwordController,
                     decoration: const InputDecoration(
                       labelText: 'Mật khẩu',
                       border: OutlineInputBorder(),
@@ -103,7 +111,14 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() async {
+                          _futureAlbum = TheMovieDbClient().login(User(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          ));
+                        });
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MyFilmAppColors.submain,
                         textStyle: const TextStyle(fontSize: 14.0),
