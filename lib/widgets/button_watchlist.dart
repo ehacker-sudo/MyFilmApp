@@ -19,12 +19,12 @@ class ButtonWatchlist extends StatefulWidget {
 
 class _ButtonWatchlistState extends State<ButtonWatchlist> {
   bool isSave = false;
-  late Future<Member> _futureAlbum;
+  // late Future<Member> _futureAlbum;
 
   @override
   void initState() {
     super.initState();
-    _futureAlbum = AdminClient().showWatchlistUser(widget.film);
+    // _futureAlbum = AdminClient().showWatchlistUser(widget.film);
   }
 
   @override

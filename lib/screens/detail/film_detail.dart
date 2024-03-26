@@ -53,6 +53,15 @@ class _FilmDetailState extends State<FilmDetail> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final film = snapshot.data as Film;
+            asas() async {
+              await AdminClient().historyStore(Member(
+                filmId: film.id,
+                mediaType: film.mediaType,
+                film: film,
+              ));
+            }
+
+            asas();
             return SizedBox.expand(
               child: SingleChildScrollView(
                 child: Container(

@@ -95,18 +95,35 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 180 + 50,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return CardBackdrop(
-                          // film: snapshot.data!.items[index],
-                          );
-                    },
-                  ),
+                FutureBuilder<ListMember>(
+                  future: AdminClient().historyUser(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Film> films = snapshot.data!.results;
+                      return SizedBox(
+                        height: 180 + 50,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: films.length,
+                          itemBuilder: (context, index) {
+                            return CardBackdrop(
+                              // film: snapshot.data!.items[index],
+                              film: films[index],
+                            );
+                          },
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        '${snapshot.error}',
+                        style: const TextStyle(color: MyFilmAppColors.white),
+                      );
+                    }
+
+                    // By default, show a loading spinner.
+                    return const CircularProgressIndicator();
+                  },
                 ),
               ],
             ),
