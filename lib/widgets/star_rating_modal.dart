@@ -3,12 +3,81 @@ import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:star_rating/star_rating.dart';
 
+class MyStarRating extends StatefulWidget {
+  final Film film;
+  MyStarRating({
+    super.key,
+    Film? film,
+  }) : film = film ?? Film();
+
+  @override
+  State<MyStarRating> createState() => _MyStarRatingState();
+}
+
+class _MyStarRatingState extends State<MyStarRating> {
+  double number = 0.0;
+  toggleIconState(double value) {
+    setState(() {
+      // toggleIcon = value;
+      number = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        showModalBottomSheet<void>(
+          isScrollControlled: true,
+          context: context,
+          builder: (BuildContext context) {
+            return StarRatingModal(
+              film: widget.film,
+              number: number,
+              valueChanged: toggleIconState,
+            );
+          },
+        );
+      },
+      icon: (number != 0.0)
+          ? Row(
+              children: [
+                const Icon(
+                  Icons.star,
+                  color: MyFilmAppColors.submain,
+                  size: 30,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "${number.toInt()}/10",
+                  style: const TextStyle(
+                    color: MyFilmAppColors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
+            )
+          : const Icon(
+              Icons.star_border_outlined,
+              color: MyFilmAppColors.submain,
+              size: 40,
+            ),
+    );
+  }
+}
+
 class StarRatingModal extends StatefulWidget {
   final Film film;
-
+  final double number;
+  final ValueChanged<double> valueChanged;
   StarRatingModal({
     super.key,
     Film? film,
+    required this.valueChanged,
+    required this.number,
   }) : film = film ?? Film();
 
   @override
@@ -16,10 +85,17 @@ class StarRatingModal extends StatefulWidget {
 }
 
 class _StarRatingModalState extends State<StarRatingModal> {
-  double _rating = 0.0;
-  Color rateColor = MyFilmAppColors.white;
+  late double _number;
+  @override
+  void initState() {
+    _number = widget.number;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Color rateColor =
+        (_number == 0.0) ? MyFilmAppColors.white : MyFilmAppColors.submain;
     return Container(
       // height: 2000,
       color: MyFilmAppColors.body,
@@ -40,13 +116,13 @@ class _StarRatingModalState extends State<StarRatingModal> {
                   "https://image.tmdb.org/t/p/w500${widget.film.posterPath}",
                   // width: MediaQuery.of(context).size.width / 2.5,
                 ),
-                if (_rating != 0)
+                if (_number != 0)
                   Container(
                     color: const Color(0x99000000),
                   ),
-                if (_rating != 0)
+                if (_number != 0)
                   Text(
-                    "${_rating.toInt()}",
+                    "${_number.toInt()}",
                     style: const TextStyle(
                       fontSize: 70,
                       color: MyFilmAppColors.white,
@@ -76,19 +152,15 @@ class _StarRatingModalState extends State<StarRatingModal> {
             child: StarRating(
               mainAxisAlignment: MainAxisAlignment.center,
               length: 10,
-              rating: _rating,
+              rating: _number,
               between: 5,
               starSize: 40,
               color: rateColor,
               onRaitingTap: (rating) {
-                setState(
-                  () {
-                    _rating = rating;
-                    rateColor = (rating == 0)
-                        ? MyFilmAppColors.white
-                        : MyFilmAppColors.submain;
-                  },
-                );
+                setState(() {
+                  _number = rating;
+                });
+                // widget.valueChanged(_number);
               },
             ),
           ),
@@ -100,10 +172,11 @@ class _StarRatingModalState extends State<StarRatingModal> {
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () {
-                debugPrint("$_rating");
+                widget.valueChanged(_number);
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: (_rating == 0)
+                backgroundColor: (_number == 0)
                     ? MyFilmAppColors.header
                     : MyFilmAppColors.submain,
                 textStyle: const TextStyle(fontSize: 14.0),
@@ -126,10 +199,6 @@ class _StarRatingModalState extends State<StarRatingModal> {
           const SizedBox(
             height: 80,
           )
-          // ElevatedButton(
-          //   child: const Text('Close BottomSheet'),
-          //   onPressed: () => Navigator.pop(context),
-          // ),
         ],
       ),
     );

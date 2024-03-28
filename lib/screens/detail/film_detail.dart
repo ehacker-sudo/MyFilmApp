@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
@@ -6,8 +7,9 @@ import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/external_id.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
-import 'package:myfilmapp/model/original.dart';
 import 'package:myfilmapp/model/person.dart';
+import 'package:myfilmapp/model/review.dart';
+import 'package:myfilmapp/screens/form/add_review.dart';
 import 'package:myfilmapp/screens/season/movie_collections.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
 import 'package:myfilmapp/widgets/button_watchlist.dart';
@@ -16,7 +18,6 @@ import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_detail.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
-import 'package:myfilmapp/database/database.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
 import 'package:star_rating/star_rating.dart';
 
@@ -94,16 +95,17 @@ class _FilmDetailState extends State<FilmDetail> {
                                   fontWeight: FontWeight.w400),
                             ),
                           ),
-                          Container(
-                            alignment: AlignmentDirectional.center,
-                            child: Text(
-                              film.tagline,
-                              style: const TextStyle(
-                                  color: MyFilmAppColors.gray,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400),
+                          if (film.tagline != "")
+                            Container(
+                              alignment: AlignmentDirectional.center,
+                              child: Text(
+                                film.tagline,
+                                style: const TextStyle(
+                                    color: MyFilmAppColors.gray,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400),
+                              ),
                             ),
-                          ),
                           Container(
                             alignment: AlignmentDirectional.center,
                             child: Text(
@@ -273,23 +275,8 @@ class _FilmDetailState extends State<FilmDetail> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                showModalBottomSheet<void>(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return StarRatingModal(
-                                      film: film,
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.star_border_outlined,
-                                color: MyFilmAppColors.submain,
-                                size: 40,
-                              ),
+                            MyStarRating(
+                              film: film,
                             ),
                           ],
                         ),
@@ -500,9 +487,10 @@ class _FilmDetailState extends State<FilmDetail> {
                                 child: const Text(
                                   "Từ khóa",
                                   style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
+                                    color: MyFilmAppColors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ],
@@ -549,6 +537,173 @@ class _FilmDetailState extends State<FilmDetail> {
                                               color: Colors.white,
                                             ),
                                           ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text(
+                                  '${snapshot.error}',
+                                  style: const TextStyle(
+                                      color: MyFilmAppColors.white),
+                                );
+                              }
+
+                              // By default, show a loading spinner.
+                              return const CircularProgressIndicator();
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            AddReview.routeName,
+                            arguments: film,
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                          ),
+                          padding: const EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                            top: 10.0,
+                            bottom: 10.0,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: MyFilmAppColors.submain,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5.0),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/plus.svg',
+                                width: 20,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                "Thêm bình luận",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: MyFilmAppColors.black,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(
+                                    left: 15.0,
+                                    right: 15.0,
+                                    top: 10.0,
+                                    bottom: 10.0),
+                                child: const Text(
+                                  "Bình luận phim",
+                                  style: TextStyle(
+                                      color: MyFilmAppColors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ],
+                          ),
+                          FutureBuilder<ListReview>(
+                            future: TheMovieDbClient().fetchReviewResults(
+                              "${film.mediaType}/${film.id}/reviews?api_key=7bb0f209157f0bb4788ecb54be635d14",
+                            ),
+                            builder: (context, snapshot) {
+                              print(
+                                  "${film.mediaType}/${film.id}/reviews?api_key=7bb0f209157f0bb4788ecb54be635d14");
+                              if (snapshot.hasData) {
+                                var reviews =
+                                    snapshot.data?.items as List<Review>;
+                                return Container(
+                                  alignment: AlignmentDirectional.centerStart,
+                                  height: 150,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: reviews.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        height: 150,
+                                        width: 400,
+                                        color: MyFilmAppColors.header,
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        padding: const EdgeInsets.only(
+                                          left: 10.0,
+                                          right: 10.0,
+                                          top: 10.0,
+                                          bottom: 10.0,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            if (reviews[index]
+                                                    .authorDetails
+                                                    .rating !=
+                                                0.0)
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.star,
+                                                        color: MyFilmAppColors
+                                                            .submain,
+                                                        size: 15,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 2,
+                                                      ),
+                                                      Text(
+                                                        "${reviews[index].authorDetails.rating}",
+                                                        style: const TextStyle(
+                                                          color: MyFilmAppColors
+                                                              .white,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                ],
+                                              ),
+                                            Text(
+                                              reviews[index].content,
+                                              maxLines: 5,
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 13.0,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       );
                                     },

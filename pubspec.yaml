@@ -48,6 +48,7 @@ dependencies:
   url_launcher: ^6.2.5
   shared_preferences: ^2.2.2
   get: ^4.6.6
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

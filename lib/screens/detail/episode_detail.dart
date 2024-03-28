@@ -228,28 +228,28 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                showModalBottomSheet<void>(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return StarRatingModal(
-                                      film: Film(
-                                        id: episode.id,
-                                        name: episode.name,
-                                        posterPath: episode.stillPath,
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.star_border_outlined,
-                                color: MyFilmAppColors.submain,
-                                size: 40,
-                              ),
-                            ),
+                            // IconButton(
+                            //   onPressed: () {
+                            //     showModalBottomSheet<void>(
+                            //       isScrollControlled: true,
+                            //       context: context,
+                            //       builder: (BuildContext context) {
+                            //         return StarRatingModal(
+                            //           film: Film(
+                            //             id: episode.id,
+                            //             name: episode.name,
+                            //             posterPath: episode.stillPath,
+                            //           ),
+                            //         );
+                            //       },
+                            //     );
+                            //   },
+                            //   icon: const Icon(
+                            //     Icons.star_border_outlined,
+                            //     color: MyFilmAppColors.submain,
+                            //     size: 40,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

@@ -4,6 +4,7 @@ import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/screens/detail/episode_detail.dart';
 import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/screens/detail/person_detail.dart';
+import 'package:myfilmapp/screens/form/add_review.dart';
 import 'package:myfilmapp/screens/home/home.dart';
 import 'package:myfilmapp/screens/season/movie_collections.dart';
 import 'package:myfilmapp/screens/season/tv_episode.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         "/tvSeason": (BuildContext context) => const TvSeason(),
         "/tvEpisode": (BuildContext context) => const TvEpisode(),
         "/movieCollections": (BuildContext context) => const MovieCollections(),
+        "/addReview": (BuildContext context) => const AddReview(),
       },
     );
   }

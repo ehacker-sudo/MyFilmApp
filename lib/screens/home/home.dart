@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/film.dart';
-import 'package:myfilmapp/screens/auth/profile.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_banner.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
-import 'package:myfilmapp/widgets/card_poster.dart';
 import 'package:myfilmapp/widgets/drawer.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -63,26 +62,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late bool showNavigationDrawer;
-  late TheMovieDbClient api;
-  int screenIndex = 0;
-  int _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      if (index == 1) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Profile()),
-        );
-      }
-      debugPrint("$index");
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    api = TheMovieDbClient();
   }
 
   Widget home() {
@@ -109,7 +92,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
+                future: TheMovieDbClient().fetchResults(
                     "trending/all/day?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -129,7 +112,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
 
@@ -178,7 +161,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
+                future: TheMovieDbClient().fetchResults(
                     "movie/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -198,7 +181,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
 
@@ -227,7 +210,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
+                future: TheMovieDbClient().fetchResults(
                     "movie/upcoming?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -247,7 +230,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
 
@@ -276,8 +259,9 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
-                    "movie/now_playing?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                future: TheMovieDbClient().fetchResults(
+                  "movie/now_playing?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+                ),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return SizedBox(
@@ -296,7 +280,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
 
@@ -334,7 +318,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
+                future: TheMovieDbClient().fetchResults(
                     "tv/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -354,7 +338,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
 
@@ -383,7 +367,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
+                future: TheMovieDbClient().fetchResults(
                     "tv/on_the_air?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -403,7 +387,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
 
@@ -432,7 +416,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<ListFilm>(
-                future: api.fetchResults(
+                future: TheMovieDbClient().fetchResults(
                     "tv/airing_today?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -452,7 +436,7 @@ class _HomeState extends State<Home> {
                   } else if (snapshot.hasError) {
                     return Text(
                       '${snapshot.error}',
-                      style: TextStyle(color: MyFilmAppColors.white),
+                      style: const TextStyle(color: MyFilmAppColors.white),
                     );
                   }
                   // By default, show a loading spinner.
@@ -482,57 +466,7 @@ class _HomeState extends State<Home> {
         mobileMode: true,
       ),
       body: home(),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedLabelStyle:
-            const TextStyle(color: MyFilmAppColors.white, fontSize: 11),
-        selectedItemColor: MyFilmAppColors.white,
-        unselectedItemColor: MyFilmAppColors.itemActive,
-        unselectedLabelStyle:
-            const TextStyle(color: MyFilmAppColors.itemActive, fontSize: 11),
-        backgroundColor: MyFilmAppColors.header,
-        onTap: _onItemTapped,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Container(
-              padding: const EdgeInsets.only(bottom: 3, top: 4),
-              child: SvgPicture.asset(
-                'assets/images/home_main.svg',
-                height: 23,
-              ),
-            ),
-            activeIcon: Container(
-              padding: const EdgeInsets.only(bottom: 3, top: 4),
-              child: SvgPicture.asset(
-                'assets/images/home_active.svg',
-                height: 23,
-              ),
-            ),
-            label: 'Trang chủ',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              height: 30,
-              width: 30,
-              margin: const EdgeInsets.only(
-                bottom: 2,
-                top: 2,
-              ),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4.0),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(
-                      "https://www.gravatar.com/avatar/ec9c0f2cf7bc38cbc05b23b87c27fcc9?d=monsterid"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            label: 'Tiểu sử',
-          ),
-        ],
-      ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 

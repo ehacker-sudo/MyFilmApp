@@ -5,7 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/auth/login.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
+import 'package:myfilmapp/widgets/dropdown_horizontal.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -15,6 +18,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String? accessToken = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,56 +36,84 @@ class _ProfileState extends State<Profile> {
             Container(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SvgPicture.asset(
-                    'assets/images/user.svg',
-                    height: 20,
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/user.svg',
+                        height: 20,
+                      ),
+                      // CircleAvatar(
+                      //   backgroundColor: Colors.white,
+                      //   child: Text('AH'),
+                      // ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        "Đăng nhập",
+                        style: TextStyle(
+                            color: MyFilmAppColors.white, fontSize: 15),
+                      )
+                    ],
                   ),
-                  // CircleAvatar(
-                  //   backgroundColor: Colors.white,
-                  //   child: Text('AH'),
-                  // ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text(
-                    "Đăng nhập",
-                    style:
-                        TextStyle(color: MyFilmAppColors.white, fontSize: 15),
-                  )
+                  const DropdownHorizontal()
                 ],
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Login()),
+            FutureBuilder<bool>(
+              future: isLogin(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  bool? isLogin = snapshot.data;
+                  if (isLogin ?? false) {
+                    return const SizedBox();
+                  } else {
+                    return Container(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Login()),
+                          );
+                        },
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.only(top: 5, bottom: 5)),
+                          backgroundColor: MaterialStateProperty.all(
+                            MyFilmAppColors.submain,
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              // Change your radius here
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          "Đăng nhập / Đăng ký",
+                          style: TextStyle(
+                              color: MyFilmAppColors.white, fontSize: 15),
+                        ),
+                      ),
+                    );
+                  }
+                } else if (snapshot.hasError) {
+                  return Text(
+                    '${snapshot.error}',
+                    style: const TextStyle(color: MyFilmAppColors.white),
                   );
-                },
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all(
-                      const EdgeInsets.only(top: 5, bottom: 5)),
-                  backgroundColor: MaterialStateProperty.all(
-                    MyFilmAppColors.submain,
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      // Change your radius here
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                ),
-                child: const Text(
-                  "Đăng nhập / Đăng ký",
-                  style: TextStyle(color: MyFilmAppColors.white, fontSize: 15),
-                ),
-              ),
+                }
+
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
+              },
             ),
             const SizedBox(
               height: 20,
@@ -177,9 +215,20 @@ class _ProfileState extends State<Profile> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
+}
+
+Future<bool> isLogin() async {
+  final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+  final SharedPreferences pref = await prefs;
+  String? accessToken = pref.getString('token');
+  return (accessToken != null && accessToken != "");
 }
