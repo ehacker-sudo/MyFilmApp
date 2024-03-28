@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:star_rating/star_rating.dart';
 
@@ -173,6 +175,12 @@ class _StarRatingModalState extends State<StarRatingModal> {
             child: ElevatedButton(
               onPressed: () {
                 widget.valueChanged(_number);
+                if (_number != 0.0) {
+                  AdminClient().rateStore(Member(
+                    film: widget.film,
+                    rate: "$_number",
+                  ));
+                }
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(

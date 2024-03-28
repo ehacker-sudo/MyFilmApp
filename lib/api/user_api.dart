@@ -180,4 +180,75 @@ class AdminClient {
       throw Exception('Failed to create Watchlist.');
     }
   }
+
+  Future<Member> rateStore(Member member) async {
+    final SharedPreferences pref = await _prefs;
+    String? accessToken = pref.getString('token');
+    final response = await http.post(
+      Uri.parse('${baseUrl}rate/store'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "name": member.film.name,
+        "media_type": member.film.mediaType,
+        "backdrop_path": member.film.backdropPath,
+        "poster_path": member.film.posterPath,
+        "first_air_date": member.film.firstAirDate,
+        "title": member.film.title,
+        "release_date": member.film.releaseDate,
+        "rate": member.rate
+      }),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+
+      print("Rate store : $results");
+      return Member.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create Watchlist.');
+    }
+  }
+
+  Future<Member> commentStore(Member member) async {
+    final SharedPreferences pref = await _prefs;
+    String? accessToken = pref.getString('token');
+    final response = await http.post(
+      Uri.parse('${baseUrl}comment/store'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "name": member.film.name,
+        "media_type": member.film.mediaType,
+        "backdrop_path": member.film.backdropPath,
+        "poster_path": member.film.posterPath,
+        "first_air_date": member.film.firstAirDate,
+        "title": member.film.title,
+        "release_date": member.film.releaseDate,
+        "content": member.content
+      }),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      print("Rate store : $results");
+      return Member.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create Watchlist.');
+    }
+  }
 }
