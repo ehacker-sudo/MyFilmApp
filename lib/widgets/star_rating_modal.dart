@@ -30,9 +30,9 @@ class _MyStarRatingState extends State<MyStarRating> {
 
   @override
   Widget build(BuildContext context) {
-    showSnackBar() {
-      const snackBar = SnackBar(
-        content: Text("snackbar"),
+    showSnackBar(String text) {
+      final snackBar = SnackBar(
+        content: Text(text),
         backgroundColor: MyFilmAppColors.submain,
       );
 
@@ -65,18 +65,19 @@ class _MyStarRatingState extends State<MyStarRating> {
                             film: widget.film,
                             rate: value,
                           ));
+                          WidgetsBinding.instance.addPostFrameCallback((_) =>
+                              showSnackBar("Cập nhật đánh giá thành công"));
                         } else {
                           futureRate = AdminClient().rateStore(Member(
                             film: widget.film,
                             rate: value,
                           ));
+                          WidgetsBinding.instance.addPostFrameCallback(
+                              (_) => showSnackBar("Lưu đánh giá thành công"));
                         }
 
                         rating = value;
                       });
-
-                      WidgetsBinding.instance
-                          .addPostFrameCallback((_) => showSnackBar());
                     },
                   );
                 },
