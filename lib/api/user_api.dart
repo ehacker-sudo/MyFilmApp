@@ -72,16 +72,20 @@ class AdminClient {
       },
     );
 
+    final results = jsonDecode(response.body) as Map<String, dynamic>;
+
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
-      final results = jsonDecode(response.body) as Map<String, dynamic>;
-      print(results);
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
-      throw Exception('Failed to create Watchlist.');
+      if (results['message'] != null) {
+        throw Exception(results['message']);
+      } else {
+        throw Exception('Failed to show Watchlist.');
+      }
     }
   }
 
@@ -106,16 +110,53 @@ class AdminClient {
       }),
     );
 
+    final results = jsonDecode(response.body) as Map<String, dynamic>;
+
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
-      final results = jsonDecode(response.body) as Map<String, dynamic>;
-      print(results);
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
-      throw Exception('Failed to create Watchlist.');
+      if (results['message'] != null) {
+        throw Exception(results['message']);
+      } else {
+        throw Exception('Failed to show Watchlist.');
+      }
+    }
+  }
+
+  Future<Member> watchlistDestroy(Member member) async {
+    final SharedPreferences pref = await _prefs;
+    String? accessToken = pref.getString('token');
+    final response = await http.delete(
+      Uri.parse('${baseUrl}watchlist/destroy'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "media_type": member.film.mediaType,
+      }),
+    );
+
+    final results = jsonDecode(response.body) as Map<String, dynamic>;
+
+    print(results);
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return Member.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      if (results['message'] != null) {
+        throw Exception(results['message']);
+      } else {
+        throw Exception('Failed to destroy Watchlist.');
+      }
     }
   }
 

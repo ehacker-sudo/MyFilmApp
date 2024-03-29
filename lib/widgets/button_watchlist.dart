@@ -18,78 +18,95 @@ class ButtonWatchlist extends StatefulWidget {
 }
 
 class _ButtonWatchlistState extends State<ButtonWatchlist> {
-  bool isSave = false;
-  // late Future<Member> _futureAlbum;
+  late Future<Member> _futureWatchlist;
 
   @override
   void initState() {
     super.initState();
-    // _futureAlbum = AdminClient().showWatchlistUser(widget.film);
+    _futureWatchlist = AdminClient().showWatchlistUser(widget.film);
   }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          if (isSave) {
-          } else {
-            AdminClient().watchlistStore(Member(
-              filmId: widget.film.id,
-              mediaType: widget.film.mediaType,
-              film: widget.film,
-            ));
-          }
-          isSave = !isSave;
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.only(
-          left: 15.0,
-          right: 15.0,
-          top: 10.0,
-          bottom: 10.0,
-        ),
-        padding: const EdgeInsets.only(
-          left: 10.0,
-          right: 10.0,
-          top: 10.0,
-          bottom: 10.0,
-        ),
-        decoration: BoxDecoration(
-          color: (isSave) ? MyFilmAppColors.body : MyFilmAppColors.submain,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(5.0),
-          ),
-          border:
-              (isSave) ? Border.all(color: MyFilmAppColors.itemActive) : null,
-        ),
-        child: Row(
-          children: [
-            (isSave)
-                ? const Icon(
-                    Icons.check,
-                    size: 20,
-                    color: MyFilmAppColors.white,
-                  )
-                : SvgPicture.asset(
-                    'assets/images/plus.svg',
-                    width: 20,
-                  ),
-            const SizedBox(
-              width: 10,
+    return FutureBuilder<Member>(
+      future: _futureWatchlist,
+      builder: (context, snapshot) {
+        // if (snapshot.hasData || snapshot.hasError) {
+        return InkWell(
+          onTap: () {
+            if (snapshot.hasData) {
+              setState(() {
+                _futureWatchlist = AdminClient().watchlistDestroy(Member(
+                  film: widget.film,
+                ));
+              });
+            } else {
+              setState(() {
+                _futureWatchlist = AdminClient().watchlistStore(Member(
+                  filmId: widget.film.id,
+                  mediaType: widget.film.mediaType,
+                  film: widget.film,
+                ));
+              });
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              top: 10.0,
+              bottom: 10.0,
             ),
-            Text(
-              (isSave) ? "Đã thêm vào danh sách xem" : "Thêm vào danh sách xem",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: (isSave) ? MyFilmAppColors.white : MyFilmAppColors.black,
+            padding: const EdgeInsets.only(
+              left: 10.0,
+              right: 10.0,
+              top: 10.0,
+              bottom: 10.0,
+            ),
+            decoration: BoxDecoration(
+              color: (snapshot.hasData)
+                  ? MyFilmAppColors.body
+                  : MyFilmAppColors.submain,
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5.0),
               ),
-            )
-          ],
-        ),
-      ),
+              border: (snapshot.hasData)
+                  ? Border.all(color: MyFilmAppColors.itemActive)
+                  : null,
+            ),
+            child: Row(
+              children: [
+                (snapshot.hasData)
+                    ? const Icon(
+                        Icons.check,
+                        size: 20,
+                        color: MyFilmAppColors.white,
+                      )
+                    : SvgPicture.asset(
+                        'assets/images/plus.svg',
+                        width: 20,
+                      ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  (snapshot.hasData)
+                      ? "Đã thêm vào danh sách xem"
+                      : "Thêm vào danh sách xem",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: (snapshot.hasData)
+                        ? MyFilmAppColors.white
+                        : MyFilmAppColors.black,
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+        // }
+      },
     );
   }
 }

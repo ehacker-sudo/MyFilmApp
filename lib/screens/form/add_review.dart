@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:star_rating/star_rating.dart';
@@ -142,7 +144,11 @@ class _AddReviewState extends State<AddReview> {
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
                       onPressed: () {
-                        print(contentController.text);
+                        // print(contentController.text);
+                        AdminClient().commentStore(Member(
+                          film: args,
+                          content: contentController.text,
+                        ));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MyFilmAppColors.white,
