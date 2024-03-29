@@ -74,6 +74,38 @@ class AdminClient {
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
 
+    if (response.statusCode == 201 ||
+        response.statusCode == 200 ||
+        response.statusCode == 202) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return Member.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      if (results['message'] != null) {
+        throw Exception(results['message']);
+      } else if (results['status'] != null) {
+        throw Exception(results['status']);
+      } else {
+        throw Exception('Failed to show Watchlist.');
+      }
+    }
+  }
+
+  Future<Member> showRateUser(Film film) async {
+    final SharedPreferences pref = await _prefs;
+    String? accessToken = pref.getString('token');
+    final response = await http.get(
+      Uri.parse(
+          '${baseUrl}show/user/rate?film_id=${film.id}&media_type=${film.mediaType}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+    );
+
+    final results = jsonDecode(response.body) as Map<String, dynamic>;
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
@@ -83,6 +115,8 @@ class AdminClient {
       // then throw an exception.
       if (results['message'] != null) {
         throw Exception(results['message']);
+      } else if (results['status'] != null) {
+        throw Exception(results['status']);
       } else {
         throw Exception('Failed to show Watchlist.');
       }
@@ -240,11 +274,13 @@ class AdminClient {
         "first_air_date": member.film.firstAirDate,
         "title": member.film.title,
         "release_date": member.film.releaseDate,
-        "rate": member.rate
+        "rate": "${member.rate}"
       }),
     );
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
+    if (response.statusCode == 201 ||
+        response.statusCode == 200 ||
+        response.statusCode == 202) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
@@ -255,6 +291,36 @@ class AdminClient {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
       throw Exception('Failed to create Watchlist.');
+    }
+  }
+
+  Future<Member> rateUpdate(Member member) async {
+    final SharedPreferences pref = await _prefs;
+    String? accessToken = pref.getString('token');
+    final response = await http.put(
+      Uri.parse('${baseUrl}rate/update'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "media_type": member.film.mediaType,
+        "rate": "${member.rate}"
+      }),
+    );
+    if (response.statusCode == 201 ||
+        response.statusCode == 200 ||
+        response.statusCode == 202) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+
+      return Member.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to update Rate.');
     }
   }
 

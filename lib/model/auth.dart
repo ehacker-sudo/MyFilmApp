@@ -6,7 +6,7 @@ class Member {
   final String episodeId;
   final String mediaType;
   final String content;
-  final String rate;
+  final double rate;
   final String userId;
   final Film film;
 
@@ -16,7 +16,7 @@ class Member {
     String? episodeId,
     String? mediaType,
     String? content,
-    String? rate,
+    double? rate,
     String? userId,
     Film? film,
   })  : filmId = filmId ?? 0,
@@ -24,7 +24,7 @@ class Member {
         episodeId = episodeId ?? "",
         mediaType = mediaType ?? "",
         content = content ?? "",
-        rate = rate ?? "",
+        rate = rate ?? 0.0,
         userId = userId ?? "",
         film = film ?? Film();
 
@@ -34,13 +34,17 @@ class Member {
       film = Film.fromJson(json['results']);
     }
 
+    double rate = 0.0;
+    if (json["rate"] != null) {
+      rate = double.parse(json["rate"]);
+    }
     return Member(
       filmId: json["film_id"] ?? 0,
       seasonId: json["season_id"] ?? "",
       episodeId: json["episode_id"] ?? "",
       mediaType: json["media_type"] ?? "",
       content: json["content"] ?? "",
-      rate: json["rate"] ?? "",
+      rate: rate,
       userId: json["user_id"] ?? "",
       film: film,
     );

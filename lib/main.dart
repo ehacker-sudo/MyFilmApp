@@ -28,7 +28,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+        GlobalKey<ScaffoldMessengerState>();
     return MaterialApp(
+      scaffoldMessengerKey: rootScaffoldMessengerKey,
       title: 'Film App',
       debugShowCheckedModeBanner: false,
       initialRoute: '/home',

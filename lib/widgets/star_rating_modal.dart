@@ -17,69 +17,111 @@ class MyStarRating extends StatefulWidget {
 }
 
 class _MyStarRatingState extends State<MyStarRating> {
-  double number = 0.0;
-  toggleIconState(double value) {
-    setState(() {
-      // toggleIcon = value;
-      number = value;
-    });
+  late double rating;
+  late Future<Member> futureRate;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    futureRate = AdminClient().showRateUser(widget.film);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        showModalBottomSheet<void>(
-          isScrollControlled: true,
-          context: context,
-          builder: (BuildContext context) {
-            return StarRatingModal(
-              film: widget.film,
-              number: number,
-              valueChanged: toggleIconState,
-            );
-          },
-        );
-      },
-      icon: (number != 0.0)
-          ? Row(
-              children: [
-                const Icon(
-                  Icons.star,
-                  color: MyFilmAppColors.submain,
-                  size: 30,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  "${number.toInt()}/10",
-                  style: const TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
+    showSnackBar() {
+      const snackBar = SnackBar(
+        content: Text("snackbar"),
+        backgroundColor: MyFilmAppColors.submain,
+      );
+
+      // Find the ScaffoldMessenger in the widget tree
+      // and use it to show a SnackBar.
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return FutureBuilder<Member>(
+        future: futureRate,
+        builder: (context, snapshot) {
+          return IconButton(
+            onPressed: () {
+              showModalBottomSheet<void>(
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext context) {
+                  if (snapshot.hasData) {
+                    rating = snapshot.data!.rate;
+                  }
+
+                  print("Rate: ${snapshot.data!.filmId}");
+                  return StarRatingModal(
+                    film: widget.film,
+                    futureRate: rating,
+                    valueChanged: (double value) {
+                      setState(() {
+                        if (snapshot.hasData) {
+                          futureRate = AdminClient().rateUpdate(Member(
+                            film: widget.film,
+                            rate: value,
+                          ));
+                        } else {
+                          futureRate = AdminClient().rateStore(Member(
+                            film: widget.film,
+                            rate: value,
+                          ));
+                        }
+
+                        rating = value;
+                      });
+
+                      WidgetsBinding.instance
+                          .addPostFrameCallback((_) => showSnackBar());
+                    },
+                  );
+                },
+              );
+            },
+            icon: (snapshot.hasData)
+                ? Row(
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: MyFilmAppColors.submain,
+                        size: 30,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "${snapshot.data?.rate.toInt()}/10",
+                        style: const TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    ],
+                  )
+                : const Icon(
+                    Icons.star_border_outlined,
+                    color: MyFilmAppColors.submain,
+                    size: 40,
                   ),
-                )
-              ],
-            )
-          : const Icon(
-              Icons.star_border_outlined,
-              color: MyFilmAppColors.submain,
-              size: 40,
-            ),
-    );
+          );
+        });
   }
 }
 
 class StarRatingModal extends StatefulWidget {
   final Film film;
-  final double number;
-  final ValueChanged<double> valueChanged;
+  final double futureRate;
+  final Function(double text) valueChanged;
   StarRatingModal({
     super.key,
     Film? film,
     required this.valueChanged,
-    required this.number,
+    required this.futureRate,
   }) : film = film ?? Film();
 
   @override
@@ -87,17 +129,21 @@ class StarRatingModal extends StatefulWidget {
 }
 
 class _StarRatingModalState extends State<StarRatingModal> {
-  late double _number;
+  late double _futureRate;
   @override
   void initState() {
-    _number = widget.number;
+    _futureRate = widget.futureRate;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Color rateColor =
-        (_number == 0.0) ? MyFilmAppColors.white : MyFilmAppColors.submain;
+    // return FutureBuilder<Member>(
+    //     future: _futureRate,
+    //     builder: (context, snapshot) {
+    //       // if (snapshot.hasData) {
+    //       //   currentRate = snapshot.data!.rate;
+    //       // }
     return Container(
       // height: 2000,
       color: MyFilmAppColors.body,
@@ -118,13 +164,13 @@ class _StarRatingModalState extends State<StarRatingModal> {
                   "https://image.tmdb.org/t/p/w500${widget.film.posterPath}",
                   // width: MediaQuery.of(context).size.width / 2.5,
                 ),
-                if (_number != 0)
+                if (_futureRate != 0)
                   Container(
                     color: const Color(0x99000000),
                   ),
-                if (_number != 0)
+                if (_futureRate != 0.0)
                   Text(
-                    "${_number.toInt()}",
+                    "${_futureRate.toInt()}",
                     style: const TextStyle(
                       fontSize: 70,
                       color: MyFilmAppColors.white,
@@ -154,15 +200,16 @@ class _StarRatingModalState extends State<StarRatingModal> {
             child: StarRating(
               mainAxisAlignment: MainAxisAlignment.center,
               length: 10,
-              rating: _number,
+              rating: _futureRate,
               between: 5,
               starSize: 40,
-              color: rateColor,
+              color: (_futureRate == 0.0)
+                  ? MyFilmAppColors.white
+                  : MyFilmAppColors.submain,
               onRaitingTap: (rating) {
                 setState(() {
-                  _number = rating;
+                  _futureRate = rating;
                 });
-                // widget.valueChanged(_number);
               },
             ),
           ),
@@ -174,17 +221,12 @@ class _StarRatingModalState extends State<StarRatingModal> {
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () {
-                widget.valueChanged(_number);
-                if (_number != 0.0) {
-                  AdminClient().rateStore(Member(
-                    film: widget.film,
-                    rate: "$_number",
-                  ));
-                }
+                widget.valueChanged(_futureRate);
+
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: (_number == 0)
+                backgroundColor: (_futureRate == 0)
                     ? MyFilmAppColors.header
                     : MyFilmAppColors.submain,
                 textStyle: const TextStyle(fontSize: 14.0),
@@ -210,5 +252,6 @@ class _StarRatingModalState extends State<StarRatingModal> {
         ],
       ),
     );
+    // });
   }
 }
