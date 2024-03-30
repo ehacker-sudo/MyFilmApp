@@ -24,7 +24,7 @@ class _MyStarRatingState extends State<MyStarRating> {
   void initState() {
     // TODO: implement initState
 
-    futureRate = AdminClient().showRateUser(widget.film);
+    futureRate = AdminClient().showRateUser(widget.film, 0.0);
     super.initState();
   }
 
@@ -132,18 +132,12 @@ class _StarRatingModalState extends State<StarRatingModal> {
   double _futureRate = 0;
   @override
   void initState() {
-    // _futureRate = widget.futureRate;
+    _futureRate = widget.futureRate;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder<Member>(
-    //     future: _futureRate,
-    //     builder: (context, snapshot) {
-    //       // if (snapshot.hasData) {
-    //       //   currentRate = snapshot.data!.rate;
-    //       // }
     return Container(
       // height: 2000,
       color: MyFilmAppColors.body,

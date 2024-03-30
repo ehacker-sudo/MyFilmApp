@@ -59,9 +59,9 @@ class ListMember {
   ) : results = results ?? [];
 
   factory ListMember.fromJson(
-    List<Map<String, dynamic>> list,
+    List<Map<String, dynamic>>? list,
   ) {
-    final results = [for (final item in list) Film.fromJson(item)];
+    final results = [for (final item in list!) Film.fromJson(item)];
 
     return ListMember(
       results,
