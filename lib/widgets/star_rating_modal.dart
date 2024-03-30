@@ -17,7 +17,7 @@ class MyStarRating extends StatefulWidget {
 }
 
 class _MyStarRatingState extends State<MyStarRating> {
-  late double rating;
+  double rating = 0.0;
   late Future<Member> futureRate;
 
   @override
@@ -54,7 +54,6 @@ class _MyStarRatingState extends State<MyStarRating> {
                     rating = snapshot.data!.rate;
                   }
 
-                  print("Rate: ${snapshot.data!.filmId}");
                   return StarRatingModal(
                     film: widget.film,
                     futureRate: rating,
@@ -117,7 +116,7 @@ class _MyStarRatingState extends State<MyStarRating> {
 class StarRatingModal extends StatefulWidget {
   final Film film;
   final double futureRate;
-  final Function(double text) valueChanged;
+  final Function(double) valueChanged;
   StarRatingModal({
     super.key,
     Film? film,
@@ -130,10 +129,10 @@ class StarRatingModal extends StatefulWidget {
 }
 
 class _StarRatingModalState extends State<StarRatingModal> {
-  late double _futureRate;
+  double _futureRate = 0;
   @override
   void initState() {
-    _futureRate = widget.futureRate;
+    // _futureRate = widget.futureRate;
     super.initState();
   }
 
