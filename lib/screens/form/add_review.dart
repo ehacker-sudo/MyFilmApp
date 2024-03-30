@@ -258,7 +258,9 @@ class _AddReviewState extends State<AddReview> {
                                   ? "Sửa bình luận"
                                   : "Gửi bình luận",
                               style: const TextStyle(
-                                  color: MyFilmAppColors.black, fontSize: 16),
+                                color: MyFilmAppColors.black,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         );

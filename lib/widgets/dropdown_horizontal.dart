@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/screens/home/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DropdownHorizontal extends StatefulWidget {
@@ -26,13 +27,13 @@ class _DropdownHorizontalState extends State<DropdownHorizontal> {
           ...MenuItems.firstItems.map(
             (item) => DropdownMenuItem<MenuItem>(
               value: item,
-              child: MenuItems.buildItem(item),
+              child: MenuItems.buildItem(item, context),
             ),
           ),
           ...MenuItems.secondItems.map(
             (item) => DropdownMenuItem<MenuItem>(
               value: item,
-              child: MenuItems.buildItem(item),
+              child: MenuItems.buildItem(item, context),
             ),
           ),
         ],
@@ -75,13 +76,16 @@ abstract class MenuItems {
   static const logout = MenuItem(text: 'Logout');
   // static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
-  static Widget buildItem(MenuItem item) {
+  static Widget buildItem(MenuItem item, BuildContext context) {
     final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
     return InkWell(
       onTap: () async {
         final SharedPreferences pref = await prefs;
         pref.clear();
-        print(pref.getString('token'));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
       },
       child: Row(
         children: [

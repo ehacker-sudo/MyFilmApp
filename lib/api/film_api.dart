@@ -32,19 +32,26 @@ class TheMovieDbClient {
         'password': user.password,
       }),
     );
+    final results = jsonDecode(response.body) as Map<String, dynamic>;
+    print(results);
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
-      final results = jsonDecode(response.body) as Map<String, dynamic>;
       if (results["access_token"] != null) {
         final SharedPreferences pref = await _prefs;
         pref.setString('token', results["access_token"]);
       }
       return Message.fromJson(results);
-    } else {
+    } else if (response.statusCode == 401) {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
-      throw Exception('Failed to create Login.');
+      if (results["message"] != null) {
+        throw Exception(results["message"]);
+      } else {
+        throw Exception('Failed to Login.');
+      }
+    } else {
+      throw Exception('Failed to Login.');
     }
   }
 
