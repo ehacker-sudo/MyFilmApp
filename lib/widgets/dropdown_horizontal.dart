@@ -73,7 +73,7 @@ abstract class MenuItems {
   static const List<MenuItem> firstItems = [logout];
   static const List<MenuItem> secondItems = [];
 
-  static const logout = MenuItem(text: 'Logout');
+  static const logout = MenuItem(text: 'Đăng xuất');
   // static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item, BuildContext context) {

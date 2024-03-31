@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
+import 'package:myfilmapp/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -57,6 +58,33 @@ class AdminClient {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
       throw Exception('Failed to create Watchlist.');
+    }
+  }
+
+  Future<User> loginUser() async {
+    final SharedPreferences pref = await _prefs;
+    String? accessToken = pref.getString('token');
+    final response = await http.get(
+      Uri.parse('${baseUrl}user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+    );
+
+    final results = jsonDecode(response.body) as Map<String, dynamic>;
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return User.fromJson(results);
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      if (results['status'] != null) {
+        throw Exception(results['status']);
+      } else {
+        throw Exception('Failed to show Watchlist.');
+      }
     }
   }
 
