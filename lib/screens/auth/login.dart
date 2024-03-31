@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
     );
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
             Container(
               padding: const EdgeInsets.all(5),
@@ -125,7 +125,9 @@ class _LoginState extends State<Login> {
                         const Text(
                           "Đăng nhập",
                           style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(
                           height: 30,

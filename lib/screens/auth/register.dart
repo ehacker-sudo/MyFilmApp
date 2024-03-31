@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/message.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/auth/login.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
@@ -13,17 +14,56 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  late bool showNavigationDrawer;
+  late Future<Message> _futureRegister;
+
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController conformPasswordController = TextEditingController();
-
+  TextEditingController confirmPasswordController = TextEditingController();
+  String email = "";
+  String password = "";
+  String name = "";
+  String confirmPassword = "";
   bool isChecked = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    showNavigationDrawer = MediaQuery.of(context).size.width >= 500;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _futureRegister = TheMovieDbClient().register(User());
+  }
+
+  showSnackBar(String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+      backgroundColor: MyFilmAppColors.submain,
+      behavior: SnackBarBehavior.floating,
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _futureRegister.then(
+      (value) {
+        if (value.result) {
+          showSnackBar("Đăng ký thành công");
+        }
+      },
+    );
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
             Container(
               padding: const EdgeInsets.all(5),
@@ -40,154 +80,276 @@ class _RegisterState extends State<Register> {
             const SizedBox(
               height: 30,
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                children: [
-                  const Text(
-                    "Đăng ký",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      // prefixIcon: Icon(Icons.email),
-                      // suffixIcon: Icon(Icons.clear),
-                      labelText: 'Họ và tên',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                      // prefixIcon: Icon(Icons.email),
-                      // suffixIcon: Icon(Icons.clear),
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: passwordController,
-                    obscureText: !isChecked,
-                    decoration: const InputDecoration(
-                      labelText: 'Mật khẩu',
-                      helperText: "Mật khẩu phải có ít nhất 8 kí tự",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: conformPasswordController,
-                    obscureText: !isChecked,
-                    decoration: const InputDecoration(
-                      labelText: 'Xác nhận mật khẩu',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        checkColor: MyFilmAppColors.white,
-                        fillColor:
-                            MaterialStateProperty.all(MyFilmAppColors.submain),
-                        value: isChecked,
-                        onChanged: (bool? value) {
-                          setState(
-                            () {
-                              isChecked = value!;
+            FutureBuilder<Message>(
+                future: _futureRegister,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Container(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      width: showNavigationDrawer
+                          ? 500
+                          : MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: [
+                          if (snapshot.hasError)
+                            Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(15.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.red,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${snapshot.error}',
+                                    style: const TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          const Text(
+                            "Đăng ký",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          TextField(
+                            controller: nameController,
+                            onChanged: (value) {
+                              setState(() {
+                                name = value;
+                              });
                             },
-                          );
-                        },
+                            decoration: InputDecoration(
+                              labelText: 'Họ và tên',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: (name != "")
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          name = "";
+                                          nameController.text = "";
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.clear,
+                                        color: Color(0xFF9A9A9A),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            controller: emailController,
+                            onChanged: (value) {
+                              setState(() {
+                                email = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              // prefixIcon: Icon(Icons.email),
+                              // suffixIcon: Icon(Icons.clear),
+                              labelText: 'Email',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: (email != "")
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          email = "";
+                                          passwordController.text = "";
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.clear,
+                                        color: Color(0xFF9A9A9A),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            controller: passwordController,
+                            obscureText: !isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                password = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Mật khẩu',
+                              helperText: "Mật khẩu phải có ít nhất 8 kí tự",
+                              border: const OutlineInputBorder(),
+                              suffixIcon: (password != "")
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          password = "";
+                                          passwordController.text = "";
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.clear,
+                                        color: Color(0xFF9A9A9A),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            controller: confirmPasswordController,
+                            obscureText: !isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                confirmPassword = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Xác nhận mật khẩu',
+                              border: const OutlineInputBorder(),
+                              suffixIcon: (confirmPassword != "")
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          confirmPassword = "";
+                                          confirmPasswordController.text = "";
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.clear,
+                                        color: Color(0xFF9A9A9A),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Checkbox(
+                                checkColor: MyFilmAppColors.white,
+                                fillColor: MaterialStateProperty.all(
+                                    MyFilmAppColors.submain),
+                                value: isChecked,
+                                onChanged: (bool? value) {
+                                  setState(
+                                    () {
+                                      isChecked = value!;
+                                    },
+                                  );
+                                },
+                              ),
+                              const Text(
+                                "Hiện mật khẩu",
+                                style: TextStyle(
+                                    color: MyFilmAppColors.black, fontSize: 16),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _futureRegister =
+                                      TheMovieDbClient().register(User(
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    confirmPassword:
+                                        confirmPasswordController.text,
+                                  ));
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: MyFilmAppColors.submain,
+                                textStyle: const TextStyle(fontSize: 14.0),
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, bottom: 15.0),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(3.0)),
+                                ),
+                                elevation: 5,
+                              ),
+                              child: const Text(
+                                "Tạo tài khoản",
+                                style: TextStyle(
+                                    color: MyFilmAppColors.white, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
+                            "Đã có tài khoản?",
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w300),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Login()),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: MyFilmAppColors.white,
+                                textStyle: const TextStyle(fontSize: 14.0),
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, bottom: 15.0),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(3.0)),
+                                ),
+                                elevation: 5,
+                              ),
+                              child: const Text(
+                                "Đăng nhập",
+                                style: TextStyle(
+                                    color: MyFilmAppColors.black, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const Text(
-                        "Hiện mật khẩu",
-                        style: TextStyle(
-                            color: MyFilmAppColors.black, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          TheMovieDbClient().register(User(
-                            name: nameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            confirmPassword: conformPasswordController.text,
-                          ));
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyFilmAppColors.submain,
-                        textStyle: const TextStyle(fontSize: 14.0),
-                        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: const Text(
-                        "Tạo tài khoản",
-                        style: TextStyle(
-                            color: MyFilmAppColors.white, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Đã có tài khoản?",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Login()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: MyFilmAppColors.white,
-                        textStyle: const TextStyle(fontSize: 14.0),
-                        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(3.0)),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: const Text(
-                        "Đăng nhập",
-                        style: TextStyle(
-                            color: MyFilmAppColors.black, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                    );
+                  }
+
+                  // By default, show a loading spinner.
+                  return const CircularProgressIndicator();
+                }),
           ],
         ),
       ),
