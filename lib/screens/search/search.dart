@@ -40,17 +40,6 @@ class _SearchState extends State<Search> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Container(
-                //   padding: const EdgeInsets.only(left: 15, bottom: 10),
-                //   child: const Text(
-                //     "Đề xuât",
-                //     style: TextStyle(
-                //       color: MyFilmAppColors.white,
-                //       fontSize: 20,
-                //       fontWeight: FontWeight.w400,
-                //     ),
-                //   ),
-                // ),
                 FutureBuilder<ListFilm>(
                   future: TheMovieDbClient().fetchResults(
                       "search/multi?page=1&api_key=7bb0f209157f0bb4788ecb54be635d14&query=$searchText"),
@@ -74,11 +63,6 @@ class _SearchState extends State<Search> {
                               child: CardVertical(
                                 name: person.name,
                                 posterPath: person.profilePath,
-                                // backdropPath: args.seasons[index].posterPath,
-                                // overview: args.seasons[index].overview,
-                                // airDate: args.seasons[index].airDate,
-                                // episodeCount: args.seasons[index].episodeCount,
-                                // voteAverage: args.seasons[index].voteAverage,
                                 onTap: () {
                                   Navigator.pushNamed(
                                     context,
@@ -90,15 +74,15 @@ class _SearchState extends State<Search> {
                             );
                           } else {
                             return Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 2, vertical: 2),
                               child: CardVertical(
                                 name:
                                     "${searchResult[index].name}${searchResult[index].title}",
                                 posterPath: searchResult[index].posterPath,
                                 // backdropPath: args.seasons[index].posterPath,
                                 // overview: args.seasons[index].overview,
-                                // airDate: args.seasons[index].airDate,
+                                airDate: searchResult[index].firstAirDate,
                                 // episodeCount: args.seasons[index].episodeCount,
                                 // voteAverage: args.seasons[index].voteAverage,
                                 onTap: () {

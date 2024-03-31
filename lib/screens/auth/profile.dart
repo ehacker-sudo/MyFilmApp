@@ -38,7 +38,8 @@ class _ProfileState extends State<Profile> {
         child: ListView(
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              padding: const EdgeInsets.only(
+                  left: 15.0, right: 15.0, top: 10, bottom: 20.0),
               child: FutureBuilder<User>(
                 future: _futureUser,
                 builder: (context, snapshot) {
@@ -87,9 +88,9 @@ class _ProfileState extends State<Profile> {
                             const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            const Text(
                               "Đăng nhập",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: MyFilmAppColors.white, fontSize: 15),
                             )
                           ],
@@ -99,12 +100,11 @@ class _ProfileState extends State<Profile> {
                   }
 
                   // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
+                  return const Column(
+                    children: [CircularProgressIndicator()],
+                  );
                 },
               ),
-            ),
-            const SizedBox(
-              height: 20,
             ),
             FutureBuilder<User>(
               future: _futureUser,
@@ -113,7 +113,8 @@ class _ProfileState extends State<Profile> {
                   return const SizedBox();
                 } else if (snapshot.hasError) {
                   return Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, bottom: 20.0),
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -145,121 +146,149 @@ class _ProfileState extends State<Profile> {
                 }
 
                 // By default, show a loading spinner.
-                return const CircularProgressIndicator();
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 20.0),
+                  child: const Column(
+                    children: [CircularProgressIndicator()],
+                  ),
+                );
               },
-            ),
-            const SizedBox(
-              height: 20,
             ),
             FutureBuilder<User>(
               future: _futureUser,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding:
-                                const EdgeInsets.only(left: 15, bottom: 10),
-                            child: const Text(
-                              "Lịch sử xem",
-                              style: TextStyle(
-                                color: MyFilmAppColors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
+                      Container(
+                        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        color: MyFilmAppColors.header,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 20.0),
+                              child: const Text(
+                                "Lịch sử xem",
+                                style: TextStyle(
+                                  color: MyFilmAppColors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
-                          ),
-                          FutureBuilder<ListMember>(
-                            future: AdminClient().historyUser(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                List<Film> films = snapshot.data!.results;
-                                return SizedBox(
-                                  height: 180 + 50,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: films.length,
-                                    itemBuilder: (context, index) {
-                                      return CardBackdrop(
-                                        // film: snapshot.data!.items[index],
-                                        film: films[index],
-                                      );
-                                    },
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                            FutureBuilder<ListMember>(
+                              future: AdminClient().historyUser(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<Film> films = snapshot.data!.results;
+                                  return SizedBox(
+                                    height: 180 + 50,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: films.length,
+                                      itemBuilder: (context, index) {
+                                        return CardBackdrop(
+                                          // film: snapshot.data!.items[index],
+                                          film: films[index],
+                                        );
+                                      },
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    '${snapshot.error}',
+                                    style: const TextStyle(
+                                        color: MyFilmAppColors.white),
+                                  );
+                                }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                                // By default, show a loading spinner.
+                                return const CircularProgressIndicator();
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding:
-                                const EdgeInsets.only(left: 15, bottom: 10),
-                            child: const Text(
-                              "Danh sách xem",
-                              style: TextStyle(
-                                color: MyFilmAppColors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
+                      Container(
+                        padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        color: MyFilmAppColors.header,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 20.0),
+                              child: const Text(
+                                "Danh sách xem",
+                                style: TextStyle(
+                                  color: MyFilmAppColors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
-                          ),
-                          FutureBuilder<ListMember>(
-                            future: AdminClient().watchlistUser(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                List<Film> films = snapshot.data!.results;
-                                return SizedBox(
-                                  height: 180 + 50,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: films.length,
-                                    itemBuilder: (context, index) {
-                                      return CardBackdrop(
-                                        // film: snapshot.data!.items[index],
-                                        film: films[index],
-                                      );
-                                    },
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                            FutureBuilder<ListMember>(
+                              future: AdminClient().watchlistUser(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<Film> films = snapshot.data!.results;
+                                  return SizedBox(
+                                    height: 180 + 50,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: films.length,
+                                      itemBuilder: (context, index) {
+                                        return CardBackdrop(
+                                          // film: snapshot.data!.items[index],
+                                          film: films[index],
+                                        );
+                                      },
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text(
+                                    '${snapshot.error}',
+                                    style: const TextStyle(
+                                        color: MyFilmAppColors.white),
+                                  );
+                                }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                                // By default, show a loading spinner.
+                                return const Column(
+                                  children: [CircularProgressIndicator()],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        color: MyFilmAppColors.header,
+                        padding: const EdgeInsets.only(
+                            left: 20, bottom: 15, top: 15),
+                        child: const Text(
+                          "Tìm kiếm thêm",
+                          style: TextStyle(
+                            color: MyFilmAppColors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -268,8 +297,13 @@ class _ProfileState extends State<Profile> {
                 }
 
                 // By default, show a loading spinner.
-                return const CircularProgressIndicator();
+                return const Column(
+                  children: [CircularProgressIndicator()],
+                );
               },
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),

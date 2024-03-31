@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/screens/search/search.dart';
+import 'package:myfilmapp/screens/search/search/search_screen.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
 
 class Navbar extends StatefulWidget implements PreferredSizeWidget {
   final bool backButton;
   final bool searchBar;
   final Function(String text) onSubmit;
+  final Function(String text) onChanged;
   final String title;
   final bool rotatedLogo;
   final bool mobileMode;
@@ -17,6 +19,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
     bool? backButton,
     bool? searchBar,
     Function(String text)? onSubmit,
+    Function(String text)? onChanged,
     String? title,
     bool? rotatedLogo,
     bool? mobileMode,
@@ -24,6 +27,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
         backButton = backButton ?? false,
         searchBar = searchBar ?? false,
         onSubmit = onSubmit ?? defaultOnTap,
+        onChanged = onChanged ?? defaultOnTap,
         rotatedLogo = rotatedLogo ?? false,
         mobileMode = mobileMode ?? false;
 
@@ -90,6 +94,7 @@ class _NavbarState extends State<Navbar> {
                                     onChanged: (text) {
                                       setState(() {
                                         searchText = text;
+                                        widget.onChanged(text);
                                       });
                                     },
                                     onSubmitted: widget.onSubmit,
@@ -121,6 +126,7 @@ class _NavbarState extends State<Navbar> {
                                                 setState(() {
                                                   searchController.text = "";
                                                   searchText = "";
+                                                  widget.onChanged("");
                                                 });
                                               },
                                               icon: const Icon(
@@ -227,7 +233,7 @@ class _NavbarState extends State<Navbar> {
                           context,
                           PageRouteBuilder(
                             pageBuilder: (BuildContext context, _, __) {
-                              return const Search();
+                              return const SearchScreen();
                             },
                             transitionsBuilder: (_, Animation<double> animation,
                                 __, Widget child) {

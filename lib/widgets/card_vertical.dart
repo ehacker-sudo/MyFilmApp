@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 
 class CardVertical extends StatefulWidget {
+  final int id;
   final String posterPath;
   final String name;
   final String overview;
@@ -10,7 +11,7 @@ class CardVertical extends StatefulWidget {
   final int episodeCount;
   final Function() onTap;
   const CardVertical({
-    super.key,
+    int? id,
     String? posterPath,
     String? name,
     String? overview,
@@ -18,12 +19,13 @@ class CardVertical extends StatefulWidget {
     String? airDate,
     int? episodeCount,
     Function()? onTap,
-  })  : name = name ?? "asasasas",
-        posterPath = posterPath ?? "/vuZrgFo96FGiTJC489aPtWyTDt2.jpg",
+  })  : name = name ?? 'One Piece',
+        id = id ?? 0,
+        posterPath = posterPath ?? '/vuZrgFo96FGiTJC489aPtWyTDt2.jpg',
         voteAverage = voteAverage ?? 0.0,
         episodeCount = episodeCount ?? 0,
-        airDate = airDate ?? "",
-        overview = overview ?? "",
+        airDate = airDate ?? '1999',
+        overview = overview ?? '',
         onTap = onTap ?? defaultOnTap;
 
   @override
@@ -31,81 +33,73 @@ class CardVertical extends StatefulWidget {
 }
 
 class _CardVerticalState extends State<CardVertical> {
+  bool itemIsHover = false;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: widget.onTap,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox(
+      onHover: (isHover) {
+        setState(() {
+          itemIsHover = isHover;
+        });
+      },
+      child: Container(
+        color: MyFilmAppColors.body,
+        child: Row(
+          children: [
+            Hero(
+              tag: widget.id,
+              child: SizedBox(
                 width: 150 * 0.667,
                 height: 150,
                 child: Image.network(
-                  "https://image.tmdb.org/t/p/w500${widget.posterPath}",
+                  'https://image.tmdb.org/t/p/w500${widget.posterPath}',
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.name,
-                      style: const TextStyle(
-                        color: MyFilmAppColors.white,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              color: MyFilmAppColors.white,
-                            ),
-                            Text(
-                              "${widget.voteAverage}",
-                              style: const TextStyle(
-                                  color: MyFilmAppColors.white,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                        Text(
-                          (widget.airDate == "")
-                              ? ""
-                              : widget.airDate.substring(0, 4),
-                          style: const TextStyle(
-                            color: MyFilmAppColors.white,
-                          ),
-                        ),
-                        Text(
-                          "${widget.episodeCount} tập",
-                          style: const TextStyle(
-                            color: MyFilmAppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Text(
-            widget.overview,
-            style: const TextStyle(
-              color: MyFilmAppColors.gray,
             ),
-          ),
-        ],
+            const SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.name,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: MyFilmAppColors.white,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        (widget.airDate == '')
+                            ? ''
+                            : widget.airDate.substring(0, 4),
+                        style: const TextStyle(
+                          color: Color(0xFFC6C6C6),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        'TV Series',
+                        style: const TextStyle(
+                          color: Color(0xFFC6C6C6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -113,6 +107,6 @@ class _CardVerticalState extends State<CardVertical> {
 
 Function defaultOnTap() {
   return () {
-    print("On Tap");
+    print('On Tap');
   };
 }

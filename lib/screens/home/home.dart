@@ -76,27 +76,27 @@ class _HomeState extends State<Home> {
           const SizedBox(
             height: 20,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Xu hướng",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                    "trending/all/day?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+                "trending/all/day?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Xu hướng",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 250,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -108,19 +108,21 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(color: MyFilmAppColors.white),
+                );
+              }
 
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
           const SizedBox(
             height: 30,
@@ -145,27 +147,27 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Top phim ảnh",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                    "movie/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+                "movie/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Top phim ảnh",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 180 + 50,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -177,44 +179,46 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(color: MyFilmAppColors.white),
+                );
+              }
 
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
           const SizedBox(
             height: 30,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Phim ảnh sắp ra mắt",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                    "movie/upcoming?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+                "movie/upcoming?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Phim ảnh sắp ra mắt",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 180 + 50,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -226,45 +230,47 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(color: MyFilmAppColors.white),
+                );
+              }
 
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
           const SizedBox(
             height: 30,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Phim ảnh hiện công chiếu",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                  "movie/now_playing?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+              "movie/now_playing?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Phim ảnh hiện công chiếu",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 180 + 50,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -276,19 +282,21 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(color: MyFilmAppColors.white),
+                );
+              }
 
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ],
       ),
@@ -302,27 +310,27 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Top phim truyền hình",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                    "tv/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+                "tv/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Top phim truyền hình",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 180 + 50,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -334,44 +342,46 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(color: MyFilmAppColors.white),
+                );
+              }
 
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
           const SizedBox(
             height: 30,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Vẫn còn lên sóng",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                    "tv/on_the_air?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+                "tv/on_the_air?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Vẫn còn lên sóng",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 180 + 50,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -383,44 +393,46 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(color: MyFilmAppColors.white),
+                );
+              }
 
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
           const SizedBox(
             height: 30,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(left: 15, bottom: 10),
-                child: const Text(
-                  "Đang được lên sóng",
-                  style: TextStyle(
-                    color: MyFilmAppColors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              FutureBuilder<ListFilm>(
-                future: TheMovieDbClient().fetchResults(
-                    "tv/airing_today?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
+          FutureBuilder<ListFilm>(
+            future: TheMovieDbClient().fetchResults(
+                "tv/airing_today?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 15, bottom: 10),
+                      child: const Text(
+                        "Đang được lên sóng",
+                        style: TextStyle(
+                          color: MyFilmAppColors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: 180 + 50,
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -432,18 +444,22 @@ class _HomeState extends State<Home> {
                           );
                         },
                       ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
-                  }
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: const TextStyle(
+                    color: MyFilmAppColors.white,
+                  ),
+                );
+              }
+              // By default, show a loading spinner.
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ],
       ),
