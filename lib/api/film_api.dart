@@ -214,13 +214,36 @@ class TheMovieDbClient {
     }
   }
 
+  Future<ListReview> fetchUserReviewResults(
+      String mediaType, int filmId) async {
+    final response = await http.get(
+      Uri.parse(
+        'http://127.0.0.1:8000/api/comment?film_id=${filmId}&media_type=${mediaType}',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      List<Map<String, dynamic>> items = [];
+      if (results['results'] != null) {
+        items = (results['results'] as List).cast<Map<String, dynamic>>();
+      }
+      return ListReview.fromJson(items);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load Film');
+    }
+  }
+
   Future<ListReview> fetchReviewResults(String term) async {
     final response = await http.get(
       Uri.parse(
         '$baseUrl$term',
       ),
     );
-
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.

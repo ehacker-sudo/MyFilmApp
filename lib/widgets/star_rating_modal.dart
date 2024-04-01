@@ -3,6 +3,8 @@ import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
+import 'package:myfilmapp/model/user.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:star_rating/star_rating.dart';
 
 class MyStarRating extends StatefulWidget {
@@ -19,12 +21,14 @@ class MyStarRating extends StatefulWidget {
 class _MyStarRatingState extends State<MyStarRating> {
   double rating = 0.0;
   late Future<Member> futureRate;
+  late Future<User> _futureUser;
 
   @override
   void initState() {
     // TODO: implement initState
 
     futureRate = AdminClient().showRateUser(widget.film, 0.0);
+    _futureUser = AdminClient().loginUser();
     super.initState();
   }
 
@@ -46,41 +50,49 @@ class _MyStarRatingState extends State<MyStarRating> {
         builder: (context, snapshot) {
           return IconButton(
             onPressed: () {
-              showModalBottomSheet<void>(
-                isScrollControlled: true,
-                context: context,
-                builder: (BuildContext context) {
-                  if (snapshot.hasData) {
-                    rating = snapshot.data!.rate;
-                  }
+              _futureUser.then((value) {
+                showModalBottomSheet<void>(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    if (snapshot.hasData) {
+                      rating = snapshot.data!.rate;
+                    }
 
-                  return StarRatingModal(
-                    film: widget.film,
-                    futureRate: rating,
-                    valueChanged: (double value) {
-                      setState(() {
-                        if (snapshot.hasData) {
-                          futureRate = AdminClient().rateUpdate(Member(
-                            film: widget.film,
-                            rate: value,
-                          ));
-                          WidgetsBinding.instance.addPostFrameCallback((_) =>
-                              showSnackBar("Cập nhật đánh giá thành công"));
-                        } else {
-                          futureRate = AdminClient().rateStore(Member(
-                            film: widget.film,
-                            rate: value,
-                          ));
-                          WidgetsBinding.instance.addPostFrameCallback(
-                              (_) => showSnackBar("Lưu đánh giá thành công"));
-                        }
+                    return StarRatingModal(
+                      film: widget.film,
+                      futureRate: rating,
+                      valueChanged: (double value) {
+                        setState(() {
+                          if (snapshot.hasData) {
+                            futureRate = AdminClient().rateUpdate(Member(
+                              film: widget.film,
+                              rate: value,
+                            ));
+                            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                                showSnackBar("Cập nhật đánh giá thành công"));
+                          } else {
+                            futureRate = AdminClient().rateStore(Member(
+                              film: widget.film,
+                              rate: value,
+                            ));
+                            WidgetsBinding.instance.addPostFrameCallback(
+                                (_) => showSnackBar("Lưu đánh giá thành công"));
+                          }
 
-                        rating = value;
-                      });
-                    },
-                  );
-                },
-              );
+                          rating = value;
+                        });
+                      },
+                    );
+                  },
+                );
+              }).catchError((err) {
+                QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.warning,
+                  text: 'Hãy đăng nhập để đánh giá phim',
+                );
+              });
             },
             icon: (snapshot.hasData)
                 ? Row(

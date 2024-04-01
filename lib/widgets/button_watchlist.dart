@@ -4,6 +4,9 @@ import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
+import 'package:myfilmapp/model/user.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ButtonWatchlist extends StatefulWidget {
   final Film film;
@@ -19,11 +22,13 @@ class ButtonWatchlist extends StatefulWidget {
 
 class _ButtonWatchlistState extends State<ButtonWatchlist> {
   late Future<Member> _futureWatchlist;
+  late Future<User> _futureUser;
 
   @override
   void initState() {
     super.initState();
     _futureWatchlist = AdminClient().showWatchlistUser(widget.film);
+    _futureUser = AdminClient().loginUser();
   }
 
   @override
@@ -34,21 +39,29 @@ class _ButtonWatchlistState extends State<ButtonWatchlist> {
         // if (snapshot.hasData || snapshot.hasError) {
         return InkWell(
           onTap: () {
-            if (snapshot.hasData) {
-              setState(() {
-                _futureWatchlist = AdminClient().watchlistDestroy(Member(
-                  film: widget.film,
-                ));
-              });
-            } else {
-              setState(() {
-                _futureWatchlist = AdminClient().watchlistStore(Member(
-                  filmId: widget.film.id,
-                  mediaType: widget.film.mediaType,
-                  film: widget.film,
-                ));
-              });
-            }
+            _futureUser.then((value) {
+              if (snapshot.hasData) {
+                setState(() {
+                  _futureWatchlist = AdminClient().watchlistDestroy(Member(
+                    film: widget.film,
+                  ));
+                });
+              } else {
+                setState(() {
+                  _futureWatchlist = AdminClient().watchlistStore(Member(
+                    filmId: widget.film.id,
+                    mediaType: widget.film.mediaType,
+                    film: widget.film,
+                  ));
+                });
+              }
+            }).catchError((err) {
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.warning,
+                text: 'Hãy đăng nhập để tạo danh sách xem',
+              );
+            });
           },
           child: Container(
             margin: const EdgeInsets.only(

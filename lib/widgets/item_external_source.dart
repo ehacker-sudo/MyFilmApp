@@ -112,6 +112,12 @@ class _ItemExternalSourceState extends State<ItemExternalSource> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: ListTile(
+              contentPadding: const EdgeInsets.only(
+                left: 15.0,
+                right: 10.0,
+                bottom: 0,
+                top: 0,
+              ),
               leading: Image.asset(
                 logo,
                 width: 40,
@@ -127,7 +133,10 @@ class _ItemExternalSourceState extends State<ItemExternalSource> {
               ),
             ),
           ),
-          FutureBuilder<void>(future: _launched, builder: _launchStatus),
+          const SizedBox(
+            height: 2,
+          ),
+          // FutureBuilder<void>(future: _launched, builder: _launchStatus),
         ],
       ),
     );

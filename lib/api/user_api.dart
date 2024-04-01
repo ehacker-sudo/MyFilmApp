@@ -73,7 +73,9 @@ class AdminClient {
     );
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
-    if (response.statusCode == 201 || response.statusCode == 200) {
+    if (response.statusCode == 201 ||
+        response.statusCode == 200 ||
+        accessToken != null && accessToken != "") {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       return User.fromJson(results);

@@ -209,9 +209,7 @@ class _PersonDetailState extends State<PersonDetail> {
                               ),
                             ],
                           ),
-                          ListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
+                          Column(
                             children: [
                               if (person.birthday != "")
                                 ItemDetail(
@@ -240,116 +238,128 @@ class _PersonDetailState extends State<PersonDetail> {
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Phim ảnh nổi bật",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListFilm>(
-                            future: TheMovieDbClient().fetchResults(
-                                "person/${person.id}/movie_credits?api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return SizedBox(
-                                  height: 250,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: snapshot.data!.cast.length,
-                                    itemBuilder: (context, index) {
-                                      return CardBackdrop(
-                                        film: snapshot.data!.cast[index],
-                                      );
-                                    },
+                      FutureBuilder<ListFilm>(
+                        future: TheMovieDbClient().fetchResults(
+                            "person/${person.id}/movie_credits?api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<Film> casts = snapshot.data!.cast;
+                            if (casts.isNotEmpty) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 15.0,
+                                            right: 15.0,
+                                            top: 10.0,
+                                            bottom: 10.0),
+                                        child: const Text(
+                                          "Phim ảnh nổi bật",
+                                          style: TextStyle(
+                                              color: MyFilmAppColors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                                  SizedBox(
+                                    height: 250,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data!.cast.length,
+                                      itemBuilder: (context, index) {
+                                        return CardBackdrop(
+                                          film: snapshot.data!.cast[index],
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          } else if (snapshot.hasError) {
+                            return Text(
+                              '${snapshot.error}',
+                              style:
+                                  const TextStyle(color: MyFilmAppColors.white),
+                            );
+                          }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Phim truyền hình nổi bật",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListFilm>(
-                            future: TheMovieDbClient().fetchResults(
-                                "person/${person.id}/tv_credits?api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return SizedBox(
-                                  height: 250,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: snapshot.data!.cast.length,
-                                    itemBuilder: (context, index) {
-                                      return CardBackdrop(
-                                        film: snapshot.data!.cast[index],
-                                      );
-                                    },
+                      FutureBuilder<ListFilm>(
+                        future: TheMovieDbClient().fetchResults(
+                            "person/${person.id}/tv_credits?api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<Film> casts = snapshot.data!.cast;
+                            if (casts.isNotEmpty) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 15.0,
+                                            right: 15.0,
+                                            top: 10.0,
+                                            bottom: 10.0),
+                                        child: const Text(
+                                          "Phim truyền hình nổi bật",
+                                          style: TextStyle(
+                                              color: MyFilmAppColors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                                  SizedBox(
+                                    height: 250,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data!.cast.length,
+                                      itemBuilder: (context, index) {
+                                        return CardBackdrop(
+                                          film: snapshot.data!.cast[index],
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                            // } else if (snapshot.hasError) {
+                            //   return Text(
+                            //     '${snapshot.error}',
+                            //     style:
+                            //         const TextStyle(color: MyFilmAppColors.white),
+                            //   );
+                          }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       const SizedBox(
                         height: 15,
@@ -378,9 +388,7 @@ class _PersonDetailState extends State<PersonDetail> {
                           ),
                           SizedBox(
                             height: 50.0,
-                            child: ListView(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                            child: Column(
                               children: [
                                 if (person.imdbId != "")
                                   ItemExternalSource(

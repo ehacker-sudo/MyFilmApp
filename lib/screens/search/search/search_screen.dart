@@ -29,45 +29,50 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<SearchState, _SearchScreenViewModel>(
-      converter: (store) {
-        return _SearchScreenViewModel(
-          state: store.state,
-          onTextChanged: (term) => store.dispatch(SearchAction(term)),
-        );
-      },
-      builder: (BuildContext context, _SearchScreenViewModel vm) {
-        return Scaffold(
-          appBar: Navbar(
-            backButton: true,
-            searchBar: true,
-            onBack: () {
-              setState(() {
-                vm.onTextChanged("");
-              });
-            },
-            onSubmit: (text) {
-              setState(() {
-                searchText = text;
-              });
-            },
-            onChanged: (text) {
-              setState(() {
-                searchText = text;
-                vm.onTextChanged(text);
-              });
-            },
-          ),
-          body: Flex(direction: Axis.vertical, children: <Widget>[
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
-                child: _buildVisible(vm.state),
-              ),
-            )
-          ]),
-        );
-      },
+    return Theme(
+      data: ThemeData(
+        brightness: Brightness.dark,
+      ),
+      child: StoreConnector<SearchState, _SearchScreenViewModel>(
+        converter: (store) {
+          return _SearchScreenViewModel(
+            state: store.state,
+            onTextChanged: (term) => store.dispatch(SearchAction(term)),
+          );
+        },
+        builder: (BuildContext context, _SearchScreenViewModel vm) {
+          return Scaffold(
+            appBar: Navbar(
+              backButton: true,
+              searchBar: true,
+              onBack: () {
+                setState(() {
+                  vm.onTextChanged("");
+                });
+              },
+              onSubmit: (text) {
+                setState(() {
+                  searchText = text;
+                });
+              },
+              onChanged: (text) {
+                setState(() {
+                  searchText = text;
+                  vm.onTextChanged(text);
+                });
+              },
+            ),
+            body: Flex(direction: Axis.vertical, children: <Widget>[
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child: _buildVisible(vm.state),
+                ),
+              )
+            ]),
+          );
+        },
+      ),
     );
   }
 

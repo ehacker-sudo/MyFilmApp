@@ -312,10 +312,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-Future<bool> isLogin() async {
-  final Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-  final SharedPreferences pref = await prefs;
-  String? accessToken = pref.getString('token');
-  return (accessToken != null && accessToken != "");
-}

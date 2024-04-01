@@ -9,6 +9,7 @@ import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/model/review.dart';
+import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/form/add_review.dart';
 import 'package:myfilmapp/screens/season/movie_collections.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
@@ -19,6 +20,7 @@ import 'package:myfilmapp/widgets/item_detail.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:star_rating/star_rating.dart';
 
 class FilmDetail extends StatefulWidget {
@@ -30,11 +32,12 @@ class FilmDetail extends StatefulWidget {
 }
 
 class _FilmDetailState extends State<FilmDetail> {
-  @override
+  late Future<User> _futureUser;
   void initState() {
     // TODO: implement initState
     super.initState();
     // MyFilmAppDatabase().historyStore();
+    _futureUser = AdminClient().loginUser();
   }
 
   @override
@@ -54,6 +57,8 @@ class _FilmDetailState extends State<FilmDetail> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final film = snapshot.data as Film;
+            print(
+                "Công ty ${args.id}: ${film.productionCompanies[0].logoPath == ""}");
             AdminClient().historyStore(Member(
               filmId: film.id,
               mediaType: film.mediaType,
@@ -557,11 +562,19 @@ class _FilmDetailState extends State<FilmDetail> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            AddReview.routeName,
-                            arguments: film,
-                          );
+                          _futureUser.then((value) {
+                            Navigator.pushNamed(
+                              context,
+                              AddReview.routeName,
+                              arguments: film,
+                            );
+                          }).catchError((err) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.warning,
+                              text: 'Hãy đăng nhập để bình luận',
+                            );
+                          });
                         },
                         child: Container(
                           margin: const EdgeInsets.only(
@@ -604,120 +617,142 @@ class _FilmDetailState extends State<FilmDetail> {
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Bình luận phim",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListReview>(
-                            future: TheMovieDbClient().fetchReviewResults(
-                              "${film.mediaType}/${film.id}/reviews?api_key=7bb0f209157f0bb4788ecb54be635d14",
-                            ),
-                            builder: (context, snapshot) {
-                              print(
-                                  "${film.mediaType}/${film.id}/reviews?api_key=7bb0f209157f0bb4788ecb54be635d14");
-                              if (snapshot.hasData) {
-                                var reviews =
-                                    snapshot.data?.items as List<Review>;
-                                return Container(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  height: 150,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: reviews.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
+                      FutureBuilder<ListReview>(
+                        future: TheMovieDbClient().fetchReviewResults(
+                          "${film.mediaType}/${film.id}/reviews?api_key=7bb0f209157f0bb4788ecb54be635d14",
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var reviews = snapshot.data?.items as List<Review>;
+                            return FutureBuilder<ListReview>(
+                              future: TheMovieDbClient().fetchUserReviewResults(
+                                  film.mediaType, film.id),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  var myUserReviews =
+                                      snapshot.data?.items as List<Review>;
+                                  reviews.addAll(myUserReviews);
+                                }
+                                if (reviews.isNotEmpty) {
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 15.0,
+                                                right: 15.0,
+                                                top: 10.0,
+                                                bottom: 10.0),
+                                            child: const Text(
+                                              "Bình luận phim",
+                                              style: TextStyle(
+                                                  color: MyFilmAppColors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
                                         height: 150,
-                                        width: 400,
-                                        color: MyFilmAppColors.header,
-                                        margin: const EdgeInsets.only(
-                                          left: 10.0,
-                                        ),
-                                        padding: const EdgeInsets.only(
-                                          left: 10.0,
-                                          right: 10.0,
-                                          top: 10.0,
-                                          bottom: 10.0,
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            if (reviews[index]
-                                                    .authorDetails
-                                                    .rating !=
-                                                0.0)
-                                              Column(
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: reviews.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              height: 150,
+                                              width: 400,
+                                              color: MyFilmAppColors.header,
+                                              margin: const EdgeInsets.only(
+                                                left: 10.0,
+                                              ),
+                                              padding: const EdgeInsets.only(
+                                                left: 10.0,
+                                                right: 10.0,
+                                                top: 10.0,
+                                                bottom: 10.0,
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                        Icons.star,
-                                                        color: MyFilmAppColors
-                                                            .submain,
-                                                        size: 15,
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 2,
-                                                      ),
-                                                      Text(
-                                                        "${reviews[index].authorDetails.rating}",
-                                                        style: const TextStyle(
-                                                          color: MyFilmAppColors
-                                                              .white,
+                                                  if (reviews[index]
+                                                          .authorDetails
+                                                          .rating !=
+                                                      0.0)
+                                                    Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.star,
+                                                              color:
+                                                                  MyFilmAppColors
+                                                                      .submain,
+                                                              size: 15,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            Text(
+                                                              "${reviews[index].authorDetails.rating.toInt() + .0}",
+                                                              style:
+                                                                  const TextStyle(
+                                                                color:
+                                                                    MyFilmAppColors
+                                                                        .white,
+                                                              ),
+                                                            )
+                                                          ],
                                                         ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  Text(
+                                                    reviews[index].content,
+                                                    maxLines: 5,
+                                                    style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 13.0,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            Text(
-                                              reviews[index].content,
-                                              maxLines: 5,
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 13.0,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
+                                            );
+                                          },
                                         ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                                      )
+                                    ],
+                                  );
+                                } else {
+                                  return const SizedBox();
+                                }
+                                // By default, show a loading spinner.
+                              },
+                            );
+                            // } else if (snapshot.hasError) {
+                            //   return Text(
+                            //     '${snapshot.error}',
+                            //     style:
+                            //         const TextStyle(color: MyFilmAppColors.white),
+                            //   );
+                          }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       const SizedBox(
                         height: 15,
@@ -740,9 +775,7 @@ class _FilmDetailState extends State<FilmDetail> {
                               ),
                             ],
                           ),
-                          ListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
+                          Column(
                             children: [
                               if (film.budget != 0)
                                 ItemDetail(
@@ -788,64 +821,74 @@ class _FilmDetailState extends State<FilmDetail> {
                         ],
                       ),
                       const SizedBox(
-                        height: 15,
+                        height: 5,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Đề xuất",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListFilm>(
-                            future: TheMovieDbClient().fetchResults(
-                                "${film.mediaType}/${film.id}/recommendations?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return SizedBox(
-                                  height: 250,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: snapshot.data!.items.length,
-                                    itemBuilder: (context, index) {
-                                      return CardBackdrop(
-                                        film: snapshot.data!.items[index],
-                                      );
-                                    },
+                      FutureBuilder<ListFilm>(
+                        future: TheMovieDbClient().fetchResults(
+                          "${film.mediaType}/${film.id}/recommendations?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14",
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<Film> films = snapshot.data!.items;
+                            if (films.isNotEmpty) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 15.0,
+                                            right: 15.0,
+                                            top: 10.0,
+                                            bottom: 10.0),
+                                        child: const Text(
+                                          "Đề xuất",
+                                          style: TextStyle(
+                                              color: MyFilmAppColors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                                  SizedBox(
+                                    height: 250,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: films.length,
+                                      itemBuilder: (context, index) {
+                                        Film film = films[index];
+                                        return CardBackdrop(
+                                          film: film,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const SizedBox(
+                                height: 15,
+                              );
+                            }
+                          } else if (snapshot.hasError) {
+                            return Text(
+                              '${snapshot.error}',
+                              style:
+                                  const TextStyle(color: MyFilmAppColors.white),
+                            );
+                          }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       if (film.networks.isNotEmpty)
                         Column(
@@ -886,6 +929,17 @@ class _FilmDetailState extends State<FilmDetail> {
                                       child: Image.network(
                                         "https://image.tmdb.org/t/p/original${film.networks[index].logoPath}",
                                       ),
+                                    );
+                                  } else {
+                                    return Container(
+                                      color: MyFilmAppColors.white,
+                                      margin: const EdgeInsets.only(left: 15.0),
+                                      padding: const EdgeInsets.all(2),
+                                      height: 40,
+                                      width: 40,
+                                      // child: Image.network(
+                                      //   "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
+                                      // ),
                                     );
                                   }
                                 },
@@ -935,6 +989,17 @@ class _FilmDetailState extends State<FilmDetail> {
                                         "https://flagsapi.com/${film.productionCountries[index].iso_3166_1}/flat/48.png",
                                       ),
                                     );
+                                  } else {
+                                    return Container(
+                                      color: MyFilmAppColors.white,
+                                      margin: const EdgeInsets.only(left: 15.0),
+                                      padding: const EdgeInsets.all(2),
+                                      height: 40,
+                                      width: 40,
+                                      // child: Image.network(
+                                      //   "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
+                                      // ),
+                                    );
                                   }
                                 },
                               ),
@@ -957,9 +1022,10 @@ class _FilmDetailState extends State<FilmDetail> {
                                   child: const Text(
                                     "Công ty sản xuât",
                                     style: TextStyle(
-                                        color: MyFilmAppColors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700),
+                                      color: MyFilmAppColors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -977,11 +1043,22 @@ class _FilmDetailState extends State<FilmDetail> {
                                       "") {
                                     return Container(
                                       color: MyFilmAppColors.white,
-                                      margin: const EdgeInsets.only(left: 10.0),
+                                      margin: const EdgeInsets.only(left: 15.0),
                                       padding: const EdgeInsets.all(2),
                                       child: Image.network(
                                         "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
                                       ),
+                                    );
+                                  } else {
+                                    return Container(
+                                      color: MyFilmAppColors.white,
+                                      margin: const EdgeInsets.only(left: 15.0),
+                                      padding: const EdgeInsets.all(2),
+                                      height: 40,
+                                      width: 40,
+                                      // child: Image.network(
+                                      //   "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
+                                      // ),
                                     );
                                   }
                                 },
@@ -1018,48 +1095,41 @@ class _FilmDetailState extends State<FilmDetail> {
                               if (snapshot.hasData) {
                                 final externalIdFilm =
                                     snapshot.data as ExternalId;
-                                return SizedBox(
-                                  height: 50.0 * externalIdFilm.total,
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    children: [
-                                      if (externalIdFilm.imdbId != "")
-                                        ItemExternalSource(
-                                          name: "Imdb",
-                                          externalId: externalIdFilm.imdbId,
-                                        ),
-                                      if (externalIdFilm.facebookId != "")
-                                        ItemExternalSource(
-                                          name: "Facebook",
-                                          externalId: externalIdFilm.facebookId,
-                                        ),
-                                      if (externalIdFilm.instagramId != "")
-                                        ItemExternalSource(
-                                          name: "Instagram",
-                                          externalId:
-                                              externalIdFilm.instagramId,
-                                        ),
-                                      if (externalIdFilm.twitterId != "")
-                                        ItemExternalSource(
-                                          name: "Twitter",
-                                          externalId: externalIdFilm.twitterId,
-                                        ),
-                                      if (externalIdFilm.wikidataId != "")
-                                        ItemExternalSource(
-                                          name: "Wikidata",
-                                          externalId: externalIdFilm.wikidataId,
-                                        ),
-                                    ],
-                                  ),
+                                return Column(
+                                  children: [
+                                    if (externalIdFilm.imdbId != "")
+                                      ItemExternalSource(
+                                        name: "Imdb",
+                                        externalId: externalIdFilm.imdbId,
+                                      ),
+                                    if (externalIdFilm.facebookId != "")
+                                      ItemExternalSource(
+                                        name: "Facebook",
+                                        externalId: externalIdFilm.facebookId,
+                                      ),
+                                    if (externalIdFilm.instagramId != "")
+                                      ItemExternalSource(
+                                        name: "Instagram",
+                                        externalId: externalIdFilm.instagramId,
+                                      ),
+                                    if (externalIdFilm.twitterId != "")
+                                      ItemExternalSource(
+                                        name: "Twitter",
+                                        externalId: externalIdFilm.twitterId,
+                                      ),
+                                    if (externalIdFilm.wikidataId != "")
+                                      ItemExternalSource(
+                                        name: "Wikidata",
+                                        externalId: externalIdFilm.wikidataId,
+                                      ),
+                                  ],
                                 );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
+                                // } else if (snapshot.hasError) {
+                                //   return Text(
+                                //     '${snapshot.error}',
+                                //     style: const TextStyle(
+                                //         color: MyFilmAppColors.white),
+                                //   );
                               }
 
                               // By default, show a loading spinner.
@@ -1068,16 +1138,19 @@ class _FilmDetailState extends State<FilmDetail> {
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                     ],
                   ),
                 ),
               ),
             );
-          } else if (snapshot.hasError) {
-            return Text(
-              '${snapshot.error}',
-              style: const TextStyle(color: MyFilmAppColors.white),
-            );
+            // } else if (snapshot.hasError) {
+            //   return Text(
+            //     '${snapshot.error}',
+            //     style: const TextStyle(color: MyFilmAppColors.white),
+            //   );
           }
 
           // By default, show a loading spinner.
