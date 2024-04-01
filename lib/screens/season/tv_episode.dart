@@ -28,49 +28,51 @@ class _TvEpisodeState extends State<TvEpisode> {
       ),
       body: Container(
         decoration: const BoxDecoration(color: MyFilmAppColors.body),
-        child: ListView(
-          children: [
-            FutureBuilder<Season>(
-              future: TheMovieDbClient().fetchSeasonResults(
-                "tv/${args.seriesId}/season/${args.seasonNumber}?api_key=7bb0f209157f0bb4788ecb54be635d14",
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final episodes = snapshot.data!.episodes;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: episodes.length,
-                    itemBuilder: (context, index) {
-                      episodes[index].seriesId = args.seriesId;
-                      return CardHorizontal(
-                        name: episodes[index].name,
-                        backdropPath: episodes[index].stillPath,
-                        overview: episodes[index].overview,
-                        airDate: episodes[index].airDate,
-                        voteAverage: episodes[index].voteAverage,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            EpisodeDetail.routeName,
-                            arguments: episodes[index],
-                          );
-                        },
-                      );
-                    },
+        child: FutureBuilder<Season>(
+          future: TheMovieDbClient().fetchSeasonResults(
+            "tv/${args.seriesId}/season/${args.seasonNumber}?api_key=7bb0f209157f0bb4788ecb54be635d14",
+          ),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final episodes = snapshot.data!.episodes;
+              return ListView.builder(
+                itemCount: episodes.length,
+                itemBuilder: (context, index) {
+                  episodes[index].seriesId = args.seriesId;
+                  return Container(
+                    padding: const EdgeInsets.only(
+                      left: 5.0,
+                      right: 5.0,
+                      bottom: 15.0,
+                    ),
+                    child: CardHorizontal(
+                      name: episodes[index].name,
+                      backdropPath: episodes[index].stillPath,
+                      overview: episodes[index].overview,
+                      airDate: episodes[index].airDate,
+                      voteAverage: episodes[index].voteAverage,
+                      episodeCount: episodes[index].runtime,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          EpisodeDetail.routeName,
+                          arguments: episodes[index],
+                        );
+                      },
+                    ),
                   );
-                } else if (snapshot.hasError) {
-                  return Text(
-                    '${snapshot.error}',
-                    style: const TextStyle(color: MyFilmAppColors.white),
-                  );
-                }
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text(
+                '${snapshot.error}',
+                style: const TextStyle(color: MyFilmAppColors.white),
+              );
+            }
 
-                // By default, show a loading spinner.
-                return const CircularProgressIndicator();
-              },
-            ),
-          ],
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          },
         ),
       ),
     );

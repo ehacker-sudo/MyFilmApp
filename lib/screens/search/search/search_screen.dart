@@ -18,7 +18,15 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  String searchText = "";
+  late String searchText;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    searchText = "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<SearchState, _SearchScreenViewModel>(
@@ -33,6 +41,11 @@ class _SearchScreenState extends State<SearchScreen> {
           appBar: Navbar(
             backButton: true,
             searchBar: true,
+            onBack: () {
+              setState(() {
+                vm.onTextChanged("");
+              });
+            },
             onSubmit: (text) {
               setState(() {
                 searchText = text;
@@ -40,6 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             onChanged: (text) {
               setState(() {
+                searchText = text;
                 vm.onTextChanged(text);
               });
             },

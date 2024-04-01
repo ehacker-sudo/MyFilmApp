@@ -36,14 +36,18 @@ class _CardHorizontalState extends State<CardHorizontal> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              SizedBox(
-                width: 100 * 1.778,
-                height: 100,
-                child: Image.network(
-                  "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: SizedBox(
+                  width: 100 * 1.778,
+                  height: 100,
+                  child: Image.network(
+                    "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
+                  ),
                 ),
               ),
               const SizedBox(
@@ -58,6 +62,7 @@ class _CardHorizontalState extends State<CardHorizontal> {
                       widget.name,
                       style: const TextStyle(
                         color: MyFilmAppColors.white,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Row(
@@ -69,12 +74,18 @@ class _CardHorizontalState extends State<CardHorizontal> {
                             const Icon(
                               Icons.star,
                               color: MyFilmAppColors.white,
+                              size: 20,
+                            ),
+                            const SizedBox(
+                              width: 3,
                             ),
                             Text(
                               "${widget.voteAverage}",
                               style: const TextStyle(
-                                  color: MyFilmAppColors.white,
-                                  fontWeight: FontWeight.bold),
+                                fontSize: 13.0,
+                                color: MyFilmAppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             )
                           ],
                         ),
@@ -87,7 +98,7 @@ class _CardHorizontalState extends State<CardHorizontal> {
                           ),
                         ),
                         Text(
-                          "${widget.episodeCount} tập",
+                          "${widget.episodeCount} m",
                           style: const TextStyle(
                             color: MyFilmAppColors.white,
                           ),
@@ -100,9 +111,11 @@ class _CardHorizontalState extends State<CardHorizontal> {
             ],
           ),
           Text(
+            maxLines: 3,
             widget.overview,
             style: const TextStyle(
               color: MyFilmAppColors.gray,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

@@ -8,17 +8,12 @@ import 'package:http/http.dart' as http;
 class GithubClient {
   final String baseUrl;
   final Map<String, SearchResult> cache;
-  // final HttpClient client;
 
   GithubClient({
-    // HttpClient? client,
     Map<String, SearchResult>? cache,
-    // this.baseUrl = 'https://api.github.com/search/repositories?q=',
     this.baseUrl =
         'https://api.themoviedb.org/3/search/multi?page=1&api_key=7bb0f209157f0bb4788ecb54be635d14&query=',
-  }) :
-        // client = client ?? HttpClient(),
-        cache = cache ?? <String, SearchResult>{};
+  }) : cache = cache ?? <String, SearchResult>{};
 
   /// Search Github for repositories using the given term
   Future<SearchResult> search(String term) async {

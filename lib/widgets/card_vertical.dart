@@ -6,26 +6,30 @@ class CardVertical extends StatefulWidget {
   final String posterPath;
   final String name;
   final String overview;
+  final String mediaType;
   final double voteAverage;
   final String airDate;
   final int episodeCount;
   final Function() onTap;
   const CardVertical({
+    super.key,
     int? id,
     String? posterPath,
     String? name,
     String? overview,
+    String? mediaType,
     double? voteAverage,
     String? airDate,
     int? episodeCount,
     Function()? onTap,
-  })  : name = name ?? 'One Piece',
+  })  : name = name ?? '',
         id = id ?? 0,
         posterPath = posterPath ?? '/vuZrgFo96FGiTJC489aPtWyTDt2.jpg',
         voteAverage = voteAverage ?? 0.0,
         episodeCount = episodeCount ?? 0,
-        airDate = airDate ?? '1999',
+        airDate = airDate ?? '',
         overview = overview ?? '',
+        mediaType = mediaType ?? 'tv',
         onTap = onTap ?? defaultOnTap;
 
   @override
@@ -84,11 +88,41 @@ class _CardVerticalState extends State<CardVertical> {
                           color: Color(0xFFC6C6C6),
                         ),
                       ),
-                      const SizedBox(
-                        width: 15,
+                      SizedBox(
+                        width: (widget.airDate == '') ? 0 : 15,
                       ),
                       Text(
-                        'TV Series',
+                        (widget.mediaType == "movie")
+                            ? 'Movie'
+                            : (widget.mediaType == "tv")
+                                ? 'TV Series'
+                                : (widget.mediaType == "person")
+                                    ? (widget.overview == "Acting")
+                                        ? "Diễn viên"
+                                        : widget.overview
+                                    : '',
+                        style: const TextStyle(
+                          color: Color(0xFFC6C6C6),
+                        ),
+                      ),
+                      Text(
+                        (widget.mediaType == "movie")
+                            ? ''
+                            : (widget.mediaType == "tv")
+                                ? ''
+                                : (widget.mediaType == "person")
+                                    ? (widget.overview == "Acting")
+                                        ? "Diễn viên"
+                                        : widget.overview
+                                    : '',
+                        style: const TextStyle(
+                          color: Color(0xFFC6C6C6),
+                        ),
+                      ),
+                      Text(
+                        (widget.mediaType == "season")
+                            ? '${widget.episodeCount} tập'
+                            : '',
                         style: const TextStyle(
                           color: Color(0xFFC6C6C6),
                         ),

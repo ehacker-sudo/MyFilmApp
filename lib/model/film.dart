@@ -18,6 +18,7 @@ class Film {
   final String originalLanguage;
   final String tagline;
   final String overview;
+  final String knownForDepartment;
   final String homepage;
   final int budget;
   final int numberOfSeasons;
@@ -39,6 +40,7 @@ class Film {
     String? firstAirDate,
     String? originalLanguage,
     String? overview,
+    String? knownForDepartment,
     String? mediaType,
     String? tagline,
     String? homepage,
@@ -76,6 +78,7 @@ class Film {
         networks = networks ?? [],
         productionCountries = productionCountries ?? [],
         voteAverage = voteAverage ?? 0.0,
+        knownForDepartment = knownForDepartment ?? "",
         runtime = runtime ?? 0;
 
   factory Film.fromJson(Map<String, dynamic> json) {
@@ -153,6 +156,7 @@ class Film {
       budget: json["budget"] ?? 0,
       revenue: json["revenue"] ?? 0,
       numberOfSeasons: json["number_of_seasons"] ?? 0,
+      knownForDepartment: json["known_for_department"] ?? "",
       genres: listGenre,
       seasons: listSeasons,
       productionCompanies: listProductionCompanies,

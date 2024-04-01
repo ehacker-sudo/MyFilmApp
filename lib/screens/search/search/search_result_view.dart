@@ -15,52 +15,52 @@ class SearchPopulatedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: MyFilmAppColors.body,
-      child: ListView.builder(
-        itemCount: result.items.length,
-        itemBuilder: (context, index) {
-          final item = result.items[index];
-          if (item.mediaType == "person") {
-            Person person = Person(
+    return ListView.builder(
+      itemCount: result.items.length,
+      itemBuilder: (context, index) {
+        final item = result.items[index];
+        if (item.mediaType == "person") {
+          Person person = Person(
+            id: item.id,
+            name: item.name,
+            profilePath: item.profilePath,
+          );
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            child: CardVertical(
+              name: person.name,
+              posterPath: person.profilePath,
+              mediaType: item.mediaType,
+              overview: item.knownForDepartment,
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  PersonDetail.routeName,
+                  arguments: person,
+                );
+              },
+            ),
+          );
+        } else {
+          return Container(
+            padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+            child: CardVertical(
               id: item.id,
-              name: item.name,
-              profilePath: item.profilePath,
-            );
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: CardVertical(
-                name: person.name,
-                posterPath: person.profilePath,
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    PersonDetail.routeName,
-                    arguments: person,
-                  );
-                },
-              ),
-            );
-          } else {
-            return Container(
-              padding: const EdgeInsets.only(bottom: 2.0),
-              child: CardVertical(
-                id: item.id,
-                name: '${item.name}${item.title}',
-                posterPath: item.posterPath,
-                airDate: '${item.firstAirDate}${item.releaseDate}',
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    FilmDetail.routeName,
-                    arguments: item,
-                  );
-                },
-              ),
-            );
-          }
-        },
-      ),
+              name: '${item.name}${item.title}',
+              mediaType: item.mediaType,
+              posterPath: item.posterPath,
+              airDate: '${item.firstAirDate}${item.releaseDate}',
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  FilmDetail.routeName,
+                  arguments: item,
+                );
+              },
+            ),
+          );
+        }
+      },
     );
   }
 

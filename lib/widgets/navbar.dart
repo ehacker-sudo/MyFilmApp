@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myfilmapp/screens/search/search.dart';
 import 'package:myfilmapp/screens/search/search/search_screen.dart';
 import 'package:myfilmapp/widgets/logo_app.dart';
 
@@ -10,6 +9,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
   final bool searchBar;
   final Function(String text) onSubmit;
   final Function(String text) onChanged;
+  final Function() onBack;
   final String title;
   final bool rotatedLogo;
   final bool mobileMode;
@@ -20,6 +20,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
     bool? searchBar,
     Function(String text)? onSubmit,
     Function(String text)? onChanged,
+    Function()? onBack,
     String? title,
     bool? rotatedLogo,
     bool? mobileMode,
@@ -28,6 +29,7 @@ class Navbar extends StatefulWidget implements PreferredSizeWidget {
         searchBar = searchBar ?? false,
         onSubmit = onSubmit ?? defaultOnTap,
         onChanged = onChanged ?? defaultOnTap,
+        onBack = onBack ?? defaultOnBack,
         rotatedLogo = rotatedLogo ?? false,
         mobileMode = mobileMode ?? false;
 
@@ -76,6 +78,7 @@ class _NavbarState extends State<Navbar> {
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
+                                widget.onBack();
                               },
                             ),
                           ),
@@ -264,3 +267,5 @@ class _NavbarState extends State<Navbar> {
 }
 
 var defaultOnTap = (String text) {};
+
+var defaultOnBack = () {};

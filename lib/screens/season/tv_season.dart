@@ -26,37 +26,29 @@ class _TvSeasonState extends State<TvSeason> {
         backButton: true,
         title: "${args.name}${args.title}",
       ),
-      body: Container(
-        decoration: const BoxDecoration(color: MyFilmAppColors.body),
-        child: ListView(
-          children: [
-            ListView.builder(
-              itemCount: args.seasons.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (content, index) {
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  child: CardVertical(
-                    name: args.seasons[index].name,
-                    posterPath: args.seasons[index].posterPath,
-                    overview: args.seasons[index].overview,
-                    airDate: args.seasons[index].airDate,
-                    episodeCount: args.seasons[index].episodeCount,
-                    voteAverage: args.seasons[index].voteAverage,
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        TvEpisode.routeName,
-                        arguments: args.seasons[index],
-                      );
-                    },
-                  ),
+      body: ListView.builder(
+        itemCount: args.seasons.length,
+        itemBuilder: (content, index) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+            child: CardVertical(
+              name: args.seasons[index].name,
+              posterPath: args.seasons[index].posterPath,
+              overview: args.seasons[index].overview,
+              airDate: args.seasons[index].airDate,
+              episodeCount: args.seasons[index].episodeCount,
+              voteAverage: args.seasons[index].voteAverage,
+              mediaType: "season",
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  TvEpisode.routeName,
+                  arguments: args.seasons[index],
                 );
               },
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
