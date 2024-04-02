@@ -66,12 +66,14 @@ class _MyStarRatingState extends State<MyStarRating> {
                       valueChanged: (double value) {
                         setState(() {
                           if (snapshot.hasData) {
-                            futureRate = AdminClient().rateUpdate(Member(
-                              film: widget.member.film,
-                              episode: widget.member.episode,
-                              mediaType: widget.member.mediaType,
-                              rate: value,
-                            ));
+                            futureRate = AdminClient().rateUpdate(
+                              Member(
+                                film: widget.member.film,
+                                episode: widget.member.episode,
+                                mediaType: widget.member.mediaType,
+                                rate: value,
+                              ),
+                            );
                             WidgetsBinding.instance.addPostFrameCallback((_) =>
                                 showSnackBar("Cập nhật đánh giá thành công"));
                           } else {
@@ -172,7 +174,7 @@ class _StarRatingModalState extends State<StarRatingModal> {
               alignment: AlignmentDirectional.center,
               children: <Widget>[
                 Image.network(
-                  "https://image.tmdb.org/t/p/w500${widget.member.film.posterPath}",
+                  "https://image.tmdb.org/t/p/w500${widget.member.film.posterPath}${widget.member.episode.stillPath}",
                   // width: MediaQuery.of(context).size.width / 2.5,
                 ),
                 if (_futureRate != 0)

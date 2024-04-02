@@ -386,6 +386,7 @@ class AdminClient {
         "first_air_date": member.film.firstAirDate,
         "title": member.film.title,
         "release_date": member.film.releaseDate,
+        "rate": "${member.rate}"
       });
     } else {
       body = jsonEncode(<String, dynamic>{
@@ -396,6 +397,7 @@ class AdminClient {
         "media_type": "episode",
         "still_path": member.episode.stillPath,
         "air_date": member.episode.airDate,
+        "rate": "${member.rate}"
       });
     }
     final response = await http.post(
@@ -413,7 +415,7 @@ class AdminClient {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
-
+      print("Rate Store: $results");
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
