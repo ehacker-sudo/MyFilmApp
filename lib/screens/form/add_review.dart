@@ -20,7 +20,7 @@ class _AddReviewState extends State<AddReview> {
   TextEditingController contentController = TextEditingController();
   double _number = 0.0;
   String content = "";
-  late Film args;
+  late Member args;
   late Future<Member> futureRate;
   late Future<Member> futureComment;
 
@@ -43,14 +43,8 @@ class _AddReviewState extends State<AddReview> {
 
   @override
   Widget build(BuildContext context) {
-    args = ModalRoute.of(context)!.settings.arguments as Film;
-    futureRate = AdminClient().showRateUser(
-      Member(
-        mediaType: args.mediaType,
-        film: args,
-      ),
-      _number,
-    );
+    args = ModalRoute.of(context)!.settings.arguments as Member;
+    futureRate = AdminClient().showRateUser(args, _number);
     futureComment = AdminClient().showCommentUser(args, content);
     return Scaffold(
       // backgroundColor: const Color(0xffe5e5e5),
@@ -80,14 +74,14 @@ class _AddReviewState extends State<AddReview> {
                                 width: 150 * 0.667,
                                 height: 150,
                                 child: Image.network(
-                                  "https://image.tmdb.org/t/p/w500${args.posterPath}",
+                                  "https://image.tmdb.org/t/p/w500${args.film.posterPath}${args.episode.stillPath}",
                                 ),
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
                               Text(
-                                "${args.name}${args.title}",
+                                "${args.film.name}${args.film.title}${args.episode.name}",
                                 style: const TextStyle(
                                   color: MyFilmAppColors.black,
                                   fontSize: 25,
@@ -169,13 +163,8 @@ class _AddReviewState extends State<AddReview> {
                                 onRaitingTap: (rating) {
                                   setState(() {
                                     _number = rating;
-                                    futureRate = AdminClient().showRateUser(
-                                      Member(
-                                        mediaType: args.mediaType,
-                                        film: args,
-                                      ),
-                                      _number,
-                                    );
+                                    futureRate = AdminClient()
+                                        .showRateUser(args, _number);
                                   });
                                 },
                               ),
@@ -224,28 +213,38 @@ class _AddReviewState extends State<AddReview> {
                             onPressed: () {
                               if (contentController.text != "") {
                                 setState(() {
+                                  print("Number $_number");
                                   if (_number != 0.0) {
-                                    futureRate =
-                                        AdminClient().rateUpdate(Member(
-                                      film: args,
-                                      rate: _number,
-                                    ));
+                                    futureRate = AdminClient().rateUpdate(
+                                      Member(
+                                        film: args.film,
+                                        episode: args.episode,
+                                        mediaType: args.mediaType,
+                                        rate: _number,
+                                      ),
+                                    );
                                   } else {
                                     futureRate = AdminClient().rateStore(Member(
-                                      film: args,
+                                      film: args.film,
+                                      episode: args.episode,
+                                      mediaType: args.mediaType,
                                       rate: _number,
                                     ));
                                   }
 
                                   if (snapshot.hasData) {
                                     AdminClient().commentUpdate(Member(
-                                      film: args,
+                                      film: args.film,
+                                      episode: args.episode,
+                                      mediaType: args.mediaType,
                                       content: contentController.text,
                                     ));
                                     showSnackBar("Sửa bình luận thành công");
                                   } else {
                                     AdminClient().commentStore(Member(
-                                      film: args,
+                                      film: args.film,
+                                      episode: args.episode,
+                                      mediaType: args.mediaType,
                                       content: contentController.text,
                                     ));
                                     showSnackBar("Thêm bình luận thành công");
@@ -285,7 +284,7 @@ class _AddReviewState extends State<AddReview> {
           ],
         ),
       ),
-      // bottomNavigationBar: const MyBottomNavigationBar(),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }

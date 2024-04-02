@@ -184,13 +184,27 @@ class AdminClient {
     }
   }
 
-  Future<Member> showCommentUser(Film film, String comment) async {
+  Future<Member> showCommentUser(Member member, String comment) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
     String userComment = (comment != "") ? "&comment=$comment" : "";
+    String filmQuery = "";
+    String mediaType = "";
+    String seasonId = "";
+    String episodeId = "";
+    if (member.mediaType == "episode") {
+      filmQuery = "series_id=${member.episode.seriesId}";
+      mediaType = "&media_type=episode";
+      seasonId = "&season_number=${member.episode.seasonNumber}";
+      episodeId = "&episode_number=${member.episode.episodeNumber}";
+    } else {
+      filmQuery = "film_id=${member.film.id}";
+      mediaType = "&media_type=${member.film.mediaType}";
+    }
+
     final response = await http.get(
       Uri.parse(
-        '${baseUrl}show/user/comment?film_id=${film.id}&media_type=${film.mediaType}$userComment',
+        '${baseUrl}show/user/comment?$filmQuery$mediaType$seasonId$episodeId$userComment',
       ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -427,17 +441,29 @@ class AdminClient {
   Future<Member> rateUpdate(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
+    String body = "";
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "media_type": member.film.mediaType,
+        "rate": "${member.rate}"
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "media_type": "episode",
+        "rate": "${member.rate}"
+      });
+    }
     final response = await http.put(
       Uri.parse('${baseUrl}rate/update'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'
       },
-      body: jsonEncode(<String, dynamic>{
-        "film_id": member.film.id,
-        "media_type": member.film.mediaType,
-        "rate": "${member.rate}"
-      }),
+      body: body,
     );
     if (response.statusCode == 201 ||
         response.statusCode == 200 ||
@@ -457,13 +483,9 @@ class AdminClient {
   Future<Member> commentStore(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
-    final response = await http.post(
-      Uri.parse('${baseUrl}comment/store'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken'
-      },
-      body: jsonEncode(<String, dynamic>{
+    String body = "";
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
         "film_id": member.film.id,
         "name": member.film.name,
         "media_type": member.film.mediaType,
@@ -473,13 +495,34 @@ class AdminClient {
         "title": member.film.title,
         "release_date": member.film.releaseDate,
         "content": member.content
-      }),
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "name": member.episode.name,
+        "media_type": "episode",
+        "still_path": member.episode.stillPath,
+        "air_date": member.episode.airDate,
+        "content": member.content
+      });
+    }
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}comment/store'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: body,
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
+      print(results);
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
@@ -491,17 +534,29 @@ class AdminClient {
   Future<Member> commentUpdate(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
+    String body = "";
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "media_type": member.film.mediaType,
+        "content": member.content
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "media_type": "episode",
+        "content": member.content
+      });
+    }
     final response = await http.put(
       Uri.parse('${baseUrl}comment/update'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'
       },
-      body: jsonEncode(<String, dynamic>{
-        "film_id": member.film.id,
-        "media_type": member.film.mediaType,
-        "content": member.content
-      }),
+      body: body,
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {

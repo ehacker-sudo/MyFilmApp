@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/collection.dart';
 import 'package:myfilmapp/model/episode.dart';
 import 'package:myfilmapp/model/external_id.dart';
@@ -215,11 +216,24 @@ class TheMovieDbClient {
     }
   }
 
-  Future<ListReview> fetchUserReviewResults(
-      String mediaType, int filmId) async {
+  Future<ListReview> fetchUserReviewResults(Member member) async {
+    String filmQuery = "";
+    String mediaType = "";
+    String seasonId = "";
+    String episodeId = "";
+    if (member.mediaType == "episode") {
+      filmQuery = "series_id=${member.episode.seriesId}";
+      mediaType = "&media_type=episode";
+      seasonId = "&season_number=${member.episode.seasonNumber}";
+      episodeId = "&episode_number=${member.episode.episodeNumber}";
+    } else {
+      filmQuery = "film_id=${member.film.id}";
+      mediaType = "&media_type=${member.film.mediaType}";
+    }
+
     final response = await http.get(
       Uri.parse(
-        'http://127.0.0.1:8000/api/comment?film_id=${filmId}&media_type=${mediaType}',
+        'http://127.0.0.1:8000/api/comment?$filmQuery$seasonId$episodeId$mediaType',
       ),
     );
 

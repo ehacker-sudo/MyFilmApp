@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myfilmapp/api/film_api.dart';
+import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/episode.dart';
@@ -9,12 +11,16 @@ import 'package:myfilmapp/model/external_id.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
 import 'package:myfilmapp/model/person.dart';
+import 'package:myfilmapp/model/review.dart';
+import 'package:myfilmapp/model/user.dart';
+import 'package:myfilmapp/screens/form/add_review.dart';
 import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:myfilmapp/database/database.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:star_rating/star_rating.dart';
 
 class EpisodeDetail extends StatefulWidget {
@@ -26,11 +32,14 @@ class EpisodeDetail extends StatefulWidget {
 }
 
 class _EpisodeDetailState extends State<EpisodeDetail> {
+  late Future<User> _futureUser;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // MyFilmAppDatabase().historyStore();
+    _futureUser = AdminClient().loginUser();
   }
 
   @override
@@ -390,6 +399,184 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                       ),
                       const SizedBox(
                         height: 15,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _futureUser.then((value) {
+                            Navigator.pushNamed(
+                              context,
+                              AddReview.routeName,
+                              arguments: Member(
+                                mediaType: "episode",
+                                episode: episode,
+                              ),
+                            );
+                          }).catchError((err) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.warning,
+                              text: 'Hãy đăng nhập để bình luận',
+                            );
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                          ),
+                          padding: const EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                            top: 10.0,
+                            bottom: 10.0,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: MyFilmAppColors.submain,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(5.0),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/plus.svg',
+                                width: 20,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                "Thêm bình luận",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: MyFilmAppColors.black,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      FutureBuilder<ListReview>(
+                        future: TheMovieDbClient().fetchUserReviewResults(
+                          Member(mediaType: "episode", episode: episode),
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var reviews = snapshot.data?.items as List<Review>;
+
+                            if (reviews.isNotEmpty) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 15.0,
+                                            right: 15.0,
+                                            top: 10.0,
+                                            bottom: 10.0),
+                                        child: const Text(
+                                          "Bình luận phim",
+                                          style: TextStyle(
+                                              color: MyFilmAppColors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    height: 150,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: reviews.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          height: 150,
+                                          width: 400,
+                                          color: MyFilmAppColors.header,
+                                          margin: const EdgeInsets.only(
+                                            left: 10.0,
+                                          ),
+                                          padding: const EdgeInsets.only(
+                                            left: 10.0,
+                                            right: 10.0,
+                                            top: 10.0,
+                                            bottom: 10.0,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if (reviews[index]
+                                                      .authorDetails
+                                                      .rating !=
+                                                  0.0)
+                                                Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.star,
+                                                          color: MyFilmAppColors
+                                                              .submain,
+                                                          size: 15,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          "${reviews[index].authorDetails.rating.toInt() + .0}",
+                                                          style:
+                                                              const TextStyle(
+                                                            color:
+                                                                MyFilmAppColors
+                                                                    .white,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                  ],
+                                                ),
+                                              Text(
+                                                reviews[index].content,
+                                                maxLines: 5,
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 13.0,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          }
+
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       Column(
                         children: [

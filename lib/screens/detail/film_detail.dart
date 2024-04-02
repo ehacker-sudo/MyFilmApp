@@ -571,7 +571,8 @@ class _FilmDetailState extends State<FilmDetail> {
                             Navigator.pushNamed(
                               context,
                               AddReview.routeName,
-                              arguments: film,
+                              arguments:
+                                  Member(mediaType: film.mediaType, film: film),
                             );
                           }).catchError((err) {
                             QuickAlert.show(
@@ -631,7 +632,11 @@ class _FilmDetailState extends State<FilmDetail> {
                             var reviews = snapshot.data?.items as List<Review>;
                             return FutureBuilder<ListReview>(
                               future: TheMovieDbClient().fetchUserReviewResults(
-                                  film.mediaType, film.id),
+                                Member(
+                                  mediaType: film.mediaType,
+                                  film: film,
+                                ),
+                              ),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   var myUserReviews =
