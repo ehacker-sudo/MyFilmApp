@@ -138,13 +138,27 @@ class AdminClient {
     }
   }
 
-  Future<Member> showRateUser(Film film, double rate) async {
+  Future<Member> showRateUser(Member member, double rate) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
     String rating = (rate != 0.0) ? "&rate=$rate" : "";
+    String filmQuery = "";
+    String mediaType = "";
+    String seasonId = "";
+    String episodeId = "";
+    if (member.mediaType == "episode") {
+      filmQuery = "series_id=${member.episode.seriesId}";
+      mediaType = "&media_type=episode";
+      seasonId = "&season_number=${member.episode.seasonNumber}";
+      episodeId = "&episode_number=${member.episode.episodeNumber}";
+    } else {
+      filmQuery = "film_id=${member.film.id}";
+      mediaType = "&media_type=${member.film.mediaType}";
+    }
+
     final response = await http.get(
       Uri.parse(
-        '${baseUrl}show/user/rate?film_id=${film.id}&media_type=${film.mediaType}$rating',
+        '${baseUrl}show/user/rate?$filmQuery$mediaType$seasonId$episodeId$rating',
       ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -360,13 +374,10 @@ class AdminClient {
   Future<Member> rateStore(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
-    final response = await http.post(
-      Uri.parse('${baseUrl}rate/store'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken'
-      },
-      body: jsonEncode(<String, dynamic>{
+    String body = "";
+
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
         "film_id": member.film.id,
         "name": member.film.name,
         "media_type": member.film.mediaType,
@@ -375,8 +386,25 @@ class AdminClient {
         "first_air_date": member.film.firstAirDate,
         "title": member.film.title,
         "release_date": member.film.releaseDate,
-        "rate": "${member.rate}"
-      }),
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "name": member.episode.name,
+        "media_type": "episode",
+        "still_path": member.episode.stillPath,
+        "air_date": member.episode.airDate,
+      });
+    }
+    final response = await http.post(
+      Uri.parse('${baseUrl}rate/store'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: body,
     );
 
     if (response.statusCode == 201 ||

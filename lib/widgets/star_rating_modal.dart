@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/auth.dart';
+import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:star_rating/star_rating.dart';
 
 class MyStarRating extends StatefulWidget {
-  final Film film;
+  final Member member;
   MyStarRating({
     super.key,
-    Film? film,
-  }) : film = film ?? Film();
+    Member? member,
+  }) : member = member ?? Member();
 
   @override
   State<MyStarRating> createState() => _MyStarRatingState();
@@ -27,7 +28,7 @@ class _MyStarRatingState extends State<MyStarRating> {
   void initState() {
     // TODO: implement initState
 
-    futureRate = AdminClient().showRateUser(widget.film, 0.0);
+    futureRate = AdminClient().showRateUser(widget.member, 0.0);
     _futureUser = AdminClient().loginUser();
     super.initState();
   }
@@ -60,20 +61,24 @@ class _MyStarRatingState extends State<MyStarRating> {
                     }
 
                     return StarRatingModal(
-                      film: widget.film,
+                      member: widget.member,
                       futureRate: rating,
                       valueChanged: (double value) {
                         setState(() {
                           if (snapshot.hasData) {
                             futureRate = AdminClient().rateUpdate(Member(
-                              film: widget.film,
+                              film: widget.member.film,
+                              episode: widget.member.episode,
+                              mediaType: widget.member.mediaType,
                               rate: value,
                             ));
                             WidgetsBinding.instance.addPostFrameCallback((_) =>
                                 showSnackBar("Cập nhật đánh giá thành công"));
                           } else {
                             futureRate = AdminClient().rateStore(Member(
-                              film: widget.film,
+                              film: widget.member.film,
+                              episode: widget.member.episode,
+                              mediaType: widget.member.mediaType,
                               rate: value,
                             ));
                             WidgetsBinding.instance.addPostFrameCallback(
@@ -126,15 +131,15 @@ class _MyStarRatingState extends State<MyStarRating> {
 }
 
 class StarRatingModal extends StatefulWidget {
-  final Film film;
+  final Member member;
   final double futureRate;
   final Function(double) valueChanged;
   StarRatingModal({
     super.key,
-    Film? film,
+    Member? member,
     required this.valueChanged,
     required this.futureRate,
-  }) : film = film ?? Film();
+  }) : member = member ?? Member();
 
   @override
   State<StarRatingModal> createState() => _StarRatingModalState();
@@ -167,7 +172,7 @@ class _StarRatingModalState extends State<StarRatingModal> {
               alignment: AlignmentDirectional.center,
               children: <Widget>[
                 Image.network(
-                  "https://image.tmdb.org/t/p/w500${widget.film.posterPath}",
+                  "https://image.tmdb.org/t/p/w500${widget.member.film.posterPath}",
                   // width: MediaQuery.of(context).size.width / 2.5,
                 ),
                 if (_futureRate != 0)
@@ -192,7 +197,7 @@ class _StarRatingModalState extends State<StarRatingModal> {
           Container(
             padding: const EdgeInsets.only(top: 10),
             child: Text(
-              "${widget.film.name}${widget.film.title}",
+              "${widget.member.film.name}${widget.member.film.title}",
               style:
                   const TextStyle(fontSize: 20, color: MyFilmAppColors.white),
             ),

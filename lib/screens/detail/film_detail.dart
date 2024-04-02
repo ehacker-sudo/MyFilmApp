@@ -279,7 +279,10 @@ class _FilmDetailState extends State<FilmDetail> {
                               ),
                             ),
                             MyStarRating(
-                              film: film,
+                              member: Member(
+                                mediaType: film.mediaType,
+                                film: film,
+                              ),
                             ),
                           ],
                         ),

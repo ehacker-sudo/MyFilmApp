@@ -44,7 +44,13 @@ class _AddReviewState extends State<AddReview> {
   @override
   Widget build(BuildContext context) {
     args = ModalRoute.of(context)!.settings.arguments as Film;
-    futureRate = AdminClient().showRateUser(args, _number);
+    futureRate = AdminClient().showRateUser(
+      Member(
+        mediaType: args.mediaType,
+        film: args,
+      ),
+      _number,
+    );
     futureComment = AdminClient().showCommentUser(args, content);
     return Scaffold(
       // backgroundColor: const Color(0xffe5e5e5),
@@ -163,8 +169,13 @@ class _AddReviewState extends State<AddReview> {
                                 onRaitingTap: (rating) {
                                   setState(() {
                                     _number = rating;
-                                    futureRate = AdminClient()
-                                        .showRateUser(args, _number);
+                                    futureRate = AdminClient().showRateUser(
+                                      Member(
+                                        mediaType: args.mediaType,
+                                        film: args,
+                                      ),
+                                      _number,
+                                    );
                                   });
                                 },
                               ),

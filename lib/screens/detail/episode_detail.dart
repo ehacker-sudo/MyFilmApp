@@ -230,15 +230,21 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                       ),
                       Container(
                         padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Đánh giá phim",
                               style: TextStyle(
                                 color: MyFilmAppColors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            MyStarRating(
+                              member: Member(
+                                mediaType: "episode",
+                                episode: episode,
                               ),
                             ),
                           ],
