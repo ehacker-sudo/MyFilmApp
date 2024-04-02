@@ -13,25 +13,25 @@ class AdminClient {
     this.baseUrl = 'http://127.0.0.1:8000/api/',
   });
 
-  Future<Member> watchlist() async {
-    final response = await http.get(
-      Uri.parse('${baseUrl}watchlist'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
+  // Future<Member> watchlist() async {
+  //   final response = await http.get(
+  //     Uri.parse('${baseUrl}watchlist'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //   );
 
-    if (response.statusCode == 201) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-      final results = jsonDecode(response.body) as Map<String, dynamic>;
-      return Member.fromJson(results);
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      throw Exception('Failed to create Register.');
-    }
-  }
+  //   if (response.statusCode == 201) {
+  //     // If the server did return a 201 CREATED response,
+  //     // then parse the JSON.
+  //     final results = jsonDecode(response.body) as Map<String, dynamic>;
+  //     return Member.fromJson(results);
+  //   } else {
+  //     // If the server did not return a 201 CREATED response,
+  //     // then throw an exception.
+  //     throw Exception('Failed to create Register.');
+  //   }
+  // }
 
   Future<ListMember> watchlistUser() async {
     final SharedPreferences pref = await _prefs;
@@ -52,7 +52,6 @@ class AdminClient {
       if (results['results'] != null) {
         items = (results['results'] as List).cast<Map<String, dynamic>>();
       }
-      print(results);
       return ListMember.fromJson(items);
     } else {
       // If the server did not return a 201 CREATED response,
@@ -90,12 +89,28 @@ class AdminClient {
     }
   }
 
-  Future<Member> showWatchlistUser(Film film) async {
+  Future<Member> showWatchlistUser(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
+    print(accessToken);
+    String filmQuery = "";
+    String mediaType = "";
+    String seasonId = "";
+    String episodeId = "";
+    if (member.mediaType == "episode") {
+      filmQuery = "series_id=${member.episode.seriesId}";
+      mediaType = "&media_type=episode";
+      seasonId = "&season_number=${member.episode.seasonNumber}";
+      episodeId = "&episode_number=${member.episode.episodeNumber}";
+    } else {
+      filmQuery = "film_id=${member.film.id}";
+      mediaType = "&media_type=${member.film.mediaType}";
+    }
+
     final response = await http.get(
       Uri.parse(
-          '${baseUrl}show/user/watchlist?film_id=${film.id}&media_type=${film.mediaType}'),
+        '${baseUrl}show/user/watchlist?$filmQuery$mediaType$seasonId$episodeId',
+      ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'
@@ -127,7 +142,6 @@ class AdminClient {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
     String rating = (rate != 0.0) ? "&rate=$rate" : "";
-    print("asasasasasasa $rating");
     final response = await http.get(
       Uri.parse(
         '${baseUrl}show/user/rate?film_id=${film.id}&media_type=${film.mediaType}$rating',
@@ -139,7 +153,6 @@ class AdminClient {
     );
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
-    print("Show Rate: ${results}");
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
@@ -161,7 +174,6 @@ class AdminClient {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
     String userComment = (comment != "") ? "&comment=$comment" : "";
-    print("userComment $userComment");
     final response = await http.get(
       Uri.parse(
         '${baseUrl}show/user/comment?film_id=${film.id}&media_type=${film.mediaType}$userComment',
@@ -173,7 +185,6 @@ class AdminClient {
     );
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
-    print("Show Comment: ${results}");
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
@@ -194,13 +205,9 @@ class AdminClient {
   Future<Member> watchlistStore(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
-    final response = await http.post(
-      Uri.parse('${baseUrl}watchlist/store'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken'
-      },
-      body: jsonEncode(<String, dynamic>{
+    String body;
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
         "film_id": member.film.id,
         "name": member.film.name,
         "media_type": member.film.mediaType,
@@ -209,11 +216,29 @@ class AdminClient {
         "first_air_date": member.film.firstAirDate,
         "title": member.film.title,
         "release_date": member.film.releaseDate,
-      }),
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "name": member.episode.name,
+        "media_type": "episode",
+        "still_path": member.episode.stillPath,
+        "air_date": member.episode.airDate,
+      });
+    }
+    final response = await http.post(
+      Uri.parse('${baseUrl}watchlist/store'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: body,
     );
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
-
+    print("Store WAtchlist: $results");
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
@@ -232,20 +257,30 @@ class AdminClient {
   Future<Member> watchlistDestroy(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
+    String body = "";
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
+        "film_id": member.film.id,
+        "media_type": member.film.mediaType,
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "media_type": "episode",
+      });
+    }
     final response = await http.delete(
       Uri.parse('${baseUrl}watchlist/destroy'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $accessToken'
       },
-      body: jsonEncode(<String, dynamic>{
-        "film_id": member.film.id,
-        "media_type": member.film.mediaType,
-      }),
+      body: body,
     );
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
-
     print(results);
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
@@ -281,7 +316,6 @@ class AdminClient {
       if (results['results'] != null) {
         items = (results['results'] as List).cast<Map<String, dynamic>>();
       }
-      print(results);
       return ListMember.fromJson(items);
     } else {
       // If the server did not return a 201 CREATED response,
@@ -315,7 +349,6 @@ class AdminClient {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
-      print(results);
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
@@ -353,7 +386,6 @@ class AdminClient {
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
 
-      print("Rate store : $results");
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
@@ -418,7 +450,6 @@ class AdminClient {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
-      print("Rate store : $results");
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,
@@ -447,7 +478,6 @@ class AdminClient {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
-      print("Rate store : $results");
       return Member.fromJson(results);
     } else {
       // If the server did not return a 201 CREATED response,

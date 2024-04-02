@@ -9,12 +9,11 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ButtonWatchlist extends StatefulWidget {
-  final Film film;
-
+  final Member member;
   ButtonWatchlist({
     super.key,
-    Film? film,
-  }) : film = film ?? Film();
+    Member? member,
+  }) : member = member ?? Member();
 
   @override
   State<ButtonWatchlist> createState() => _ButtonWatchlistState();
@@ -27,7 +26,7 @@ class _ButtonWatchlistState extends State<ButtonWatchlist> {
   @override
   void initState() {
     super.initState();
-    _futureWatchlist = AdminClient().showWatchlistUser(widget.film);
+    _futureWatchlist = AdminClient().showWatchlistUser(widget.member);
     _futureUser = AdminClient().loginUser();
   }
 
@@ -42,23 +41,20 @@ class _ButtonWatchlistState extends State<ButtonWatchlist> {
             _futureUser.then((value) {
               if (snapshot.hasData) {
                 setState(() {
-                  _futureWatchlist = AdminClient().watchlistDestroy(Member(
-                    film: widget.film,
-                  ));
+                  _futureWatchlist =
+                      AdminClient().watchlistDestroy(widget.member);
                 });
               } else {
                 setState(() {
-                  _futureWatchlist = AdminClient().watchlistStore(Member(
-                    filmId: widget.film.id,
-                    mediaType: widget.film.mediaType,
-                    film: widget.film,
-                  ));
+                  _futureWatchlist =
+                      AdminClient().watchlistStore(widget.member);
                 });
               }
             }).catchError((err) {
               QuickAlert.show(
                 context: context,
                 type: QuickAlertType.warning,
+                title: '',
                 text: 'Hãy đăng nhập để tạo danh sách xem',
               );
             });

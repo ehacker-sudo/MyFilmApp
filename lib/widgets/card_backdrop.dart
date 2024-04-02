@@ -6,13 +6,15 @@ import 'package:myfilmapp/widgets/item_info.dart';
 class CardBackdrop extends StatefulWidget {
   final double height;
   final Film film;
-
+  final Function() onTap;
   CardBackdrop({
     super.key,
     double? height,
     Film? film,
+    Function()? onTap,
   })  : height = height ?? 180,
-        film = film ?? Film();
+        film = film ?? Film(),
+        onTap = onTap ?? defaultOnTap;
 
   @override
   State<CardBackdrop> createState() => _CardBackdropState();
@@ -23,11 +25,15 @@ class _CardBackdropState extends State<CardBackdrop> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          FilmDetail.routeName,
-          arguments: widget.film,
-        );
+        if (widget.onTap == defaultOnTap) {
+          Navigator.pushNamed(
+            context,
+            FilmDetail.routeName,
+            arguments: widget.film,
+          );
+        } else {
+          widget.onTap();
+        }
       },
       child: Container(
         width: widget.height * 900 / 500,
@@ -56,4 +62,10 @@ class _CardBackdropState extends State<CardBackdrop> {
       ),
     );
   }
+}
+
+Function defaultOnTap() {
+  return () {
+    print("On Tap");
+  };
 }

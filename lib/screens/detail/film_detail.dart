@@ -59,11 +59,10 @@ class _FilmDetailState extends State<FilmDetail> {
             final film = snapshot.data as Film;
             print(
                 "Công ty ${args.id}: ${film.productionCompanies[0].logoPath == ""}");
-            AdminClient().historyStore(Member(
-              filmId: film.id,
-              mediaType: film.mediaType,
-              film: film,
-            ));
+            // AdminClient().historyStore(Member(
+            //   mediaType: film.mediaType,
+            //   film: film,
+            // ));
             return SizedBox.expand(
               child: SingleChildScrollView(
                 child: Container(
@@ -258,7 +257,10 @@ class _FilmDetailState extends State<FilmDetail> {
                         height: 15,
                       ),
                       ButtonWatchlist(
-                        film: film,
+                        member: Member(
+                          mediaType: film.mediaType,
+                          film: film,
+                        ),
                       ),
                       const SizedBox(
                         height: 15,

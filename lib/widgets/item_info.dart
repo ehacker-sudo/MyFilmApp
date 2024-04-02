@@ -99,6 +99,45 @@ class _ItemInfoState extends State<ItemInfo> {
                 ),
               ),
             ],
+          )
+        else if (widget.film.mediaType == "episode")
+          Row(
+            children: [
+              Text(
+                (widget.film.firstAirDate == "")
+                    ? ""
+                    : widget.film.firstAirDate.substring(0, 4),
+                style: const TextStyle(
+                  color: MyFilmAppColors.white,
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(width: 6.0),
+              const Icon(
+                Icons.circle,
+                size: 3,
+                color: MyFilmAppColors.white,
+              ),
+              const SizedBox(width: 8.0),
+              SvgPicture.asset(
+                'assets/images/tv_active.svg',
+                width: 13,
+              ),
+              const SizedBox(width: 8.0),
+              const Icon(
+                Icons.circle,
+                size: 3,
+                color: MyFilmAppColors.white,
+              ),
+              const SizedBox(width: 8.0),
+              const Text(
+                "Episode",
+                style: TextStyle(
+                  color: MyFilmAppColors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
         const SizedBox(
           height: 1,

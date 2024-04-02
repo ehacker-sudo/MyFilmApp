@@ -98,6 +98,7 @@ class TheMovieDbClient {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       final results = jsonDecode(response.body) as Map<String, dynamic>;
+      print(results);
       return Film.fromJson(results);
     } else {
       // If the server did not return a 200 OK response,

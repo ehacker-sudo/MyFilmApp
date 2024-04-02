@@ -1,11 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
+import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/episode.dart';
 import 'package:myfilmapp/model/external_id.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
 import 'package:myfilmapp/model/person.dart';
+import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
@@ -215,12 +219,21 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                       const SizedBox(
                         height: 15,
                       ),
+                      ButtonWatchlist(
+                        member: Member(
+                          mediaType: "episode",
+                          episode: episode,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       Container(
                         padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: Row(
+                        child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               "Đánh giá phim",
                               style: TextStyle(
                                 color: MyFilmAppColors.white,
@@ -228,28 +241,6 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            // IconButton(
-                            //   onPressed: () {
-                            //     showModalBottomSheet<void>(
-                            //       isScrollControlled: true,
-                            //       context: context,
-                            //       builder: (BuildContext context) {
-                            //         return StarRatingModal(
-                            //           film: Film(
-                            //             id: episode.id,
-                            //             name: episode.name,
-                            //             posterPath: episode.stillPath,
-                            //           ),
-                            //         );
-                            //       },
-                            //     );
-                            //   },
-                            //   icon: const Icon(
-                            //     Icons.star_border_outlined,
-                            //     color: MyFilmAppColors.submain,
-                            //     size: 40,
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

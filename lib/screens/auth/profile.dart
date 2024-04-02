@@ -6,6 +6,7 @@ import 'package:myfilmapp/model/auth.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/auth/login.dart';
+import 'package:myfilmapp/screens/detail/episode_detail.dart';
 import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/dropdown_horizontal.dart';
@@ -19,7 +20,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String? accessToken = "";
   late Future<User> _futureUser;
   @override
   void initState() {
@@ -185,18 +185,44 @@ class _ProfileState extends State<Profile> {
                               future: AdminClient().historyUser(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  List<Film> films = snapshot.data!.results;
+                                  List<Member> members = snapshot.data!.results;
                                   return SizedBox(
                                     height: 180 + 50,
+                                    width: MediaQuery.of(context).size.width,
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: films.length,
+                                      itemCount: members.length,
                                       itemBuilder: (context, index) {
-                                        return CardBackdrop(
-                                          // film: snapshot.data!.items[index],
-                                          film: films[index],
-                                        );
+                                        if (members[index].mediaType ==
+                                            "episode") {
+                                          return CardBackdrop(
+                                            // film: snapshot.data!.items[index],
+                                            film: Film(
+                                              backdropPath: members[index]
+                                                  .episode
+                                                  .stillPath,
+                                              name: members[index].episode.name,
+                                              mediaType: "episode",
+                                              firstAirDate: members[index]
+                                                  .episode
+                                                  .airDate,
+                                            ),
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                EpisodeDetail.routeName,
+                                                arguments:
+                                                    members[index].episode,
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          return CardBackdrop(
+                                            // film: snapshot.data!.items[index],
+                                            film: members[index].film,
+                                          );
+                                        }
                                       },
                                     ),
                                   );
@@ -241,18 +267,44 @@ class _ProfileState extends State<Profile> {
                               future: AdminClient().watchlistUser(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  List<Film> films = snapshot.data!.results;
+                                  List<Member> members = snapshot.data!.results;
                                   return SizedBox(
                                     height: 180 + 50,
+                                    width: MediaQuery.of(context).size.width,
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: films.length,
+                                      itemCount: members.length,
                                       itemBuilder: (context, index) {
-                                        return CardBackdrop(
-                                          // film: snapshot.data!.items[index],
-                                          film: films[index],
-                                        );
+                                        if (members[index].mediaType ==
+                                            "episode") {
+                                          return CardBackdrop(
+                                            // film: snapshot.data!.items[index],
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                EpisodeDetail.routeName,
+                                                arguments:
+                                                    members[index].episode,
+                                              );
+                                            },
+                                            film: Film(
+                                              name: members[index].episode.name,
+                                              mediaType: "episode",
+                                              firstAirDate: members[index]
+                                                  .episode
+                                                  .airDate,
+                                              backdropPath: members[index]
+                                                  .episode
+                                                  .stillPath,
+                                            ),
+                                          );
+                                        } else {
+                                          return CardBackdrop(
+                                            // film: snapshot.data!.items[index],
+                                            film: members[index].film,
+                                          );
+                                        }
                                       },
                                     ),
                                   );

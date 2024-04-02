@@ -73,15 +73,17 @@ class _TvEpisodeState extends State<TvEpisode> {
                         );
                       },
                     );
-                  } else if (snapshot.hasError) {
-                    return Text(
-                      '${snapshot.error}',
-                      style: const TextStyle(color: MyFilmAppColors.white),
-                    );
+                    // } else if (snapshot.hasError) {
+                    //   return Text(
+                    //     '${snapshot.error}',
+                    //     style: const TextStyle(color: MyFilmAppColors.white),
+                    //   );
                   }
 
                   // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
+                  return const Column(
+                    children: [CircularProgressIndicator()],
+                  );
                 },
               ),
               Expanded(

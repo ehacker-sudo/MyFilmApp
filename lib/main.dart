@@ -51,7 +51,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final Store<SearchState> store;
 
-  MyApp({Key? key, required this.store}) : super(key: key);
+  const MyApp({Key? key, required this.store}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
