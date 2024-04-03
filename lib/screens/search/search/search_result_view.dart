@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/screens/detail/person_detail.dart';
@@ -64,29 +65,32 @@ class SearchPopulatedView extends StatelessWidget {
     );
   }
 
-  void showItem(BuildContext context, SearchResultItem item) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute<Null>(
-    //     builder: (BuildContext context) {
-    //       return Scaffold(
-    //         resizeToAvoidBottomInset: false,
-    //         body: GestureDetector(
-    //           onTap: () => Navigator.pop(context),
-    //           child: SizedBox.expand(
-    //             child: Hero(
-    //               tag: item.id,
-    //               child: Image.network(
-    //                 'https://image.tmdb.org/t/p/w500${item.posterPath}',
-    //                 width: MediaQuery.of(context).size.width,
-    //                 height: 300.0,
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
-  }
+  // void showItem(BuildContext context, Film item) {
+  //   Navigator.of(context).p
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute<Null>(
+  //       builder: (BuildContext context) {
+  //         return Scaffold(
+  //           resizeToAvoidBottomInset: false,
+  //           body: GestureDetector(
+  //             onTap: () => Navigator.pop(context),
+  //             child: Hero(
+  //               tag: item.id,
+  //               child: ClipRRect(
+  //                 borderRadius: BorderRadius.circular(10.0),
+  //                 child: Image.network(
+  //                   "https://image.tmdb.org/t/p/original${item.posterPath}",
+  //                   height: 250 * 790 / 500,
+  //                   width: 250,
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 }

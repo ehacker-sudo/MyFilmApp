@@ -14,6 +14,7 @@ import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/model/review.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/form/add_review.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
@@ -572,9 +573,8 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                             } else {
                               return const SizedBox();
                             }
-                          }
-                          else if(snapshot.hasError){
-                              return const SizedBox();
+                          } else if (snapshot.hasError) {
+                            return const SizedBox();
                           }
 
                           // By default, show a loading spinner.
@@ -676,6 +676,7 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
           return const CircularProgressIndicator();
         },
       ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }

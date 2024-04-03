@@ -44,45 +44,51 @@ class _FilmDetailState extends State<FilmDetail> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Film;
-
+    // AdminClient().historyStore(Member(
+    //   mediaType: film.mediaType,
+    //   film: film,
+    // ));
     return Scaffold(
       backgroundColor: MyFilmAppColors.body,
       appBar: Navbar(
         backButton: true,
         title: "${args.name}${args.title}",
       ),
-      body: FutureBuilder<Film>(
-        future: TheMovieDbClient().fetchDetailsResults(
-          "${args.mediaType}/${args.id}?language=vi&api_key=7bb0f209157f0bb4788ecb54be635d14",
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final film = snapshot.data as Film;
-            // AdminClient().historyStore(Member(
-            //   mediaType: film.mediaType,
-            //   film: film,
-            // ));
-            return SizedBox.expand(
-              child: SingleChildScrollView(
-                child: Container(
-                  decoration: const BoxDecoration(color: MyFilmAppColors.body),
-                  child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Hero(
+                  tag: args.id,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      "https://image.tmdb.org/t/p/original${args.posterPath}",
+                      height: 250 * 790 / 500,
+                      width: 250,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            FutureBuilder<Film>(
+              future: TheMovieDbClient().fetchDetailsResults(
+                "${args.mediaType}/${args.id}?language=vi&api_key=7bb0f209157f0bb4788ecb54be635d14",
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final film = snapshot.data as Film;
+                  // Future.delayed(Duration(seconds: 2), () {
+                  // print('Delayed code executed');
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                "https://image.tmdb.org/t/p/original${film.posterPath}",
-                                height: 250 * 790 / 500,
-                                width: 250,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
                           Container(
                             alignment: AlignmentDirectional.center,
                             margin: const EdgeInsets.only(top: 30),
@@ -1157,22 +1163,21 @@ class _FilmDetailState extends State<FilmDetail> {
                         height: 15,
                       ),
                     ],
-                  ),
-                ),
-              ),
-            );
-            // } else if (snapshot.hasError) {
-            //   return Text(
-            //     '${snapshot.error}',
-            //     style: const TextStyle(color: MyFilmAppColors.white),
-            //   );
-          }
+                  );
+                  // });
+                  // } else if (snapshot.hasError) {
+                  //   return Text(
+                  //     '${snapshot.error}',
+                  //     style: const TextStyle(color: MyFilmAppColors.white),
+                  //   );
+                }
 
-          // By default, show a loading spinner.
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
+              },
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: const MyBottomNavigationBar(),
     );

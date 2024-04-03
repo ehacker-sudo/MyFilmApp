@@ -5,6 +5,7 @@ import 'package:myfilmapp/model/collection.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/screens/season/tv_episode.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_horizontal.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 
@@ -45,19 +46,26 @@ class _MovieCollectionsState extends State<MovieCollections> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: parts.length,
                     itemBuilder: (context, index) {
-                      return CardHorizontal(
-                        name: parts[index].name,
-                        backdropPath: parts[index].backdropPath,
-                        overview: parts[index].overview,
-                        airDate: parts[index].releaseDate,
-                        voteAverage: parts[index].voteAverage,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            FilmDetail.routeName,
-                            arguments: parts[index],
-                          );
-                        },
+                      return Container(
+                        padding: const EdgeInsets.only(
+                          left: 5.0,
+                          right: 5.0,
+                          bottom: 15.0,
+                        ),
+                        child: CardHorizontal(
+                          name: parts[index].name,
+                          backdropPath: parts[index].backdropPath,
+                          overview: parts[index].overview,
+                          airDate: parts[index].releaseDate,
+                          voteAverage: parts[index].voteAverage,
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              FilmDetail.routeName,
+                              arguments: parts[index],
+                            );
+                          },
+                        ),
                       );
                     },
                   );
@@ -69,7 +77,9 @@ class _MovieCollectionsState extends State<MovieCollections> {
                 }
 
                 // By default, show a loading spinner.
-                return const CircularProgressIndicator();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               },
             ),
             ListView.builder(
@@ -100,6 +110,7 @@ class _MovieCollectionsState extends State<MovieCollections> {
           ],
         ),
       ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }

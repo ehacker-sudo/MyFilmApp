@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/season/tv_episode.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_horizontal.dart';
 import 'package:myfilmapp/widgets/card_vertical.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
@@ -55,6 +56,7 @@ class _TvSeasonState extends State<TvSeason> {
             );
           },
         ),
+        bottomNavigationBar: const MyBottomNavigationBar(),
       ),
     );
   }
