@@ -573,6 +573,9 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                               return const SizedBox();
                             }
                           }
+                          else if(snapshot.hasError){
+                              return const SizedBox();
+                          }
 
                           // By default, show a loading spinner.
                           return const CircularProgressIndicator();

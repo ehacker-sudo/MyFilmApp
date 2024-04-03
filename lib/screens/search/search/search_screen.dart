@@ -84,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
     } else if (state is SearchPopulated) {
       return SearchPopulatedView(state.result);
     } else if (state is SearchInitial) {
-      return SearchInitialView();
+      return const SearchInitialView();
     } else if (state is SearchError) {
       return SearchErrorWidget();
     }

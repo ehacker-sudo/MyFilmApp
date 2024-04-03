@@ -4,6 +4,7 @@ import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/episode.dart';
 import 'package:myfilmapp/model/season.dart';
 import 'package:myfilmapp/screens/detail/episode_detail.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_horizontal.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 
@@ -94,6 +95,7 @@ class _TvEpisodeState extends State<TvEpisode> {
             ],
           ),
         ),
+        bottomNavigationBar: const MyBottomNavigationBar(),
       ),
     );
   }

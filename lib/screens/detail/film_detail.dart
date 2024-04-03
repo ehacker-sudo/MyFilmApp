@@ -13,6 +13,7 @@ import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/form/add_review.dart';
 import 'package:myfilmapp/screens/season/movie_collections.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
+import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
@@ -52,13 +53,11 @@ class _FilmDetailState extends State<FilmDetail> {
       ),
       body: FutureBuilder<Film>(
         future: TheMovieDbClient().fetchDetailsResults(
-          "${args.mediaType}/${args.id}?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14",
+          "${args.mediaType}/${args.id}?language=vi&api_key=7bb0f209157f0bb4788ecb54be635d14",
         ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final film = snapshot.data as Film;
-            print(
-                "Công ty ${args.id}: ${film.productionCompanies[0].logoPath == ""}");
             // AdminClient().historyStore(Member(
             //   mediaType: film.mediaType,
             //   film: film,
@@ -290,36 +289,36 @@ class _FilmDetailState extends State<FilmDetail> {
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Diễn viên",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
+                      FutureBuilder<ListCredit>(
+                        future: TheMovieDbClient().fetchCreditResults(
+                            "${film.mediaType}/${film.id}/credits?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final casts =
+                                snapshot.data?.listCast as List<Person>;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 15.0,
+                                          top: 10.0,
+                                          bottom: 10.0),
+                                      child: const Text(
+                                        "Diễn viên",
+                                        style: TextStyle(
+                                            color: MyFilmAppColors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListCredit>(
-                            future: TheMovieDbClient().fetchCreditResults(
-                                "${film.mediaType}/${film.id}/credits?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final casts =
-                                    snapshot.data?.listCast as List<Person>;
-                                return SizedBox(
+                                SizedBox(
                                   height: 310,
                                   child: ListView.builder(
                                     shrinkWrap: true,
@@ -331,56 +330,57 @@ class _FilmDetailState extends State<FilmDetail> {
                                       );
                                     },
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                                )
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            // return Text(
+                            //   '${snapshot.error}',
+                            //   style: const TextStyle(
+                            //       color: MyFilmAppColors.white),
+                            // );
+                            return const SizedBox();
+                          }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                  left: 15.0,
-                                  right: 15.0,
-                                  top: 10.0,
-                                  bottom: 10.0,
+                      FutureBuilder<ListImage>(
+                        future: TheMovieDbClient().fetchImageResults(
+                          "${film.mediaType}/${film.id}/images?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14",
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final backdrops =
+                                snapshot.data?.listBackdrop as List<ImageModel>;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                        left: 15.0,
+                                        right: 15.0,
+                                        top: 10.0,
+                                        bottom: 10.0,
+                                      ),
+                                      child: const Text(
+                                        "Tập ảnh",
+                                        style: TextStyle(
+                                            color: MyFilmAppColors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: const Text(
-                                  "Tập ảnh",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListImage>(
-                            future: TheMovieDbClient().fetchImageResults(
-                              "${film.mediaType}/${film.id}/images?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14",
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final backdrops = snapshot.data?.listBackdrop
-                                    as List<ImageModel>;
-                                return SizedBox(
+                                SizedBox(
                                   height: 150,
                                   child: ListView.builder(
                                     shrinkWrap: true,
@@ -402,79 +402,81 @@ class _FilmDetailState extends State<FilmDetail> {
                                       );
                                     },
                                   ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
+                                )
+                              ],
+                            );
+                          } else if (snapshot.hasError) {
+                            // return Text(
+                            //   '${snapshot.error}',
+                            //   style: const TextStyle(
+                            //       color: MyFilmAppColors.white),
+                            // );
+                            return const SizedBox();
+                          }
 
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
-                            },
-                          ),
-                        ],
+                          // By default, show a loading spinner.
+                          return const CircularProgressIndicator();
+                        },
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Thể loại",
-                                  style: TextStyle(
-                                    color: MyFilmAppColors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
+                      if (film.genres.isNotEmpty)
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 15.0,
+                                      top: 10.0,
+                                      bottom: 10.0),
+                                  child: const Text(
+                                    "Thể loại",
+                                    style: TextStyle(
+                                      color: MyFilmAppColors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            alignment: AlignmentDirectional.centerStart,
-                            height: 35,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: film.genres.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: const EdgeInsets.only(left: 10.0),
-                                  child: OutlinedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
+                              ],
+                            ),
+                            Container(
+                              alignment: AlignmentDirectional.centerStart,
+                              height: 35,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: film.genres.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(left: 10.0),
+                                    child: OutlinedButton(
+                                      onPressed: () {},
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                          ),
                                         ),
                                       ),
+                                      child: Text(
+                                        film.genres[index].name,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
                                     ),
-                                    child: Text(
-                                      film.genres[index].name,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -752,12 +754,13 @@ class _FilmDetailState extends State<FilmDetail> {
                                 // By default, show a loading spinner.
                               },
                             );
-                            // } else if (snapshot.hasError) {
-                            //   return Text(
-                            //     '${snapshot.error}',
-                            //     style:
-                            //         const TextStyle(color: MyFilmAppColors.white),
-                            //   );
+                          } else if (snapshot.hasError) {
+                            // return Text(
+                            //   '${snapshot.error}',
+                            //   style:
+                            //       const TextStyle(color: MyFilmAppColors.white),
+                            // );
+                            return const SizedBox();
                           }
 
                           // By default, show a loading spinner.
@@ -889,11 +892,13 @@ class _FilmDetailState extends State<FilmDetail> {
                               );
                             }
                           } else if (snapshot.hasError) {
-                            return Text(
-                              '${snapshot.error}',
-                              style:
-                                  const TextStyle(color: MyFilmAppColors.white),
-                            );
+                            // return Text(
+                            //   '${snapshot.error}',
+                            //   style:
+                            //       const TextStyle(color: MyFilmAppColors.white),
+                            // );
+
+                            return const SizedBox();
                           }
 
                           // By default, show a loading spinner.
@@ -1164,9 +1169,12 @@ class _FilmDetailState extends State<FilmDetail> {
           }
 
           // By default, show a loading spinner.
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }
