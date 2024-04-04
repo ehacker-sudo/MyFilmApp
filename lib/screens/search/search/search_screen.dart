@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/screens/search/search/search_empty_view.dart';
 import 'package:myfilmapp/screens/search/search/search_error_view.dart';
 import 'package:myfilmapp/screens/search/search/search_initial_view.dart';
@@ -19,7 +20,6 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late String searchText;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -29,50 +29,46 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(
-        brightness: Brightness.dark,
-      ),
-      child: StoreConnector<SearchState, _SearchScreenViewModel>(
-        converter: (store) {
-          return _SearchScreenViewModel(
-            state: store.state,
-            onTextChanged: (term) => store.dispatch(SearchAction(term)),
-          );
-        },
-        builder: (BuildContext context, _SearchScreenViewModel vm) {
-          return Scaffold(
-            appBar: Navbar(
-              backButton: true,
-              searchBar: true,
-              onBack: () {
-                setState(() {
-                  vm.onTextChanged("");
-                });
-              },
-              onSubmit: (text) {
-                setState(() {
-                  searchText = text;
-                });
-              },
-              onChanged: (text) {
-                setState(() {
-                  searchText = text;
-                  vm.onTextChanged(text);
-                });
-              },
-            ),
-            body: Flex(direction: Axis.vertical, children: <Widget>[
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  child: _buildVisible(vm.state),
-                ),
-              )
-            ]),
-          );
-        },
-      ),
+    return StoreConnector<SearchState, _SearchScreenViewModel>(
+      converter: (store) {
+        return _SearchScreenViewModel(
+          state: store.state,
+          onTextChanged: (term) => store.dispatch(SearchAction(term)),
+        );
+      },
+      builder: (BuildContext context, _SearchScreenViewModel vm) {
+        return Scaffold(
+          backgroundColor: MyFilmAppColors.body,
+          appBar: Navbar(
+            backButton: true,
+            searchBar: true,
+            onBack: () {
+              setState(() {
+                vm.onTextChanged("");
+              });
+            },
+            onSubmit: (text) {
+              setState(() {
+                searchText = text;
+              });
+            },
+            onChanged: (text) {
+              setState(() {
+                searchText = text;
+                vm.onTextChanged(text);
+              });
+            },
+          ),
+          body: Flex(direction: Axis.vertical, children: <Widget>[
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 500),
+                child: _buildVisible(vm.state),
+              ),
+            )
+          ]),
+        );
+      },
     );
   }
 

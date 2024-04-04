@@ -1,6 +1,23 @@
 import 'search_result.dart';
 
 /// Actions
+
+class FilmAction {
+  FilmAction();
+}
+
+class FilmEmptyAction {}
+
+class FilmLoadingAction {}
+
+class FilmErrorAction {}
+
+// class FilmResultAction {
+//   final FilmResult result;
+
+//   FilmResultAction(this.result);
+// }
+
 class SearchAction {
   final String term;
 

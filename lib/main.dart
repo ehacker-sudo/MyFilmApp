@@ -16,7 +16,7 @@ import 'package:myfilmapp/screens/season/tv_episode.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
 // import 'package:myfilmapp/screens/movie/movie.dart';
 // import 'package:myfilmapp/screens/tv/tv.dart';
-
+import 'package:redux_epics/redux_epics.dart';
 import 'package:redux/redux.dart';
 
 void main() {
@@ -39,7 +39,6 @@ void main() {
       // an epic for demonstration purposes.
 
       SearchMiddleware(GithubClient()),
-      // EpicMiddleware<SearchState>(SearchEpic(GithubClient())),
     ],
   );
 

@@ -30,29 +30,3 @@ class SearchResult {
 
   bool get isNoTerm => kind == SearchResultKind.noTerm;
 }
-
-class SearchResultItem {
-  final int id;
-  final String fullName;
-  final String url;
-  final String avatarUrl;
-
-  SearchResultItem({
-    int? id,
-    String? fullName,
-    String? url,
-    String? avatarUrl,
-  })  : id = id ?? 0,
-        fullName = fullName ?? '',
-        url = url ?? '',
-        avatarUrl = avatarUrl ?? '';
-
-  factory SearchResultItem.fromJson(Map<String, dynamic> json) {
-    return SearchResultItem(
-      id: json['id'] ?? 0,
-      fullName: json['full_name'] ?? '',
-      url: json['html_url'] ?? '',
-      avatarUrl: json['owner']['avatar_url'] ?? '',
-    );
-  }
-}
