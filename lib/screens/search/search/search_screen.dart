@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:myfilmapp/constants/theme.dart';
-import 'package:myfilmapp/screens/search/search/search_empty_view.dart';
-import 'package:myfilmapp/screens/search/search/search_error_view.dart';
-import 'package:myfilmapp/screens/search/search/search_initial_view.dart';
-import 'package:myfilmapp/screens/search/search/search_loading_view.dart';
-import 'package:myfilmapp/screens/search/search/search_result_view.dart';
+import 'package:myfilmapp/screens/search/search/view/search_empty_view.dart';
+import 'package:myfilmapp/screens/search/search/view/search_error_view.dart';
+import 'package:myfilmapp/screens/search/search/view/search_initial_view.dart';
+import 'package:myfilmapp/screens/search/search/view/search_loading_view.dart';
+import 'package:myfilmapp/screens/search/search/view/search_result_view.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 
 import 'search_actions.dart';
@@ -62,7 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
           body: Flex(direction: Axis.vertical, children: <Widget>[
             Expanded(
               child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
                 child: _buildVisible(vm.state),
               ),
             )

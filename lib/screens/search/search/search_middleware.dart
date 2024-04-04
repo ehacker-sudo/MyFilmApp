@@ -30,9 +30,9 @@ class SearchMiddleware implements MiddlewareClass<SearchState> {
 
       // Don't start searching until the user pauses for 250ms. This will stop
       // us from over-fetching from our backend.
-      _timer = Timer(Duration(milliseconds: 250), () {
+      _timer = Timer(const Duration(milliseconds: 500), () {
         if (action.term.isEmpty) {
-          store.dispatch(SearchEmptyAction());
+          store.dispatch(SearchInitialAction());
         } else {
           store.dispatch(SearchLoadingAction());
 
@@ -47,6 +47,32 @@ class SearchMiddleware implements MiddlewareClass<SearchState> {
                   store..dispatch(SearchErrorAction())));
         }
       });
+      // } else if (action is FilmAction) {
+      //   // Stop our previous debounce timer and search.
+      //   _timer?.cancel();
+      //   _operation?.cancel();
+
+      //   // Don't start searching until the user pauses for 250ms. This will stop
+      //   // us from over-fetching from our backend.
+      //   _timer = Timer(const Duration(milliseconds: 500), () {
+      //     if (action.term.isEmpty) {
+      //       store.dispatch(SearchInitialAction());
+      //     } else {
+      //       store.dispatch(SearchLoadingAction());
+
+      //       // Instead of a simple Future, we'll use a CancellableOperation from the
+      //       // `async` package. This will allow us to cancel the previous operation
+      //       // if a Search term comes in. This will prevent us from
+      //       // accidentally showing stale results.
+      //       _operation = CancelableOperation.fromFuture(
+      //         api
+      //             .search(action.term)
+      //             .then((result) => store..dispatch(SearchResultAction(result)))
+      //             .catchError((Object e, StackTrace s) =>
+      //                 store..dispatch(SearchErrorAction())),
+      //       );
+      //     }
+      //   });
     }
 
     // Make sure to forward actions to the next middleware in the chain!

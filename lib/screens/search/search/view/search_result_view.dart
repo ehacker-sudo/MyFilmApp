@@ -7,7 +7,7 @@ import 'package:myfilmapp/widgets/card_vertical.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-import 'search_result.dart';
+import '../search_result.dart';
 
 class SearchPopulatedView extends StatelessWidget {
   final SearchResult result;

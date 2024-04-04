@@ -6,16 +6,15 @@ import 'search_state.dart';
 /// Reducer
 final searchReducer = combineReducers<SearchState>([
   // Tìm kiếm phim hoặc diễn viên
-  TypedReducer<SearchState, SearchEmptyAction>(_onEmpty),
+  TypedReducer<SearchState, SearchInitialAction>(_onInitial),
   TypedReducer<SearchState, SearchLoadingAction>(_onLoad),
   TypedReducer<SearchState, SearchErrorAction>(_onError),
   TypedReducer<SearchState, SearchResultAction>(_onResult),
-  // Lây dữ liệu
-  TypedReducer<SearchState, SearchEmptyAction>(_onFilmEmpty),
+  // Lấy dữ liệu
 ]);
 
 // Tìm kiếm phim hoặc diễn viên
-SearchState _onEmpty(SearchState state, SearchEmptyAction action) =>
+SearchState _onInitial(SearchState state, SearchInitialAction action) =>
     SearchInitial();
 
 SearchState _onLoad(SearchState state, SearchLoadingAction action) =>
@@ -29,6 +28,14 @@ SearchState _onResult(SearchState state, SearchResultAction action) =>
         ? SearchEmpty()
         : SearchPopulated(action.result);
 
-// Lây dữ liệu
-SearchState _onFilmEmpty(SearchState state, SearchEmptyAction action) =>
-    SearchInitial();
+// // Lấy dữ liệu
+// SearchState _onFilmLoad(SearchState state, FilmLoadingAction action) =>
+//     SearchLoading();
+
+// SearchState _onFilmError(SearchState state, FilmErrorAction action) =>
+//     SearchError();
+
+// SearchState _onFilmResult(SearchState state, SearchResultAction action) =>
+//     action.result.items.isEmpty
+//         ? SearchEmpty()
+//         : SearchPopulated(action.result);

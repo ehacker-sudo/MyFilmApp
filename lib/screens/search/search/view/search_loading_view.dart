@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfilmapp/constants/theme.dart';
 
 class SearchLoadingView extends StatelessWidget {
-  SearchLoadingView();
+  const SearchLoadingView({super.key});
 
   @override
   Widget build(BuildContext context) {

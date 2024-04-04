@@ -2,15 +2,15 @@ import 'search_result.dart';
 
 /// Actions
 
-class FilmAction {
-  FilmAction();
-}
+// class FilmAction {
+//   FilmAction();
+// }
 
-class FilmEmptyAction {}
+// class FilmEmptyAction {}
 
-class FilmLoadingAction {}
+// class FilmLoadingAction {}
 
-class FilmErrorAction {}
+// class FilmErrorAction {}
 
 // class FilmResultAction {
 //   final FilmResult result;
@@ -24,7 +24,7 @@ class SearchAction {
   SearchAction(this.term);
 }
 
-class SearchEmptyAction {}
+class SearchInitialAction {}
 
 class SearchLoadingAction {}
 
