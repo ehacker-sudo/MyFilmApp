@@ -7,12 +7,10 @@ import 'package:myfilmapp/widgets/card_vertical.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-import '../search_result.dart';
-
 class SearchPopulatedView extends StatelessWidget {
-  final SearchResult result;
+  final ListFilm result;
 
-  SearchPopulatedView(this.result);
+  const SearchPopulatedView(this.result, {super.key});
 
   @override
   Widget build(BuildContext context) {

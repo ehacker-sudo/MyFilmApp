@@ -1,4 +1,4 @@
-import 'search_result.dart';
+import 'package:myfilmapp/model/film.dart';
 
 /// Actions
 
@@ -31,7 +31,7 @@ class SearchLoadingAction {}
 class SearchErrorAction {}
 
 class SearchResultAction {
-  final SearchResult result;
+  final ListFilm result;
 
   SearchResultAction(this.result);
 }

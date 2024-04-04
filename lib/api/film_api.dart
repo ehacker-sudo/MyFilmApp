@@ -89,6 +89,7 @@ class TheMovieDbClient {
   }
 
   Future<Film> fetchDetailsResults(String term) async {
+    // await Future.delayed(const Duration(milliseconds: 1500));
     final response = await http.get(
       Uri.parse(
         '$baseUrl$term',

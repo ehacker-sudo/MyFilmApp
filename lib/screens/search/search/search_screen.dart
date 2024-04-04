@@ -43,6 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
             backButton: true,
             searchBar: true,
             onBack: () {
+              Navigator.pop(context);
               setState(() {
                 vm.onTextChanged("");
               });
@@ -62,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
           body: Flex(direction: Axis.vertical, children: <Widget>[
             Expanded(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 250),
                 child: _buildVisible(vm.state),
               ),
             )

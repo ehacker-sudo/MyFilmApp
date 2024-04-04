@@ -7,7 +7,7 @@
 //
 // The State Stream responds to input from the View by accepting a
 // Stream<String>. We call this Stream the onTextChanged "intent".
-import 'search_result.dart';
+import 'package:myfilmapp/model/film.dart';
 
 abstract class SearchState {}
 
@@ -18,7 +18,7 @@ class SearchLoading implements SearchState {}
 class SearchEmpty implements SearchState {}
 
 class SearchPopulated implements SearchState {
-  final SearchResult result;
+  final ListFilm result;
 
   SearchPopulated(this.result);
 }

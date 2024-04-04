@@ -77,8 +77,11 @@ class _NavbarState extends State<Navbar> {
                                 size: 25,
                               ),
                               onPressed: () {
-                                Navigator.pop(context);
-                                widget.onBack();
+                                if (widget.onBack == defaultOnBack) {
+                                  Navigator.pop(context);
+                                } else {
+                                  widget.onBack();
+                                }
                               },
                             ),
                           ),
@@ -199,7 +202,11 @@ class _NavbarState extends State<Navbar> {
                               size: 30,
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
+                              if (widget.onBack == defaultOnBack) {
+                                Navigator.pop(context);
+                              } else {
+                                widget.onBack();
+                              }
                             },
                           ),
                         ),

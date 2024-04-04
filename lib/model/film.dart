@@ -168,18 +168,25 @@ class Film {
   }
 }
 
+enum FilmKind { noTerm, empty, populated }
+
 class ListFilm {
+  final FilmKind kind;
   final List<Film> items;
   final List<Film> cast;
   final List<Film> keywords;
 
-  ListFilm(
+  ListFilm({
+    FilmKind? kind,
     List<Film>? items,
     List<Film>? cast,
     List<Film>? keywords,
-  )   : items = items ?? [],
-        cast = cast ?? [],
-        keywords = keywords ?? [];
+  })  : kind = kind ?? FilmKind.noTerm,
+        items = items ?? <Film>[],
+        cast = cast ?? <Film>[],
+        keywords = keywords ?? <Film>[];
+
+  factory ListFilm.noTerm() => ListFilm();
 
   factory ListFilm.fromJson(
     List<Map<String, dynamic>> list,
@@ -191,9 +198,10 @@ class ListFilm {
     final keywords = [for (final item in listKeyword) Film.fromJson(item)];
 
     return ListFilm(
-      items,
-      cast,
-      keywords,
+      kind: items.isEmpty ? FilmKind.empty : FilmKind.populated,
+      items: items,
+      cast: cast,
+      keywords: keywords,
     );
   }
 }

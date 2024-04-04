@@ -325,23 +325,6 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: MyFilmAppColors.header,
-                        padding: const EdgeInsets.only(
-                            left: 20, bottom: 15, top: 15),
-                        child: const Text(
-                          "Tìm kiếm thêm",
-                          style: TextStyle(
-                            color: MyFilmAppColors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
                     ],
                   );
                 } else if (snapshot.hasError) {
@@ -353,6 +336,22 @@ class _ProfileState extends State<Profile> {
                   children: [CircularProgressIndicator()],
                 );
               },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: MyFilmAppColors.header,
+              padding: const EdgeInsets.only(left: 20, bottom: 15, top: 15),
+              child: const Text(
+                "Tìm kiếm thêm",
+                style: TextStyle(
+                  color: MyFilmAppColors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
             const SizedBox(
               height: 10,

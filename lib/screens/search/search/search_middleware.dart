@@ -30,11 +30,13 @@ class SearchMiddleware implements MiddlewareClass<SearchState> {
 
       // Don't start searching until the user pauses for 250ms. This will stop
       // us from over-fetching from our backend.
-      _timer = Timer(const Duration(milliseconds: 500), () {
+      _timer = Timer(const Duration(milliseconds: 250), () {
         if (action.term.isEmpty) {
           store.dispatch(SearchInitialAction());
+          print("init");
         } else {
           store.dispatch(SearchLoadingAction());
+          print("loading");
 
           // Instead of a simple Future, we'll use a CancellableOperation from the
           // `async` package. This will allow us to cancel the previous operation
@@ -45,6 +47,7 @@ class SearchMiddleware implements MiddlewareClass<SearchState> {
               .then((result) => store..dispatch(SearchResultAction(result)))
               .catchError((Object e, StackTrace s) =>
                   store..dispatch(SearchErrorAction())));
+          print("result");
         }
       });
       // } else if (action is FilmAction) {

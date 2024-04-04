@@ -34,11 +34,13 @@ class FilmDetail extends StatefulWidget {
 
 class _FilmDetailState extends State<FilmDetail> {
   late Future<User> _futureUser;
+  late ConnectionState connectionState;
   void initState() {
     // TODO: implement initState
     super.initState();
     // MyFilmAppDatabase().historyStore();
     _futureUser = AdminClient().loginUser();
+    connectionState = ConnectionState.waiting;
   }
 
   @override
@@ -53,6 +55,11 @@ class _FilmDetailState extends State<FilmDetail> {
       appBar: Navbar(
         backButton: true,
         title: "${args.name}${args.title}",
+        onBack: () {
+          if (connectionState == ConnectionState.done) {
+            Navigator.pop(context);
+          }
+        },
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -60,7 +67,7 @@ class _FilmDetailState extends State<FilmDetail> {
           children: [
             Center(
               child: Container(
-                margin: const EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 20, bottom: 20),
                 child: Hero(
                   tag: args.id,
                   child: ClipRRect(
@@ -80,6 +87,7 @@ class _FilmDetailState extends State<FilmDetail> {
                 "${args.mediaType}/${args.id}?language=vi&api_key=7bb0f209157f0bb4788ecb54be635d14",
               ),
               builder: (context, snapshot) {
+                connectionState = snapshot.connectionState;
                 if (snapshot.hasData) {
                   final film = snapshot.data as Film;
                   // Future.delayed(Duration(seconds: 2), () {
@@ -91,7 +99,6 @@ class _FilmDetailState extends State<FilmDetail> {
                         children: [
                           Container(
                             alignment: AlignmentDirectional.center,
-                            margin: const EdgeInsets.only(top: 30),
                             child: Text(
                               "${film.name}${film.title}",
                               style: const TextStyle(
