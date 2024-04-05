@@ -11,7 +11,7 @@ class Film {
   final int revenue;
   final String releaseDate;
   final String firstAirDate;
-  final String mediaType;
+  String mediaType;
   final String posterPath;
   final double voteAverage;
   final int runtime;

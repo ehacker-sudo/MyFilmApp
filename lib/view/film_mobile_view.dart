@@ -9,8 +9,10 @@ import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/model/review.dart';
+import 'package:myfilmapp/model/search.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/form/add_review.dart';
+import 'package:myfilmapp/screens/search/advance_search/advance_search.dart';
 import 'package:myfilmapp/screens/season/movie_collections.dart';
 import 'package:myfilmapp/screens/season/tv_season.dart';
 import 'package:myfilmapp/widgets/button_watchlist.dart';
@@ -439,7 +441,17 @@ class FilmMobileView extends StatelessWidget {
                                 return Container(
                                   margin: const EdgeInsets.only(left: 10.0),
                                   child: OutlinedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AdvanceSearch.routeName,
+                                        arguments: MySearch(
+                                          mediaType: film.mediaType,
+                                          withGenres:
+                                              "${film.genres[index].id}",
+                                        ),
+                                      );
+                                    },
                                     style: ButtonStyle(
                                       shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
@@ -512,7 +524,17 @@ class FilmMobileView extends StatelessWidget {
                                     return Container(
                                       margin: const EdgeInsets.only(left: 10.0),
                                       child: OutlinedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            AdvanceSearch.routeName,
+                                            arguments: MySearch(
+                                              mediaType: film.mediaType,
+                                              withKeywords:
+                                                  "${keywords[index].id}",
+                                            ),
+                                          );
+                                        },
                                         style: ButtonStyle(
                                           shape: MaterialStateProperty.all(
                                             RoundedRectangleBorder(
