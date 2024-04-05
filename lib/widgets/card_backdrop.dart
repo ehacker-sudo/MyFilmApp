@@ -35,9 +35,8 @@ class _CardBackdropState extends State<CardBackdrop> {
           widget.onTap();
         }
       },
-      child: Container(
+      child: SizedBox(
         width: widget.height * 900 / 500,
-        padding: const EdgeInsets.only(left: 10.0),
         child: Column(
           children: [
             ClipRRect(

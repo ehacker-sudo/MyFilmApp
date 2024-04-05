@@ -1,5 +1,7 @@
 import 'dart:ui' show Color;
 
+import 'package:flutter/widgets.dart';
+
 class MyFilmAppColors {
   static const Color main = Color(0xFF2CA8FF);
 
@@ -21,3 +23,9 @@ class MyFilmAppColors {
 
   static const Color gray = Color(0xFF808080);
 }
+
+var defaultOnTap = (String text) {};
+
+var defaultOnBack = () {};
+
+var defaultOnLoad = (ConnectionState connectionState) {};

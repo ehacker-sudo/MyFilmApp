@@ -28,6 +28,7 @@ class Film {
   final List<Original> networks;
   final List<Original> productionCompanies;
   final List<Original> productionCountries;
+  final int episodeRunTime;
 
   Film({
     int? id,
@@ -55,6 +56,7 @@ class Film {
     List<Original>? productionCompanies,
     List<Original>? productionCountries,
     int? runtime,
+    int? episodeRunTime,
   })  : id = id ?? 0,
         title = title ?? "",
         name = name ?? "",
@@ -79,7 +81,8 @@ class Film {
         productionCountries = productionCountries ?? [],
         voteAverage = voteAverage ?? 0.0,
         knownForDepartment = knownForDepartment ?? "",
-        runtime = runtime ?? 0;
+        runtime = runtime ?? 0,
+        episodeRunTime = episodeRunTime ?? 0;
 
   factory Film.fromJson(Map<String, dynamic> json) {
     String validatedMediaType = json["media_type"] ?? "";
@@ -138,6 +141,14 @@ class Film {
       id = json["film_id"] ?? 0;
     }
 
+    int episodeRunTime = 0;
+    if (json["episode_run_time"] != null) {
+      List runTime = json["episode_run_time"];
+      if (runTime.isNotEmpty) {
+        episodeRunTime = runTime[0];
+      }
+    }
+
     return Film(
       id: id,
       title: json["title"] ?? "",
@@ -164,6 +175,7 @@ class Film {
       belongsToCollection: itemBelongsToCollection,
       networks: listNetworks,
       mediaType: validatedMediaType,
+      episodeRunTime: episodeRunTime,
     );
   }
 }

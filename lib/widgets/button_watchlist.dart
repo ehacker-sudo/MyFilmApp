@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/api/user_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/auth.dart';
-import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -60,12 +59,6 @@ class _ButtonWatchlistState extends State<ButtonWatchlist> {
             });
           },
           child: Container(
-            margin: const EdgeInsets.only(
-              left: 15.0,
-              right: 15.0,
-              top: 10.0,
-              bottom: 10.0,
-            ),
             padding: const EdgeInsets.only(
               left: 10.0,
               right: 10.0,

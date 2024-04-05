@@ -229,10 +229,18 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                       const SizedBox(
                         height: 15,
                       ),
-                      ButtonWatchlist(
-                        member: Member(
-                          mediaType: "episode",
-                          episode: episode,
+                      Container(
+                        margin: const EdgeInsets.only(
+                          left: 15.0,
+                          right: 15.0,
+                          top: 10.0,
+                          bottom: 10.0,
+                        ),
+                        child: ButtonWatchlist(
+                          member: Member(
+                            mediaType: "episode",
+                            episode: episode,
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -300,8 +308,11 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: 3,
                                     itemBuilder: (context, index) {
-                                      return CardCredit(
-                                        person: casts[index],
+                                      return Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        child: CardCredit(
+                                          person: casts[index],
+                                        ),
                                       );
                                     },
                                   ),
@@ -610,41 +621,64 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                               if (snapshot.hasData) {
                                 final externalIdFilm =
                                     snapshot.data as ExternalId;
-                                return SizedBox(
-                                  height: 50.0 * externalIdFilm.total,
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    children: [
-                                      if (externalIdFilm.imdbId != "")
-                                        ItemExternalSource(
-                                          name: "Imdb",
-                                          externalId: externalIdFilm.imdbId,
+                                return Column(
+                                  children: [
+                                    if (externalIdFilm.imdbId != "")
+                                      ItemExternalSource(
+                                        name: "Imdb",
+                                        margin: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 10.0,
+                                          bottom: 0,
+                                          top: 0,
                                         ),
-                                      if (externalIdFilm.facebookId != "")
-                                        ItemExternalSource(
-                                          name: "Facebook",
-                                          externalId: externalIdFilm.facebookId,
+                                        externalId: externalIdFilm.imdbId,
+                                      ),
+                                    if (externalIdFilm.facebookId != "")
+                                      ItemExternalSource(
+                                        name: "Facebook",
+                                        margin: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 10.0,
+                                          bottom: 0,
+                                          top: 0,
                                         ),
-                                      if (externalIdFilm.instagramId != "")
-                                        ItemExternalSource(
-                                          name: "Instagram",
-                                          externalId:
-                                              externalIdFilm.instagramId,
+                                        externalId: externalIdFilm.facebookId,
+                                      ),
+                                    if (externalIdFilm.instagramId != "")
+                                      ItemExternalSource(
+                                        name: "Instagram",
+                                        margin: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 10.0,
+                                          bottom: 0,
+                                          top: 0,
                                         ),
-                                      if (externalIdFilm.twitterId != "")
-                                        ItemExternalSource(
-                                          name: "Twitter",
-                                          externalId: externalIdFilm.twitterId,
+                                        externalId: externalIdFilm.instagramId,
+                                      ),
+                                    if (externalIdFilm.twitterId != "")
+                                      ItemExternalSource(
+                                        name: "Twitter",
+                                        margin: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 10.0,
+                                          bottom: 0,
+                                          top: 0,
                                         ),
-                                      if (externalIdFilm.wikidataId != "")
-                                        ItemExternalSource(
-                                          name: "Wikidata",
-                                          externalId: externalIdFilm.wikidataId,
+                                        externalId: externalIdFilm.twitterId,
+                                      ),
+                                    if (externalIdFilm.wikidataId != "")
+                                      ItemExternalSource(
+                                        name: "Wikidata",
+                                        margin: const EdgeInsets.only(
+                                          left: 15.0,
+                                          right: 10.0,
+                                          bottom: 0,
+                                          top: 0,
                                         ),
-                                    ],
-                                  ),
+                                        externalId: externalIdFilm.wikidataId,
+                                      ),
+                                  ],
                                 );
                               } else if (snapshot.hasError) {
                                 return Text(

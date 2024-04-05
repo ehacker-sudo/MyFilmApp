@@ -53,7 +53,7 @@ class _ItemDetailState extends State<ItemDetail> {
         width: MediaQuery.of(context).size.width,
         child: ListTile(
           contentPadding: const EdgeInsets.only(
-            left: 15.0,
+            left: 0.0,
             right: 0,
             bottom: 0,
             top: 0,

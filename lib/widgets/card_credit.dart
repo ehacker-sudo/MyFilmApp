@@ -26,9 +26,8 @@ class _CardCreditState extends State<CardCredit> {
           arguments: widget.person,
         );
       },
-      child: Container(
+      child: SizedBox(
         width: 180,
-        padding: const EdgeInsets.only(left: 11.0),
         child: Column(
           children: [
             Image.network(

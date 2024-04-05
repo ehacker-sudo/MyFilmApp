@@ -214,7 +214,12 @@ class _NavbarState extends State<Navbar> {
                     ],
                   )
             : Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.only(
+                  left: 5.0,
+                  right: 10.0,
+                  top: 5.0,
+                  bottom: 5.0,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -272,7 +277,3 @@ class _NavbarState extends State<Navbar> {
     );
   }
 }
-
-var defaultOnTap = (String text) {};
-
-var defaultOnBack = () {};

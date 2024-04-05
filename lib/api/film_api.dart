@@ -217,6 +217,33 @@ class TheMovieDbClient {
     }
   }
 
+  Future<ListFilm> fetchCastResults(String term) async {
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl$term',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      List<Map<String, dynamic>> keywords;
+      List<Map<String, dynamic>> items;
+      List<Map<String, dynamic>> casts;
+      keywords = items = casts = [];
+
+      if (results['cast'] != null) {
+        items = (results['cast'] as List).cast<Map<String, dynamic>>();
+      }
+      return ListFilm.fromJson(items, casts, keywords);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load Film');
+    }
+  }
+
   Future<ListReview> fetchUserReviewResults(Member member) async {
     String filmQuery = "";
     String mediaType = "";

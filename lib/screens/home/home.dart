@@ -6,6 +6,7 @@ import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_banner.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/drawer.dart';
+import 'package:myfilmapp/widgets/list_view_horizontal.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -78,7 +79,8 @@ class _HomeState extends State<Home> {
           ),
           FutureBuilder<ListFilm>(
             future: TheMovieDbClient().fetchResults(
-                "trending/all/day?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
+              "trending/all/day?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Column(
@@ -147,156 +149,32 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FutureBuilder<ListFilm>(
+          ListViewHorizontal(
             future: TheMovieDbClient().fetchResults(
-                "movie/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15, bottom: 10),
-                      child: const Text(
-                        "Top phim ảnh",
-                        style: TextStyle(
-                          color: MyFilmAppColors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 180 + 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          return CardBackdrop(
-                            film: snapshot.data!.items[index],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text(
-                  '${snapshot.error}',
-                  style: const TextStyle(color: MyFilmAppColors.white),
-                );
-              }
-
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              "movie/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
+            title: "Top phim ảnh",
+            padding: const EdgeInsets.only(left: 10.0),
           ),
           const SizedBox(
             height: 30,
           ),
-          FutureBuilder<ListFilm>(
+          ListViewHorizontal(
             future: TheMovieDbClient().fetchResults(
-                "movie/upcoming?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15, bottom: 10),
-                      child: const Text(
-                        "Phim ảnh sắp ra mắt",
-                        style: TextStyle(
-                          color: MyFilmAppColors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 180 + 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          return CardBackdrop(
-                            film: snapshot.data!.items[index],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text(
-                  '${snapshot.error}',
-                  style: const TextStyle(color: MyFilmAppColors.white),
-                );
-              }
-
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              "movie/upcoming?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
+            title: "Phim ảnh sắp ra mắt",
+            padding: const EdgeInsets.only(left: 10.0),
           ),
           const SizedBox(
             height: 30,
           ),
-          FutureBuilder<ListFilm>(
+          ListViewHorizontal(
             future: TheMovieDbClient().fetchResults(
               "movie/now_playing?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
             ),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15, bottom: 10),
-                      child: const Text(
-                        "Phim ảnh hiện công chiếu",
-                        style: TextStyle(
-                          color: MyFilmAppColors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 180 + 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          return CardBackdrop(
-                            film: snapshot.data!.items[index],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text(
-                  '${snapshot.error}',
-                  style: const TextStyle(color: MyFilmAppColors.white),
-                );
-              }
-
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+            title: "Phim ảnh hiện công chiếu",
+            padding: const EdgeInsets.only(left: 10.0),
           ),
         ],
       ),
@@ -310,156 +188,32 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          FutureBuilder<ListFilm>(
+          ListViewHorizontal(
             future: TheMovieDbClient().fetchResults(
-                "tv/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15, bottom: 10),
-                      child: const Text(
-                        "Top phim truyền hình",
-                        style: TextStyle(
-                          color: MyFilmAppColors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 180 + 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          return CardBackdrop(
-                            film: snapshot.data!.items[index],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text(
-                  '${snapshot.error}',
-                  style: const TextStyle(color: MyFilmAppColors.white),
-                );
-              }
-
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              "tv/top_rated?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
+            title: "Top phim truyền hình",
+            padding: const EdgeInsets.only(left: 10.0),
           ),
           const SizedBox(
             height: 30,
           ),
-          FutureBuilder<ListFilm>(
+          ListViewHorizontal(
             future: TheMovieDbClient().fetchResults(
-                "tv/on_the_air?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15, bottom: 10),
-                      child: const Text(
-                        "Vẫn còn lên sóng",
-                        style: TextStyle(
-                          color: MyFilmAppColors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 180 + 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          return CardBackdrop(
-                            film: snapshot.data!.items[index],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text(
-                  '${snapshot.error}',
-                  style: const TextStyle(color: MyFilmAppColors.white),
-                );
-              }
-
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              "tv/on_the_air?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
+            title: "Vẫn còn lên sóng",
+            padding: const EdgeInsets.only(left: 10.0),
           ),
           const SizedBox(
             height: 30,
           ),
-          FutureBuilder<ListFilm>(
+          ListViewHorizontal(
             future: TheMovieDbClient().fetchResults(
-                "tv/airing_today?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 15, bottom: 10),
-                      child: const Text(
-                        "Đang được lên sóng",
-                        style: TextStyle(
-                          color: MyFilmAppColors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 180 + 50,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data!.items.length,
-                        itemBuilder: (context, index) {
-                          return CardBackdrop(
-                            film: snapshot.data!.items[index],
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text(
-                  '${snapshot.error}',
-                  style: const TextStyle(
-                    color: MyFilmAppColors.white,
-                  ),
-                );
-              }
-              // By default, show a loading spinner.
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+              "tv/airing_today?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14",
+            ),
+            title: "Đang được lên sóng",
+            padding: const EdgeInsets.only(left: 10.0),
           ),
         ],
       ),

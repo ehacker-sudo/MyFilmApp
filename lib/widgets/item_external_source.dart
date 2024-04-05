@@ -8,15 +8,17 @@ class ItemExternalSource extends StatefulWidget {
   final String name;
   final String externalId;
   final String mediaType;
-
+  final EdgeInsetsGeometry margin;
   const ItemExternalSource({
     super.key,
     String? name,
     String? externalId,
     String? mediaType,
+    EdgeInsetsGeometry? margin,
   })  : name = name ?? "",
         externalId = externalId ?? "",
-        mediaType = mediaType ?? "";
+        mediaType = mediaType ?? "",
+        margin = margin ?? const EdgeInsets.all(0.0);
 
   @override
   State<ItemExternalSource> createState() => _ItemExternalSourceState();
@@ -112,12 +114,7 @@ class _ItemExternalSourceState extends State<ItemExternalSource> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: ListTile(
-              contentPadding: const EdgeInsets.only(
-                left: 15.0,
-                right: 10.0,
-                bottom: 0,
-                top: 0,
-              ),
+              contentPadding: widget.margin,
               leading: Image.asset(
                 logo,
                 width: 40,
