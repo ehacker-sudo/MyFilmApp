@@ -87,9 +87,10 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                             child: Text(
                               episode.name,
                               style: const TextStyle(
-                                  color: MyFilmAppColors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w400),
+                                color: MyFilmAppColors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                           Container(
@@ -148,29 +149,6 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                                 ),
                               ],
                             ),
-                            // Column(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     const Text(
-                            //       "Ngôn ngữ",
-                            //       style: TextStyle(
-                            //         color: MyFilmAppColors.gray,
-                            //         fontSize: 15,
-                            //         fontWeight: FontWeight.w500,
-                            //       ),
-                            //     ),
-                            //     Text(
-                            //       film.originalLanguage,
-                            //       style: const TextStyle(
-                            //         color: MyFilmAppColors.white,
-                            //         fontSize: 15,
-                            //         fontWeight: FontWeight.w500,
-                            //         letterSpacing: 0,
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,

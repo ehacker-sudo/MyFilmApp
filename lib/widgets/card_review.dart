@@ -61,10 +61,12 @@ class _CardReviewState extends State<CardReview> {
               ],
             ),
           Text(
+            maxLines: 5,
             widget.review.content,
             style: const TextStyle(
               color: Colors.grey,
               fontSize: 13.0,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

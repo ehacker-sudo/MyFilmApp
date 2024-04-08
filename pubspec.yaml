@@ -83,6 +83,8 @@ flutter:
     - assets/images/twitter.png
     - assets/images/wikidata.png
     - assets/images/imdb.png
+    - assets/images/theater_movie.jpg
+    - assets/images/monster.jpg
     - assets/images/external_link_outline.png
     - assets/images/logo.svg
     - assets/images/movie_main.svg
@@ -95,6 +97,7 @@ flutter:
     - assets/images/search_outline.svg
     - assets/images/suffix_search_outline.svg
     - assets/images/prefix_search_outline.svg
+    - assets/images/advance_search_outline.svg
     - assets/images/user_circle.svg
     - assets/images/user.svg
     - assets/images/plus.svg

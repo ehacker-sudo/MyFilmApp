@@ -41,9 +41,10 @@ class _CardOverviewState extends State<CardOverview> {
         const Text(
           "Giới thiệu phim",
           style: TextStyle(
-              color: MyFilmAppColors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w700),
+            color: MyFilmAppColors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         const SizedBox(
           height: 10,

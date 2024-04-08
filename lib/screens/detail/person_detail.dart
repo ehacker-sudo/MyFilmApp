@@ -10,6 +10,7 @@ import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_detail.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
+import 'package:myfilmapp/widgets/list_view.dart';
 import 'package:myfilmapp/widgets/list_view_horizontal.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:myfilmapp/database/database.dart';
@@ -242,22 +243,50 @@ class _PersonDetailState extends State<PersonDetail> {
                       const SizedBox(
                         height: 15,
                       ),
-                      ListViewHorizontal(
+                      MyListView(
                         future: TheMovieDbClient().fetchCastResults(
                           "person/${person.id}/movie_credits?api_key=7bb0f209157f0bb4788ecb54be635d14",
                         ),
-                        title: "Phim ảnh nổi bật",
-                        padding: const EdgeInsets.only(left: 10.0),
+                        listBuilder: (snapshot) => snapshot.data!.items,
+                        myItemBuilder: (items) {
+                          return ListViewHorizontal(
+                            title: "Phim ảnh nổi bật",
+                            padding: const EdgeInsets.only(left: 10.0),
+                            items: items,
+                            myItemBuilder: (context, index) {
+                              return Container(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: CardBackdrop(
+                                  film: items?[index],
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      ListViewHorizontal(
+                      MyListView(
                         future: TheMovieDbClient().fetchCastResults(
                           "person/${person.id}/tv_credits?api_key=7bb0f209157f0bb4788ecb54be635d14",
                         ),
-                        title: "Phim truyền hình nổi bật",
-                        padding: const EdgeInsets.only(left: 10.0),
+                        listBuilder: (snapshot) => snapshot.data!.items,
+                        myItemBuilder: (items) {
+                          return ListViewHorizontal(
+                            title: "Phim truyền hình nổi bật",
+                            padding: const EdgeInsets.only(left: 10.0),
+                            items: items,
+                            myItemBuilder: (context, index) {
+                              return Container(
+                                padding: const EdgeInsets.only(left: 10.0),
+                                child: CardBackdrop(
+                                  film: items?[index],
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: 15,

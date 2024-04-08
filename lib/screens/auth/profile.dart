@@ -7,6 +7,7 @@ import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/user.dart';
 import 'package:myfilmapp/screens/auth/login.dart';
 import 'package:myfilmapp/screens/detail/episode_detail.dart';
+import 'package:myfilmapp/screens/search/advance_search/advance_search_view.dart';
 import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/dropdown_horizontal.dart';
@@ -340,16 +341,24 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              color: MyFilmAppColors.header,
-              padding: const EdgeInsets.only(left: 20, bottom: 15, top: 15),
-              child: const Text(
-                "Tìm kiếm thêm",
-                style: TextStyle(
-                  color: MyFilmAppColors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  AdvanceSearchView.routeName,
+                );
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                color: MyFilmAppColors.header,
+                padding: const EdgeInsets.only(left: 20, bottom: 15, top: 15),
+                child: const Text(
+                  "Tìm kiếm thêm",
+                  style: TextStyle(
+                    color: MyFilmAppColors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),

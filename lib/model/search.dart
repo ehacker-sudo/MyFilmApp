@@ -1,8 +1,6 @@
-import 'dart:ffi';
-
 class MySearch {
-  final String releaseDateGte;
-  final String releaseDateLte;
+  final String primaryReleaseDateGte;
+  final String primaryReleaseDateLte;
   final String sortBy;
   final double voteAverageGte;
   final double voteAverageLte;
@@ -21,11 +19,15 @@ class MySearch {
   final String withoutCompanies;
   final String withoutGenres;
   final String mediaType;
+  final String firstAirDateYear;
+  final String firstAirDateGte;
+  final String firstAirDateLte;
+  final String primaryReleaseYear;
   final String withoutKeywords;
 
   MySearch({
-    String? releaseDateGte,
-    String? releaseDateLte,
+    String? primaryReleaseDateGte,
+    String? primaryReleaseDateLte,
     String? sortBy,
     double? voteAverageGte,
     double? voteAverageLte,
@@ -44,9 +46,13 @@ class MySearch {
     String? withoutCompanies,
     String? withoutGenres,
     String? mediaType,
+    String? firstAirDateYear,
+    String? firstAirDateGte,
+    String? firstAirDateLte,
+    String? primaryReleaseYear,
     String? withoutKeywords,
-  })  : releaseDateGte = releaseDateGte ?? "",
-        releaseDateLte = releaseDateLte ?? "",
+  })  : primaryReleaseDateGte = primaryReleaseDateGte ?? "",
+        primaryReleaseDateLte = primaryReleaseDateLte ?? "",
         sortBy = sortBy ?? "",
         voteAverageGte = voteAverageGte ?? 0.0,
         voteAverageLte = voteAverageLte ?? 0.0,
@@ -65,6 +71,10 @@ class MySearch {
         withoutCompanies = withoutCompanies ?? "",
         withoutGenres = withoutGenres ?? "",
         mediaType = mediaType ?? "",
+        firstAirDateYear = firstAirDateYear ?? "",
+        firstAirDateGte = firstAirDateGte ?? "",
+        firstAirDateLte = firstAirDateLte ?? "",
+        primaryReleaseYear = primaryReleaseYear ?? "",
         withoutKeywords = withoutKeywords ?? "";
 
   factory MySearch.fromJson(Map<String, dynamic> json) {

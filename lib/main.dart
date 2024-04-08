@@ -8,6 +8,7 @@ import 'package:myfilmapp/screens/detail/person_detail.dart';
 import 'package:myfilmapp/screens/form/add_review.dart';
 import 'package:myfilmapp/screens/home/home.dart';
 import 'package:myfilmapp/screens/search/advance_search/advance_search.dart';
+import 'package:myfilmapp/screens/search/advance_search/advance_search_view.dart';
 import 'package:myfilmapp/screens/search/search/github_client.dart';
 import 'package:myfilmapp/screens/search/search/search_middleware.dart';
 import 'package:myfilmapp/screens/search/search/search_reducer.dart';
@@ -77,6 +78,8 @@ class MyApp extends StatelessWidget {
               const MovieCollections(),
           "/addReview": (BuildContext context) => const AddReview(),
           "/advanceSearch": (BuildContext context) => const AdvanceSearch(),
+          "/advanceSearchView": (BuildContext context) =>
+              const AdvanceSearchView(),
         },
       ),
     );

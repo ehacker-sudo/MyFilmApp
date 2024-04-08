@@ -21,7 +21,38 @@ class _AdvanceSearchState extends State<AdvanceSearch> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as MySearch;
+    String withKeywords =
+        (args.withKeywords == "") ? "" : "&with_keywords=${args.withKeywords}";
+    String withGenres =
+        (args.withGenres == "") ? "" : "&with_genres=${args.withGenres}";
+    String voteAverageGte = (args.voteAverageGte == 0)
+        ? ""
+        : "&vote_average.gte=${args.voteAverageGte}";
 
+    String voteCountGte =
+        (args.voteCountGte == 0) ? "" : "&vote_count.gte=${args.voteCountGte}";
+
+    String runTime = (args.withRuntimeGte == 0 || args.withRuntimeLte == 0)
+        ? ""
+        : "&with_runtime.gte=${args.withRuntimeGte}&with_runtime.lte=${args.withRuntimeLte}";
+    String withOriginalLanguage = (args.withOriginalLanguage == "")
+        ? ""
+        : "&with_original_language=${args.withOriginalLanguage}";
+
+    String releaseYear = (args.mediaType == "tv")
+        ? (args.firstAirDateYear == "")
+            ? ""
+            : "&first_air_date_year=${args.firstAirDateYear}"
+        : (args.primaryReleaseYear == "")
+            ? ""
+            : "&primary_release_year=${args.primaryReleaseYear}";
+    String releaseTime = (args.mediaType == "tv")
+        ? (args.firstAirDateGte == "" || args.firstAirDateLte == "")
+            ? ""
+            : "&first_air_date.gte=${args.firstAirDateGte}&first_air_date.lte=${args.firstAirDateLte}"
+        : (args.primaryReleaseDateGte == "" || args.primaryReleaseDateLte == "")
+            ? ""
+            : "&primary_release_date.gte=${args.primaryReleaseDateGte}&primary_release_date.lte=${args.primaryReleaseDateLte}";
     return Scaffold(
       backgroundColor: MyFilmAppColors.body,
       appBar: Navbar(
@@ -34,7 +65,7 @@ class _AdvanceSearchState extends State<AdvanceSearch> {
             color: const Color(0xFF3C3C3C).withOpacity(0.2),
             child: FutureBuilder(
               future: TheMovieDbClient().fetchResults(
-                "discover/${args.mediaType}?language=en-US&page=1&with_keywords=${args.withGenres}&with_keywords=${args.withKeywords}&api_key=7bb0f209157f0bb4788ecb54be635d14",
+                "discover/${args.mediaType}?language=en-US&page=1&api_key=7bb0f209157f0bb4788ecb54be635d14$voteAverageGte$withKeywords$withGenres$voteCountGte$releaseYear$releaseTime$withOriginalLanguage$runTime",
               ),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {

@@ -26,60 +26,57 @@ class _CardBannerState extends State<CardBanner> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 10),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            FilmDetail.routeName,
-            arguments: widget.film,
-          );
-        },
-        child: Stack(
-          alignment: AlignmentDirectional.bottomStart,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                "https://image.tmdb.org/t/p/original${widget.film.backdropPath}",
-                height: 250,
-                width: 250 * 900 / 500,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          FilmDetail.routeName,
+          arguments: widget.film,
+        );
+      },
+      child: Stack(
+        alignment: AlignmentDirectional.bottomStart,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Image.network(
+              "https://image.tmdb.org/t/p/original${widget.film.backdropPath}",
               height: 250,
               width: 250 * 900 / 500,
-              decoration: const BoxDecoration(
-                // color: Color(0x33000000),
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0x00000000),
-                    Color(0x0D000000),
-                    Color(0x33000000),
-                    Color(0x80000000),
-                  ],
-                  begin: Alignment.topCenter, //begin of the gradient color
-                  end: Alignment.bottomCenter, //end of the gradient color
-                  // stops: [0, 0.2, 0.5, 0.8] //stops for individual color
-                  //set the stops number equal to numbers of color
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20.0),
-                ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            height: 250,
+            width: 250 * 900 / 500,
+            decoration: const BoxDecoration(
+              // color: Color(0x33000000),
+              gradient: LinearGradient(
+                colors: [
+                  Color(0x00000000),
+                  Color(0x0D000000),
+                  Color(0x33000000),
+                  Color(0x80000000),
+                ],
+                begin: Alignment.topCenter, //begin of the gradient color
+                end: Alignment.bottomCenter, //end of the gradient color
+                // stops: [0, 0.2, 0.5, 0.8] //stops for individual color
+                //set the stops number equal to numbers of color
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
               ),
             ),
-            Container(
-              height: 300,
-              alignment: AlignmentDirectional.bottomCenter,
-              padding: const EdgeInsets.all(10.0),
-              child: ItemInfo(
-                film: widget.film,
-              ),
+          ),
+          Container(
+            height: 300,
+            alignment: AlignmentDirectional.bottomCenter,
+            padding: const EdgeInsets.all(10.0),
+            child: ItemInfo(
+              film: widget.film,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

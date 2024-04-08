@@ -49,6 +49,7 @@ class _CardCreditState extends State<CardCredit> {
                     color: MyFilmAppColors.white,
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   textAlign: TextAlign.center,
                 ),

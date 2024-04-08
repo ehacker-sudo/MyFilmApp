@@ -63,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
           body: Flex(direction: Axis.vertical, children: <Widget>[
             Expanded(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 500),
                 child: _buildVisible(vm.state),
               ),
             )

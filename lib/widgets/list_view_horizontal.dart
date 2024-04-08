@@ -3,17 +3,29 @@ import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 
 class ListViewHorizontal extends StatefulWidget {
-  final Future future;
+  final double between;
+  final double height;
+  final List items;
   final String title;
+  final Axis axis;
   final EdgeInsetsGeometry padding;
+  final Widget? Function(BuildContext context, int index) myItemBuilder;
 
-  const ListViewHorizontal({
+  ListViewHorizontal({
     super.key,
-    required this.future,
+    double? between,
+    double? height,
+    List? items,
     String? title,
     EdgeInsetsGeometry? padding,
-  })  : title = title ?? "",
-        padding = padding ?? const EdgeInsets.all(0.0);
+    this.axis = Axis.horizontal,
+    Widget? Function(BuildContext context, int index)? myItemBuilder,
+  })  : height = height ?? (180 + 50),
+        between = between ?? 15,
+        title = title ?? "",
+        items = items ?? [],
+        padding = padding ?? const EdgeInsets.all(0.0),
+        myItemBuilder = myItemBuilder ?? defaultItemBuilder;
   @override
   State<ListViewHorizontal> createState() => _ListViewHorizontalState();
 }
@@ -21,65 +33,40 @@ class ListViewHorizontal extends StatefulWidget {
 class _ListViewHorizontalState extends State<ListViewHorizontal> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: widget.future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List items = snapshot.data!.items;
-          if (items.isNotEmpty) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: widget.padding,
-                  child: Text(
-                    widget.title,
-                    style: const TextStyle(
-                      color: MyFilmAppColors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: widget.padding,
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  color: MyFilmAppColors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SizedBox(
-                  height: 180 + 50,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: widget.padding,
-                        child: CardBackdrop(
-                          film: items[index],
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ],
-            );
-          } else {
-            return const SizedBox(
-              height: 15,
-            );
-          }
-        } else if (snapshot.hasError) {
-          return Text(
-            '${snapshot.error}',
-            style: const TextStyle(color: MyFilmAppColors.white),
-          );
-        }
-
-        // By default, show a loading spinner.
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: widget.between,
+        ),
+        Container(
+          height: widget.height,
+          alignment: AlignmentDirectional.centerStart,
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: widget.axis,
+            itemCount: widget.items.length,
+            itemBuilder: widget.myItemBuilder,
+          ),
+        )
+      ],
     );
   }
 }

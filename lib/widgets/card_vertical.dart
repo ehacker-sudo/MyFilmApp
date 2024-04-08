@@ -58,6 +58,7 @@ class _CardVerticalState extends State<CardVertical> {
                 height: 150,
                 child: Image.network(
                   'https://image.tmdb.org/t/p/w500${widget.posterPath}',
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

@@ -8,6 +8,7 @@ import 'package:myfilmapp/model/episode.dart';
 import 'package:myfilmapp/model/external_id.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/model/image.dart';
+import 'package:myfilmapp/model/language.dart';
 import 'package:myfilmapp/model/message.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/model/review.dart';
@@ -210,6 +211,51 @@ class TheMovieDbClient {
         casts = (results['cast'] as List).cast<Map<String, dynamic>>();
       }
       return ListFilm.fromJson(items, casts, keywords);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load Film');
+    }
+  }
+
+  Future<ListLanguage> fetchLanguageResults(String term) async {
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl$term',
+      ),
+    );
+    final results = jsonDecode(response.body) as List<dynamic>;
+    // print(results);
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      List<Map<String, dynamic>> items = [];
+      items = results.cast<Map<String, dynamic>>();
+      return ListLanguage.fromJson(items);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load Film');
+    }
+  }
+
+  Future fetchFilmResults(String term) async {
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl$term',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      final results = jsonDecode(response.body) as Map<String, dynamic>;
+      List<Map<String, dynamic>> items = [];
+
+      if (results['results'] != null) {
+        items = (results['results'] as List).cast<Map<String, dynamic>>();
+      }
+      return items;
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.

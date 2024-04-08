@@ -9,14 +9,18 @@ class ItemDetail extends StatefulWidget {
   final String name;
   final String content;
   final Function() onTap;
+  final EdgeInsetsGeometry margin;
+
   const ItemDetail({
     super.key,
     String? name,
     String? content,
     Function()? onTap,
+    EdgeInsetsGeometry? margin,
   })  : name = name ?? "",
         content = content ?? "",
-        onTap = onTap ?? defaultOnTap;
+        onTap = onTap ?? defaultOnTap,
+        margin = margin ?? const EdgeInsets.all(0.0);
 
   @override
   State<ItemDetail> createState() => _ItemDetailState();
@@ -52,12 +56,7 @@ class _ItemDetailState extends State<ItemDetail> {
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: ListTile(
-          contentPadding: const EdgeInsets.only(
-            left: 0.0,
-            right: 0,
-            bottom: 0,
-            top: 0,
-          ),
+          contentPadding: widget.margin,
           title: Text(
             widget.name,
             style: const TextStyle(color: MyFilmAppColors.white, fontSize: 15),

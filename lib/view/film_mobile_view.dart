@@ -19,9 +19,12 @@ import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_backdrop.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/card_overview.dart';
+import 'package:myfilmapp/widgets/card_review.dart';
 import 'package:myfilmapp/widgets/item_detail.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
+import 'package:myfilmapp/widgets/list_view.dart';
 import 'package:myfilmapp/widgets/list_view_horizontal.dart';
+import 'package:myfilmapp/widgets/outlined_button.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:star_rating/star_rating.dart';
@@ -226,15 +229,10 @@ class FilmMobileView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 30,
+                      height: 15,
                     ),
                     Container(
-                      margin: const EdgeInsets.only(
-                        left: 15.0,
-                        right: 15.0,
-                        top: 10.0,
-                        bottom: 10.0,
-                      ),
+                      margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                       child: ButtonWatchlist(
                         member: Member(
                           mediaType: film.mediaType,
@@ -246,7 +244,7 @@ class FilmMobileView extends StatelessWidget {
                       height: 15,
                     ),
                     Container(
-                      padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -255,7 +253,7 @@ class FilmMobileView extends StatelessWidget {
                             style: TextStyle(
                               color: MyFilmAppColors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                           MyStarRating(
@@ -270,308 +268,131 @@ class FilmMobileView extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    FutureBuilder<ListCredit>(
+                    MyListView(
                       future: TheMovieDbClient().fetchCreditResults(
-                          "${film.mediaType}/${film.id}/credits?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14"),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final casts = snapshot.data?.listCast as List<Person>;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                        left: 15.0,
-                                        right: 15.0,
-                                        top: 10.0,
-                                        bottom: 10.0),
-                                    child: const Text(
-                                      "Diễn viên",
-                                      style: TextStyle(
-                                          color: MyFilmAppColors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 310,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: casts.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: CardCredit(
-                                        person: casts[index],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          // return Text(
-                          //   '${snapshot.error}',
-                          //   style: const TextStyle(
-                          //       color: MyFilmAppColors.white),
-                          // );
-                          return const SizedBox();
+                        "${film.mediaType}/${film.id}/credits?language=en-US&api_key=7bb0f209157f0bb4788ecb54be635d14",
+                      ),
+                      listBuilder: (snapshot) => snapshot.data?.listCast,
+                      myItemBuilder: (items) {
+                        List casts = [];
+                        if (items != null) {
+                          casts = items;
                         }
-
-                        // By default, show a loading spinner.
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return ListViewHorizontal(
+                          height: 310,
+                          title: "Diễn viên",
+                          padding: const EdgeInsets.only(left: 10.0),
+                          items: casts,
+                          myItemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.only(left: 10.0),
+                              child: CardCredit(
+                                person: casts[index],
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
                     const SizedBox(
                       height: 15,
                     ),
-                    FutureBuilder<ListImage>(
+                    MyListView(
                       future: TheMovieDbClient().fetchImageResults(
                         "${film.mediaType}/${film.id}/images?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14",
                       ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final backdrops =
-                              snapshot.data?.listBackdrop as List<ImageModel>;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(
-                                      left: 15.0,
-                                      right: 15.0,
-                                      top: 10.0,
-                                      bottom: 10.0,
-                                    ),
-                                    child: const Text(
-                                      "Tập ảnh",
-                                      style: TextStyle(
-                                          color: MyFilmAppColors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 150,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: backdrops.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      width: 150 * backdrops[index].aspectRatio,
-                                      margin: const EdgeInsets.only(left: 10.0),
-                                      child: Image.network(
-                                        "https://image.tmdb.org/t/p/original${backdrops[index].filePath}",
-                                        height: 150,
-                                        width:
-                                            150 * backdrops[index].aspectRatio,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            ],
-                          );
-                        } else if (snapshot.hasError) {
-                          // return Text(
-                          //   '${snapshot.error}',
-                          //   style: const TextStyle(
-                          //       color: MyFilmAppColors.white),
-                          // );
-                          return const SizedBox();
+                      listBuilder: (snapshot) => snapshot.data?.listBackdrop,
+                      myItemBuilder: (items) {
+                        List<ImageModel> backdrops = [];
+                        if (items != null) {
+                          backdrops = items.cast<ImageModel>();
                         }
-
-                        // By default, show a loading spinner.
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    if (film.genres.isNotEmpty)
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Thể loại",
-                                  style: TextStyle(
-                                    color: MyFilmAppColors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            alignment: AlignmentDirectional.centerStart,
-                            height: 35,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: film.genres.length,
-                              itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListViewHorizontal(
+                              title: "Tập ảnh",
+                              padding: const EdgeInsets.only(left: 10.0),
+                              height: 150,
+                              items: backdrops,
+                              myItemBuilder: (context, index) {
                                 return Container(
+                                  width: 150 * backdrops[index].aspectRatio,
                                   margin: const EdgeInsets.only(left: 10.0),
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        AdvanceSearch.routeName,
-                                        arguments: MySearch(
-                                          mediaType: film.mediaType,
-                                          withGenres:
-                                              "${film.genres[index].id}",
-                                        ),
-                                      );
-                                    },
-                                    style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      film.genres[index].name,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
+                                  child: Image.network(
+                                    "https://image.tmdb.org/t/p/original${backdrops[index].filePath}",
+                                    height: 150,
+                                    width: 150 * backdrops[index].aspectRatio,
+                                    fit: BoxFit.cover,
                                   ),
                                 );
                               },
                             ),
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    if (film.genres.isNotEmpty)
+                      ListViewHorizontal(
+                        title: "Thể loại",
+                        height: 35,
+                        padding: const EdgeInsets.only(left: 10.0),
+                        items: film.genres,
+                        myItemBuilder: (context, index) {
+                          return MyOutlinedButton(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            name: film.genres[index].name,
+                            mySearch: MySearch(
+                              mediaType: film.mediaType,
+                              withGenres: "${film.genres[index].id}",
+                            ),
+                          );
+                        },
                       ),
                     const SizedBox(
                       height: 15,
                     ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    MyListView(
+                      future: TheMovieDbClient().fetchResults(
+                        "${film.mediaType}/${film.id}/keywords?api_key=7bb0f209157f0bb4788ecb54be635d14",
+                      ),
+                      listBuilder: (snapshot) {
+                        List<Film> keywords = [];
+                        if (film.mediaType == "movie") {
+                          keywords = snapshot.data?.keywords as List<Film>;
+                        } else if (film.mediaType == "tv") {
+                          keywords = snapshot.data?.items as List<Film>;
+                        }
+                        return keywords;
+                      },
+                      myItemBuilder: (items) {
+                        List keywords = (items != null) ? items : [];
+                        return Column(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.only(
-                                  left: 15.0,
-                                  right: 15.0,
-                                  top: 10.0,
-                                  bottom: 10.0),
-                              child: const Text(
-                                "Từ khóa",
-                                style: TextStyle(
-                                  color: MyFilmAppColors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
+                            ListViewHorizontal(
+                              height: 35,
+                              title: "Từ khóa",
+                              padding: const EdgeInsets.only(left: 10.0),
+                              items: items,
+                              myItemBuilder: (context, index) {
+                                return MyOutlinedButton(
+                                  margin: const EdgeInsets.only(left: 10.0),
+                                  name: keywords[index].name,
+                                  mySearch: MySearch(
+                                    mediaType: film.mediaType,
+                                    withKeywords: "${keywords[index].id}",
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                           ],
-                        ),
-                        FutureBuilder<ListFilm>(
-                          future: TheMovieDbClient().fetchResults(
-                            "${film.mediaType}/${film.id}/keywords?api_key=7bb0f209157f0bb4788ecb54be635d14",
-                          ),
-                          builder: (context, snapshot) {
-                            print(
-                                "${film.mediaType}/${film.id}/keywords?api_key=7bb0f209157f0bb4788ecb54be635d14");
-                            if (snapshot.hasData) {
-                              List<Film> keywords = [];
-                              if (film.mediaType == "movie") {
-                                keywords =
-                                    snapshot.data?.keywords as List<Film>;
-                              } else if (film.mediaType == "tv") {
-                                keywords = snapshot.data?.items as List<Film>;
-                              }
-                              return Container(
-                                alignment: AlignmentDirectional.centerStart,
-                                height: 35,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: keywords.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: const EdgeInsets.only(left: 10.0),
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            AdvanceSearch.routeName,
-                                            arguments: MySearch(
-                                              mediaType: film.mediaType,
-                                              withKeywords:
-                                                  "${keywords[index].id}",
-                                            ),
-                                          );
-                                        },
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5.0),
-                                            ),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          keywords[index].name,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            } else if (snapshot.hasError) {
-                              return Text(
-                                '${snapshot.error}',
-                                style: const TextStyle(
-                                    color: MyFilmAppColors.white),
-                              );
-                            }
-
-                            // By default, show a loading spinner.
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
+                        );
+                      },
                     ),
                     InkWell(
                       onTap: () {
@@ -631,152 +452,57 @@ class FilmMobileView extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    FutureBuilder<ListReview>(
+                    MyListView(
                       future: TheMovieDbClient().fetchReviewResults(
                         "${film.mediaType}/${film.id}/reviews?api_key=7bb0f209157f0bb4788ecb54be635d14",
                       ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          var reviews = snapshot.data?.items as List<Review>;
-                          return FutureBuilder<ListReview>(
-                            future: TheMovieDbClient().fetchUserReviewResults(
-                              Member(
-                                mediaType: film.mediaType,
-                                film: film,
-                              ),
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var myUserReviews =
-                                    snapshot.data?.items as List<Review>;
-                                reviews.addAll(myUserReviews);
-                              }
-                              if (reviews.isNotEmpty) {
-                                return Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 15.0,
-                                              right: 15.0,
-                                              top: 10.0,
-                                              bottom: 10.0),
-                                          child: const Text(
-                                            "Bình luận phim",
-                                            style: TextStyle(
-                                                color: MyFilmAppColors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      height: 150,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: reviews.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            height: 150,
-                                            width: 400,
-                                            color: MyFilmAppColors.header,
-                                            margin: const EdgeInsets.only(
-                                              left: 10.0,
-                                            ),
-                                            padding: const EdgeInsets.only(
-                                              left: 10.0,
-                                              right: 10.0,
-                                              top: 10.0,
-                                              bottom: 10.0,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                if (reviews[index]
-                                                        .authorDetails
-                                                        .rating !=
-                                                    0.0)
-                                                  Column(
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          const Icon(
-                                                            Icons.star,
-                                                            color:
-                                                                MyFilmAppColors
-                                                                    .submain,
-                                                            size: 15,
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 2,
-                                                          ),
-                                                          Text(
-                                                            "${reviews[index].authorDetails.rating.toInt() + .0}",
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  MyFilmAppColors
-                                                                      .white,
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                Text(
-                                                  reviews[index].content,
-                                                  maxLines: 5,
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 13.0,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                );
-                              } else {
-                                return const SizedBox();
-                              }
-                              // By default, show a loading spinner.
-                            },
-                          );
-                        } else if (snapshot.hasError) {
-                          // return Text(
-                          //   '${snapshot.error}',
-                          //   style:
-                          //       const TextStyle(color: MyFilmAppColors.white),
-                          // );
-                          return const SizedBox();
+                      listBuilder: (snapshot) => snapshot.data!.items,
+                      myItemBuilder: (items) {
+                        List<Review> reviews = [];
+                        if (items != null) {
+                          reviews = items.cast<Review>();
                         }
-
-                        // By default, show a loading spinner.
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return FutureBuilder<ListReview>(
+                          future: TheMovieDbClient().fetchUserReviewResults(
+                            Member(
+                              mediaType: film.mediaType,
+                              film: film,
+                            ),
+                          ),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              var myUserReviews =
+                                  snapshot.data?.items as List<Review>;
+                              reviews.addAll(myUserReviews);
+                            }
+                            if (reviews.isNotEmpty) {
+                              return Column(
+                                children: [
+                                  ListViewHorizontal(
+                                    height: 150,
+                                    title: "Bình luận phim",
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    items: reviews,
+                                    myItemBuilder: (context, index) {
+                                      return CardReview(
+                                        margin:
+                                            const EdgeInsets.only(left: 10.0),
+                                        review: reviews[index],
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                            // By default, show a loading spinner.
+                          },
                         );
                       },
-                    ),
-                    const SizedBox(
-                      height: 15,
                     ),
                     Column(
                       children: [
@@ -785,7 +511,9 @@ class FilmMobileView extends StatelessWidget {
                           children: [
                             Container(
                               padding: const EdgeInsets.only(
-                                  left: 15.0, right: 15.0),
+                                left: 10.0,
+                                right: 10.0,
+                              ),
                               child: const Text(
                                 "Chi tiết",
                                 style: TextStyle(
@@ -796,240 +524,162 @@ class FilmMobileView extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Column(
-                            children: [
-                              if (film.budget != 0)
-                                ItemDetail(
-                                  name: "Ngân sách",
-                                  content: "${film.budget}",
-                                ),
-                              if (film.revenue != 0)
-                                ItemDetail(
-                                  name: "Doanh thu",
-                                  content: "${film.revenue}",
-                                ),
-                              if (film.homepage != "")
-                                ItemDetail(
-                                  name: "Trang chủ chính",
-                                  content: film.homepage,
-                                ),
-                              if (film.belongsToCollection.name != "")
-                                ItemDetail(
-                                  name: "Trọn bộ phần phim",
-                                  content: film.belongsToCollection.name,
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      MovieCollections.routeName,
-                                      arguments: film,
-                                    );
-                                  },
-                                ),
-                              if (film.numberOfSeasons != 0)
-                                ItemDetail(
-                                  name: "Các mùa phim",
-                                  content: "${film.numberOfSeasons} mùa",
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      TvSeason.routeName,
-                                      arguments: film,
-                                    );
-                                  },
-                                ),
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            if (film.budget != 0)
+                              ItemDetail(
+                                name: "Ngân sách",
+                                content: "${film.budget}",
+                                margin: const EdgeInsets.only(left: 10.0),
+                              ),
+                            if (film.revenue != 0)
+                              ItemDetail(
+                                name: "Doanh thu",
+                                content: "${film.revenue}",
+                                margin: const EdgeInsets.only(left: 10.0),
+                              ),
+                            if (film.homepage != "")
+                              ItemDetail(
+                                name: "Trang chủ chính",
+                                content: film.homepage,
+                                margin: const EdgeInsets.only(left: 10.0),
+                              ),
+                            if (film.belongsToCollection.name != "")
+                              ItemDetail(
+                                name: "Trọn bộ phần phim",
+                                content: film.belongsToCollection.name,
+                                margin: const EdgeInsets.only(left: 10.0),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    MovieCollections.routeName,
+                                    arguments: film,
+                                  );
+                                },
+                              ),
+                            if (film.numberOfSeasons != 0)
+                              ItemDetail(
+                                name: "Các mùa phim",
+                                content: "${film.numberOfSeasons} mùa",
+                                margin: const EdgeInsets.only(left: 10.0),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    TvSeason.routeName,
+                                    arguments: film,
+                                  );
+                                },
+                              ),
+                          ],
                         ),
                       ],
                     ),
                     const SizedBox(
                       height: 5,
                     ),
-                    ListViewHorizontal(
+                    MyListView(
                       future: TheMovieDbClient().fetchResults(
                         "${film.mediaType}/${film.id}/recommendations?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14",
                       ),
-                      title: "Đề xuất",
-                      padding: const EdgeInsets.only(left: 10.0),
+                      listBuilder: (snapshot) => snapshot.data!.items,
+                      myItemBuilder: (items) {
+                        return ListViewHorizontal(
+                          title: "Đề xuất",
+                          padding: const EdgeInsets.only(left: 10.0),
+                          items: items,
+                          myItemBuilder: (context, index) {
+                            return Container(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: CardBackdrop(
+                                film: items?[index],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 15,
                     ),
                     if (film.networks.isNotEmpty)
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Kênh truyền hình",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            height: 40,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: film.networks.length,
-                              itemBuilder: (context, index) {
-                                if (film.networks[index].logoPath != "") {
-                                  return Container(
-                                    color: MyFilmAppColors.white,
-                                    margin: const EdgeInsets.only(left: 10.0),
-                                    padding: const EdgeInsets.all(2),
-                                    child: Image.network(
-                                      "https://image.tmdb.org/t/p/original${film.networks[index].logoPath}",
-                                    ),
-                                  );
-                                } else {
-                                  return Container(
-                                    color: MyFilmAppColors.white,
-                                    margin: const EdgeInsets.only(left: 15.0),
-                                    padding: const EdgeInsets.all(2),
+                      ListViewHorizontal(
+                        title: "Kênh truyền hình",
+                        between: 5,
+                        padding: const EdgeInsets.only(left: 10.0),
+                        height: 40,
+                        items: film.networks,
+                        myItemBuilder: (context, index) {
+                          return Container(
+                            color: MyFilmAppColors.white,
+                            margin: const EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.all(2),
+                            child: (film.networks[index].logoPath != "")
+                                ? Image.network(
+                                    "https://image.tmdb.org/t/p/original${film.networks[index].logoPath}",
+                                  )
+                                : const SizedBox(
                                     height: 40,
                                     width: 40,
-                                    // child: Image.network(
-                                    //   "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
-                                    // ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                                  ),
+                          );
+                        },
                       ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     if (film.productionCountries.isNotEmpty)
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Các quốc gia sản xuât",
-                                  style: TextStyle(
-                                    color: MyFilmAppColors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            height: 48,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: film.productionCountries.length,
-                              itemBuilder: (context, index) {
-                                if (film.productionCountries[index]
-                                        .iso_3166_1 !=
-                                    "") {
-                                  return Container(
-                                    color: MyFilmAppColors.white,
-                                    margin: const EdgeInsets.only(left: 10.0),
-                                    padding: const EdgeInsets.all(2),
-                                    child: Image.network(
-                                      "https://flagsapi.com/${film.productionCountries[index].iso_3166_1}/flat/48.png",
-                                    ),
-                                  );
-                                } else {
-                                  return Container(
-                                    color: MyFilmAppColors.white,
-                                    margin: const EdgeInsets.only(left: 15.0),
-                                    padding: const EdgeInsets.all(2),
-                                    height: 40,
-                                    width: 40,
-                                    // child: Image.network(
-                                    //   "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
-                                    // ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                      ListViewHorizontal(
+                        title: "Các quốc gia sản xuất",
+                        padding: const EdgeInsets.only(left: 10.0),
+                        height: 48,
+                        between: 5,
+                        items: film.productionCountries,
+                        myItemBuilder: (context, index) {
+                          return Container(
+                            color: MyFilmAppColors.white,
+                            margin: const EdgeInsets.only(left: 10.0),
+                            child:
+                                (film.productionCountries[index].iso_3166_1 !=
+                                        "")
+                                    ? Image.network(
+                                        "https://flagsapi.com/${film.productionCountries[index].iso_3166_1}/flat/48.png",
+                                      )
+                                    : const SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                          );
+                        },
                       ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     if (film.productionCompanies.isNotEmpty)
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Công ty sản xuât",
-                                  style: TextStyle(
-                                    color: MyFilmAppColors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            height: 40,
-                            alignment: AlignmentDirectional.centerStart,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: film.productionCompanies.length,
-                              itemBuilder: (context, index) {
-                                if (film.productionCompanies[index].logoPath !=
-                                    "") {
-                                  return Container(
-                                    color: MyFilmAppColors.white,
-                                    margin: const EdgeInsets.only(left: 15.0),
-                                    padding: const EdgeInsets.all(2),
-                                    child: Image.network(
-                                      "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
-                                    ),
-                                  );
-                                } else {
-                                  return Container(
-                                    color: MyFilmAppColors.white,
-                                    margin: const EdgeInsets.only(left: 15.0),
-                                    padding: const EdgeInsets.all(2),
-                                    height: 40,
-                                    width: 40,
-                                    // child: Image.network(
-                                    //   "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
-                                    // ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                      ListViewHorizontal(
+                        title: "Công ty sản xuất",
+                        padding: const EdgeInsets.only(left: 10.0),
+                        height: 48,
+                        between: 5,
+                        items: film.productionCompanies,
+                        myItemBuilder: (context, index) {
+                          return Container(
+                            color: MyFilmAppColors.white,
+                            margin: const EdgeInsets.only(left: 10.0),
+                            child:
+                                (film.productionCompanies[index].logoPath != "")
+                                    ? Image.network(
+                                        "https://image.tmdb.org/t/p/original${film.productionCompanies[index].logoPath}",
+                                      )
+                                    : const SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                          );
+                        },
                       ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     Column(
                       children: [
                         Row(
@@ -1038,10 +688,11 @@ class FilmMobileView extends StatelessWidget {
                           children: [
                             Container(
                               padding: const EdgeInsets.only(
-                                  left: 15.0,
-                                  right: 15.0,
-                                  top: 10.0,
-                                  bottom: 10.0),
+                                left: 10.0,
+                                right: 10.0,
+                                top: 10.0,
+                                bottom: 10.0,
+                              ),
                               child: const Text(
                                 "Khám giá thêm",
                                 style: TextStyle(
@@ -1054,7 +705,8 @@ class FilmMobileView extends StatelessWidget {
                         ),
                         FutureBuilder<ExternalId>(
                           future: TheMovieDbClient().fetchExternalIdResults(
-                              "${film.mediaType}/${film.id}/external_ids?api_key=7bb0f209157f0bb4788ecb54be635d14"),
+                            "${film.mediaType}/${film.id}/external_ids?api_key=7bb0f209157f0bb4788ecb54be635d14",
+                          ),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               final externalIdFilm =
@@ -1064,7 +716,7 @@ class FilmMobileView extends StatelessWidget {
                                   if (externalIdFilm.imdbId != "")
                                     ItemExternalSource(
                                       margin: const EdgeInsets.only(
-                                        left: 15.0,
+                                        left: 10.0,
                                         right: 10.0,
                                         bottom: 0,
                                         top: 0,
@@ -1076,7 +728,7 @@ class FilmMobileView extends StatelessWidget {
                                     ItemExternalSource(
                                       name: "Facebook",
                                       margin: const EdgeInsets.only(
-                                        left: 15.0,
+                                        left: 10.0,
                                         right: 10.0,
                                         bottom: 0,
                                         top: 0,
@@ -1087,7 +739,7 @@ class FilmMobileView extends StatelessWidget {
                                     ItemExternalSource(
                                       name: "Instagram",
                                       margin: const EdgeInsets.only(
-                                        left: 15.0,
+                                        left: 10.0,
                                         right: 10.0,
                                         bottom: 0,
                                         top: 0,
@@ -1098,7 +750,7 @@ class FilmMobileView extends StatelessWidget {
                                     ItemExternalSource(
                                       name: "Twitter",
                                       margin: const EdgeInsets.only(
-                                        left: 15.0,
+                                        left: 10.0,
                                         right: 10.0,
                                         bottom: 0,
                                         top: 0,
@@ -1109,7 +761,7 @@ class FilmMobileView extends StatelessWidget {
                                     ItemExternalSource(
                                       name: "Wikidata",
                                       margin: const EdgeInsets.only(
-                                        left: 15.0,
+                                        left: 10.0,
                                         right: 10.0,
                                         bottom: 0,
                                         top: 0,

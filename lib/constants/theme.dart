@@ -29,3 +29,5 @@ var defaultOnTap = (String text) {};
 var defaultOnBack = () {};
 
 var defaultOnLoad = (ConnectionState connectionState) {};
+
+var defaultItemBuilder = (BuildContext buildContext, int index) {};

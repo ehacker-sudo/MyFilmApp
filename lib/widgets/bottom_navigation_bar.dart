@@ -82,7 +82,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
               ),
             ),
           ),
-          label: 'Tiểu sử',
+          label: 'Hồ sơ',
         ),
       ],
     );

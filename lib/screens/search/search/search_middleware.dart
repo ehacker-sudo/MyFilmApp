@@ -30,7 +30,7 @@ class SearchMiddleware implements MiddlewareClass<SearchState> {
 
       // Don't start searching until the user pauses for 250ms. This will stop
       // us from over-fetching from our backend.
-      _timer = Timer(const Duration(milliseconds: 250), () {
+      _timer = Timer(const Duration(milliseconds: 500), () {
         if (action.term.isEmpty) {
           store.dispatch(SearchInitialAction());
           print("init");

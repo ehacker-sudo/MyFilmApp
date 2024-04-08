@@ -47,6 +47,7 @@ class _CardHorizontalState extends State<CardHorizontal> {
                   height: 100,
                   child: Image.network(
                     "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
