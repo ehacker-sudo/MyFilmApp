@@ -21,12 +21,12 @@ class AdvanceSearchView extends StatefulWidget {
 }
 
 class _AdvanceSearchViewState extends State<AdvanceSearchView> {
-  String? mediaType;
+  String mediaType = "";
   List<dynamic> kind = [];
   double voteAverageGte = 0;
   double voteCountGte = 0;
-  String? withOriginalLanguage;
-  int? releaseYear;
+  String withOriginalLanguage = "";
+  int releaseYear = 0;
   List<int> releaseDecade = [];
   List<int> runTimes = [];
   @override
@@ -52,10 +52,8 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
                 child: TextButton(
                   onPressed: () {
                     setState(() {
-                      if (mediaType == null ||
-                          mediaType == "" ||
-                          mediaType != Term.type[index]["media_type"]) {
-                        mediaType = Term.type[index]["media_type"];
+                      if (mediaType != Term.type[index]["media_type"]) {
+                        mediaType = Term.type[index]["media_type"] ?? "";
                       } else {
                         mediaType = "";
                       }
@@ -172,8 +170,7 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
                 child: TextButton(
                   onPressed: () {
                     setState(() {
-                      if (voteAverageGte == null ||
-                          voteAverageGte != Term.rates[index]["rate"]) {
+                      if (voteAverageGte != Term.rates[index]["rate"]) {
                         voteAverageGte = Term.rates[index]["rate"];
                       } else {
                         voteAverageGte = 0.0;
@@ -227,8 +224,7 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
                 child: TextButton(
                   onPressed: () {
                     setState(() {
-                      if (voteCountGte == null ||
-                          voteCountGte != Term.rateCounts[index]["count"]) {
+                      if (voteCountGte != Term.rateCounts[index]["count"]) {
                         voteCountGte = Term.rateCounts[index]["count"];
                       } else {
                         voteCountGte = 0.0;
@@ -367,8 +363,7 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
                 child: TextButton(
                   onPressed: () {
                     setState(() {
-                      if (releaseYear == null ||
-                          releaseYear != Term.releaseYears[index]) {
+                      if (releaseYear != Term.releaseYears[index]) {
                         releaseYear = Term.releaseYears[index];
                       } else {
                         releaseYear = 0;
@@ -435,9 +430,8 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
                     child: TextButton(
                       onPressed: () {
                         setState(() {
-                          if (withOriginalLanguage == null ||
-                              withOriginalLanguage !=
-                                  languages[index].iso_639_1) {
+                          if (withOriginalLanguage !=
+                              languages[index].iso_639_1) {
                             withOriginalLanguage = languages[index].iso_639_1;
                           } else {
                             withOriginalLanguage = "";
@@ -568,7 +562,6 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(runTimes);
           List<int> withRuntime = [];
           if (runTimes.isNotEmpty) {
             for (var element in runTimes) {
@@ -580,15 +573,14 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
             }
           }
           withRuntime.sort();
-          print((withRuntime.first == 0) ? 1 : withRuntime.first * 60);
-          if (mediaType != null) {
+          if (mediaType != "") {
             String withGenres = "";
             if (kind.isNotEmpty) {
               for (var i = 0; i < kind.length; i++) {
                 if (i == kind.length - 1) {
-                  withGenres += "${kind[i]["id"]["$mediaType"]}";
+                  withGenres += "${kind[i]["id"][mediaType]}";
                 } else {
-                  withGenres += "${kind[i]["id"]["$mediaType"]} , ";
+                  withGenres += "${kind[i]["id"][mediaType]} , ";
                 }
               }
             }
@@ -600,8 +592,8 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
                 withGenres: withGenres,
                 voteAverageGte: voteAverageGte,
                 voteCountGte: voteCountGte,
-                primaryReleaseYear: "$releaseYear",
-                firstAirDateYear: "$releaseYear",
+                primaryReleaseYear: (releaseYear == 0) ? "" : "$releaseYear",
+                firstAirDateYear: (releaseYear == 0) ? "" : "$releaseYear",
                 firstAirDateGte: (releaseDecade.isNotEmpty)
                     ? "${releaseDecade.first}-01-01"
                     : "",
