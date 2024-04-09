@@ -62,6 +62,12 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
           if (snapshot.hasData) {
             final episode = snapshot.data as Episode;
             episode.seriesId = args.seriesId;
+
+            AdminClient().historyStore(Member(
+              mediaType: "episode",
+              episode: episode,
+            ));
+
             return SizedBox.expand(
               child: SingleChildScrollView(
                 child: Container(

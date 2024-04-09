@@ -76,6 +76,10 @@ class FilmDestopView extends StatelessWidget {
                 onLoad(snapshot.connectionState);
                 if (snapshot.hasData) {
                   final film = snapshot.data as Film;
+                  AdminClient().historyStore(Member(
+                    mediaType: film.mediaType,
+                    film: film,
+                  ));
                   // Future.delayed(Duration(seconds: 2), () {
                   // print('Delayed code executed');
                   return ListView(

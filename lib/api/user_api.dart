@@ -338,13 +338,10 @@ class AdminClient {
   Future<Member> historyStore(Member member) async {
     final SharedPreferences pref = await _prefs;
     String? accessToken = pref.getString('token');
-    final response = await http.post(
-      Uri.parse('${baseUrl}history/store'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $accessToken'
-      },
-      body: jsonEncode(<String, dynamic>{
+
+    String body;
+    if (member.mediaType != "episode") {
+      body = jsonEncode(<String, dynamic>{
         "film_id": member.film.id,
         "name": member.film.name,
         "media_type": member.film.mediaType,
@@ -353,7 +350,26 @@ class AdminClient {
         "first_air_date": member.film.firstAirDate,
         "title": member.film.title,
         "release_date": member.film.releaseDate,
-      }),
+      });
+    } else {
+      body = jsonEncode(<String, dynamic>{
+        "series_id": member.episode.seriesId,
+        "season_number": member.episode.seasonNumber,
+        "episode_number": member.episode.episodeNumber,
+        "name": member.episode.name,
+        "media_type": "episode",
+        "still_path": member.episode.stillPath,
+        "air_date": member.episode.airDate,
+      });
+    }
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}history/store'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: body,
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {

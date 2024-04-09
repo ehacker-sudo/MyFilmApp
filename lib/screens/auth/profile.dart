@@ -179,17 +179,6 @@ class _ProfileState extends State<Profile> {
                                                 left: 10.0),
                                             child: CardBackdrop(
                                               // film: snapshot.data!.items[index],
-                                              film: Film(
-                                                backdropPath: members[index]
-                                                    .episode
-                                                    .stillPath,
-                                                name:
-                                                    members[index].episode.name,
-                                                mediaType: "episode",
-                                                firstAirDate: members[index]
-                                                    .episode
-                                                    .airDate,
-                                              ),
                                               onTap: () {
                                                 Navigator.pushNamed(
                                                   context,
@@ -198,6 +187,17 @@ class _ProfileState extends State<Profile> {
                                                       members[index].episode,
                                                 );
                                               },
+                                              film: Film(
+                                                name:
+                                                    members[index].episode.name,
+                                                mediaType: "episode",
+                                                firstAirDate: members[index]
+                                                    .episode
+                                                    .airDate,
+                                                backdropPath: members[index]
+                                                    .episode
+                                                    .stillPath,
+                                              ),
                                             ),
                                           );
                                         } else {
