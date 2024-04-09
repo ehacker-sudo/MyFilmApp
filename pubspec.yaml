@@ -98,6 +98,12 @@ flutter:
     - assets/images/suffix_search_outline.svg
     - assets/images/prefix_search_outline.svg
     - assets/images/advance_search_outline.svg
+
+    - assets/images/film_horizontal_placeholder.svg
+    - assets/images/film_vertical_placeholder.svg
+    - assets/images/user_horizontal_placeholder.svg
+    - assets/images/user_vertical_placeholder.svg
+
     - assets/images/user_circle.svg
     - assets/images/user.svg
     - assets/images/plus.svg

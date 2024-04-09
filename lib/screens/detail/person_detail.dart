@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/episode.dart';
@@ -13,9 +14,6 @@ import 'package:myfilmapp/widgets/item_external_source.dart';
 import 'package:myfilmapp/widgets/list_view.dart';
 import 'package:myfilmapp/widgets/list_view_horizontal.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
-import 'package:myfilmapp/database/database.dart';
-import 'package:myfilmapp/widgets/star_rating_modal.dart';
-import 'package:star_rating/star_rating.dart';
 
 class PersonDetail extends StatefulWidget {
   static const routeName = '/personDetail';
@@ -63,12 +61,19 @@ class _PersonDetailState extends State<PersonDetail> {
                             margin: const EdgeInsets.only(top: 20),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                "https://image.tmdb.org/t/p/original${person.profilePath}",
-                                height: 250 * 790 / 500,
-                                width: 250,
-                                fit: BoxFit.cover,
-                              ),
+                              child: (person.profilePath != "")
+                                  ? Image.network(
+                                      "https://image.tmdb.org/t/p/original${person.profilePath}",
+                                      height: 250 * 790 / 500,
+                                      width: 250,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : SvgPicture.asset(
+                                      "assets/images/film_vertical_placeholder.svg",
+                                      height: 250 * 790 / 500,
+                                      width: 250,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                           Container(

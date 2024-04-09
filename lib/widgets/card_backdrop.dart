@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/model/film.dart';
 import 'package:myfilmapp/screens/detail/film_detail.dart';
 import 'package:myfilmapp/widgets/item_info.dart';
@@ -41,12 +42,19 @@ class _CardBackdropState extends State<CardBackdrop> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                "https://image.tmdb.org/t/p/w500${widget.film.backdropPath}",
-                height: widget.height,
-                width: widget.height * 900 / 500,
-                fit: BoxFit.cover,
-              ),
+              child: (widget.film.backdropPath != "")
+                  ? Image.network(
+                      "https://image.tmdb.org/t/p/w500${widget.film.backdropPath}",
+                      height: widget.height,
+                      width: widget.height * 900 / 500,
+                      fit: BoxFit.cover,
+                    )
+                  : SvgPicture.asset(
+                      "assets/images/film_horizontal_placeholder.svg",
+                      height: widget.height,
+                      width: widget.height * 900 / 500,
+                      fit: BoxFit.cover,
+                    ),
             ),
             Container(
               margin: const EdgeInsets.only(left: 10.0),

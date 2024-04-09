@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/constants/theme.dart';
 import 'package:myfilmapp/model/person.dart';
 import 'package:myfilmapp/screens/detail/person_detail.dart';
@@ -30,12 +31,19 @@ class _CardCreditState extends State<CardCredit> {
         width: 180,
         child: Column(
           children: [
-            Image.network(
-              "https://image.tmdb.org/t/p/w500/${widget.person?.profilePath}",
-              height: 180 * 700 / 500,
-              width: 180,
-              fit: BoxFit.cover,
-            ),
+            (widget.person?.profilePath != "")
+                ? Image.network(
+                    "https://image.tmdb.org/t/p/w500/${widget.person?.profilePath}",
+                    height: 180 / 0.667,
+                    width: 180,
+                    fit: BoxFit.cover,
+                  )
+                : SvgPicture.asset(
+                    "assets/images/user_vertical_placeholder.svg",
+                    height: 180 / 0.667,
+                    width: 180,
+                    fit: BoxFit.cover,
+                  ),
             const SizedBox(
               height: 5,
             ),

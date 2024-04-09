@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/constants/theme.dart';
 
 class CardHorizontal extends StatefulWidget {
@@ -45,10 +46,15 @@ class _CardHorizontalState extends State<CardHorizontal> {
                 child: SizedBox(
                   width: 100 * 1.778,
                   height: 100,
-                  child: Image.network(
-                    "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
-                    fit: BoxFit.cover,
-                  ),
+                  child: (widget.backdropPath != "")
+                      ? Image.network(
+                          "https://image.tmdb.org/t/p/w500${widget.backdropPath}",
+                          fit: BoxFit.cover,
+                        )
+                      : SvgPicture.asset(
+                          "assets/images/film_horizontal_placeholder.svg",
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               const SizedBox(

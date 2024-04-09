@@ -54,13 +54,23 @@ class FilmDestopView extends StatelessWidget {
                 tag: film.id,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                    "https://image.tmdb.org/t/p/original${film.posterPath}",
-                    height: 200 + MediaQuery.of(context).size.width * 0.2,
-                    width:
-                        (200 + MediaQuery.of(context).size.width * 0.2) * 0.667,
-                    fit: BoxFit.cover,
-                  ),
+                  child: (film.posterPath != "")
+                      ? Image.network(
+                          "https://image.tmdb.org/t/p/original${film.posterPath}",
+                          height: 200 + MediaQuery.of(context).size.width * 0.2,
+                          width:
+                              (200 + MediaQuery.of(context).size.width * 0.2) *
+                                  0.667,
+                          fit: BoxFit.cover,
+                        )
+                      : SvgPicture.asset(
+                          "assets/images/film_vertical_placeholder.svg",
+                          height: 200 + MediaQuery.of(context).size.width * 0.2,
+                          width:
+                              (200 + MediaQuery.of(context).size.width * 0.2) *
+                                  0.667,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),

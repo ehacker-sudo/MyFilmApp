@@ -81,12 +81,19 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                             margin: const EdgeInsets.only(top: 20),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                "https://image.tmdb.org/t/p/original${episode.stillPath}",
-                                height: 250 * 790 / 500,
-                                width: 250,
-                                fit: BoxFit.cover,
-                              ),
+                              child: (episode.stillPath != "")
+                                  ? Image.network(
+                                      "https://image.tmdb.org/t/p/original${episode.stillPath}",
+                                      height: 250 * 790 / 500,
+                                      width: 250,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : SvgPicture.asset(
+                                      "assets/images/film_vertical_placeholder.svg",
+                                      height: 250 * 790 / 500,
+                                      width: 250,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                           Container(

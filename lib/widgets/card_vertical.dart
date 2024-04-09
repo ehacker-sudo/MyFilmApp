@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfilmapp/constants/theme.dart';
 
 class CardVertical extends StatefulWidget {
@@ -56,10 +57,20 @@ class _CardVerticalState extends State<CardVertical> {
               child: SizedBox(
                 width: 150 * 0.667,
                 height: 150,
-                child: Image.network(
-                  'https://image.tmdb.org/t/p/w500${widget.posterPath}',
-                  fit: BoxFit.cover,
-                ),
+                child: (widget.posterPath != "")
+                    ? Image.network(
+                        "https://image.tmdb.org/t/p/w500${widget.posterPath}",
+                        fit: BoxFit.cover,
+                      )
+                    : (widget.mediaType == "person")
+                        ? SvgPicture.asset(
+                            "assets/images/user_vertical_placeholder.svg",
+                            fit: BoxFit.cover,
+                          )
+                        : SvgPicture.asset(
+                            "assets/images/film_vertical_placeholder.svg",
+                            fit: BoxFit.cover,
+                          ),
               ),
             ),
             const SizedBox(
