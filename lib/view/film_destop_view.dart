@@ -57,17 +57,19 @@ class FilmDestopView extends StatelessWidget {
                   child: (film.posterPath != "")
                       ? Image.network(
                           "https://image.tmdb.org/t/p/original${film.posterPath}",
-                          height: 200 + MediaQuery.of(context).size.width * 0.2,
+                          height:
+                              200 + MediaQuery.of(context).size.width * 0.15,
                           width:
-                              (200 + MediaQuery.of(context).size.width * 0.2) *
+                              (200 + MediaQuery.of(context).size.width * 0.15) *
                                   0.667,
                           fit: BoxFit.cover,
                         )
                       : SvgPicture.asset(
                           "assets/images/film_vertical_placeholder.svg",
-                          height: 200 + MediaQuery.of(context).size.width * 0.2,
+                          height:
+                              200 + MediaQuery.of(context).size.width * 0.15,
                           width:
-                              (200 + MediaQuery.of(context).size.width * 0.2) *
+                              (200 + MediaQuery.of(context).size.width * 0.15) *
                                   0.667,
                           fit: BoxFit.cover,
                         ),

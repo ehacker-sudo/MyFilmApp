@@ -15,7 +15,10 @@ class AdminClient {
 
   Future<ListMember> watchlistUser() async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     final response = await http.get(
       Uri.parse('${baseUrl}user/watchlist'),
       headers: <String, String>{
@@ -74,7 +77,10 @@ class AdminClient {
 
   Future<Member> showWatchlistUser(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     print(accessToken);
     String filmQuery = "";
     String mediaType = "";
@@ -123,7 +129,10 @@ class AdminClient {
 
   Future<Member> showRateUser(Member member, double rate) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String rating = (rate != 0.0) ? "&rate=$rate" : "";
     String filmQuery = "";
     String mediaType = "";
@@ -169,7 +178,10 @@ class AdminClient {
 
   Future<Member> showCommentUser(Member member, String comment) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String userComment = (comment != "") ? "&comment=$comment" : "";
     String filmQuery = "";
     String mediaType = "";
@@ -215,7 +227,10 @@ class AdminClient {
 
   Future<Member> watchlistStore(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String body;
     if (member.mediaType != "episode") {
       body = jsonEncode(<String, dynamic>{
@@ -267,7 +282,10 @@ class AdminClient {
 
   Future<Member> watchlistDestroy(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String body = "";
     if (member.mediaType != "episode") {
       body = jsonEncode(<String, dynamic>{
@@ -310,7 +328,10 @@ class AdminClient {
 
   Future<ListMember> historyUser() async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     final response = await http.get(
       Uri.parse('${baseUrl}user/history'),
       headers: <String, String>{
@@ -337,7 +358,10 @@ class AdminClient {
 
   Future<Member> historyStore(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
 
     String body;
     if (member.mediaType != "episode") {
@@ -386,7 +410,10 @@ class AdminClient {
 
   Future<Member> rateStore(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String body = "";
 
     if (member.mediaType != "episode") {
@@ -439,7 +466,10 @@ class AdminClient {
 
   Future<Member> rateUpdate(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String body = "";
     if (member.mediaType != "episode") {
       body = jsonEncode(<String, dynamic>{
@@ -481,7 +511,10 @@ class AdminClient {
 
   Future<Member> commentStore(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String body = "";
     if (member.mediaType != "episode") {
       body = jsonEncode(<String, dynamic>{
@@ -532,7 +565,10 @@ class AdminClient {
 
   Future<Member> commentUpdate(Member member) async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     String body = "";
     if (member.mediaType != "episode") {
       body = jsonEncode(<String, dynamic>{
