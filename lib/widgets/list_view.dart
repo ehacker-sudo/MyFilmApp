@@ -33,11 +33,11 @@ class _MyListViewState extends State<MyListView> {
               height: 15,
             );
           }
-        } else if (snapshot.hasError) {
-          return Text(
-            '${snapshot.error}',
-            style: const TextStyle(color: MyFilmAppColors.white),
-          );
+          // } else if (snapshot.hasError) {
+          //   return Text(
+          //     '${snapshot.error}',
+          //     style: const TextStyle(color: MyFilmAppColors.white),
+          //   );
         }
 
         // By default, show a loading spinner.

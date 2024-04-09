@@ -44,8 +44,7 @@ class _ProfileState extends State<Profile> {
               child: FutureBuilder<User>(
                 future: _futureUser,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    User? user = snapshot.data;
+                  if (snapshot.hasData || snapshot.hasError) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -63,39 +62,17 @@ class _ProfileState extends State<Profile> {
                               width: 10,
                             ),
                             Text(
-                              user!.name,
+                              (snapshot.hasData)
+                                  ? snapshot.data!.name
+                                  : (snapshot.hasError)
+                                      ? "Đăng nhập"
+                                      : "Đăng nhập",
                               style: const TextStyle(
                                   color: MyFilmAppColors.white, fontSize: 15),
                             )
                           ],
                         ),
                         const DropdownHorizontal()
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/images/user.svg',
-                              height: 24,
-                            ),
-                            // CircleAvatar(
-                            //   backgroundColor: Colors.white,
-                            //   child: Text('AH'),
-                            // ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "Đăng nhập",
-                              style: TextStyle(
-                                  color: MyFilmAppColors.white, fontSize: 15),
-                            )
-                          ],
-                        ),
                       ],
                     );
                   }

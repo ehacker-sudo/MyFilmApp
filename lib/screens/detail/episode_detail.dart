@@ -18,6 +18,8 @@ import 'package:myfilmapp/widgets/bottom_navigation_bar.dart';
 import 'package:myfilmapp/widgets/button_watchlist.dart';
 import 'package:myfilmapp/widgets/card_credit.dart';
 import 'package:myfilmapp/widgets/item_external_source.dart';
+import 'package:myfilmapp/widgets/list_view.dart';
+import 'package:myfilmapp/widgets/list_view_horizontal.dart';
 import 'package:myfilmapp/widgets/navbar.dart';
 import 'package:myfilmapp/database/database.dart';
 import 'package:myfilmapp/widgets/star_rating_modal.dart';
@@ -191,7 +193,7 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                               style: TextStyle(
                                   color: MyFilmAppColors.white,
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w700),
+                                  fontWeight: FontWeight.w400),
                             ),
                             const SizedBox(
                               height: 10,
@@ -234,7 +236,7 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                               style: TextStyle(
                                 color: MyFilmAppColors.white,
                                 fontSize: 20,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                             MyStarRating(
@@ -249,142 +251,70 @@ class _EpisodeDetailState extends State<EpisodeDetail> {
                       const SizedBox(
                         height: 15,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 15.0,
-                                    top: 10.0,
-                                    bottom: 10.0),
-                                child: const Text(
-                                  "Diễn viên",
-                                  style: TextStyle(
-                                      color: MyFilmAppColors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
+                      MyListView(
+                        future: TheMovieDbClient().fetchCreditResults(
+                          "tv/${episode.seriesId}/season/${episode.seasonNumber}/episode/${episode.episodeNumber}/credits?api_key=7bb0f209157f0bb4788ecb54be635d14",
+                        ),
+                        listBuilder: (snapshot) => snapshot.data?.listCast,
+                        myItemBuilder: (items) {
+                          List casts = [];
+                          if (items != null) {
+                            casts = items;
+                          }
+                          return ListViewHorizontal(
+                            height: 310,
+                            title: "Diễn viên",
+                            padding: const EdgeInsets.only(left: 10.0),
+                            items: casts,
+                            myItemBuilder: (context, index) {
+                              return Container(
+                                margin: const EdgeInsets.only(left: 10.0),
+                                child: CardCredit(
+                                  person: casts[index],
                                 ),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder<ListCredit>(
-                            future: TheMovieDbClient().fetchCreditResults(
-                              "tv/${episode.seriesId}/season/${episode.seasonNumber}/episode/${episode.episodeNumber}/credits?api_key=7bb0f209157f0bb4788ecb54be635d14",
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final casts =
-                                    snapshot.data?.listCast as List<Person>;
-                                return SizedBox(
-                                  height: 310,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 3,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: const EdgeInsets.only(left: 10),
-                                        child: CardCredit(
-                                          person: casts[index],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                      color: MyFilmAppColors.white),
-                                );
-                              }
-
-                              // By default, show a loading spinner.
-                              return const CircularProgressIndicator();
+                              );
                             },
-                          ),
-                        ],
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: 15,
                       ),
-                      FutureBuilder<ListImage>(
+                      MyListView(
                         future: TheMovieDbClient().fetchImageResults(
                           "tv/${episode.seriesId}/season/${episode.seasonNumber}/episode/${episode.episodeNumber}/images?language=en&api_key=7bb0f209157f0bb4788ecb54be635d14",
                         ),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            final stills =
-                                snapshot.data?.listStills as List<ImageModel>;
-                            if (stills.isNotEmpty) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                          left: 15.0,
-                                          right: 15.0,
-                                          top: 10.0,
-                                          bottom: 10.0,
-                                        ),
-                                        child: const Text(
-                                          "Tập ảnh",
-                                          style: TextStyle(
-                                            color: MyFilmAppColors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 150,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: stills.length,
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          width:
-                                              150 * stills[index].aspectRatio,
-                                          margin:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Image.network(
-                                            "https://image.tmdb.org/t/p/original${stills[index].filePath}",
-                                            height: 150,
-                                            width:
-                                                150 * stills[index].aspectRatio,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          } else if (snapshot.hasError) {
-                            return Text(
-                              '${snapshot.error}',
-                              style: const TextStyle(
-                                color: MyFilmAppColors.white,
-                              ),
-                            );
+                        listBuilder: (snapshot) => snapshot.data?.listBackdrop,
+                        myItemBuilder: (items) {
+                          List<ImageModel> backdrops = [];
+                          if (items != null) {
+                            backdrops = items.cast<ImageModel>();
                           }
-
-                          // By default, show a loading spinner.
-                          return const CircularProgressIndicator();
+                          return Column(
+                            children: [
+                              ListViewHorizontal(
+                                title: "Tập ảnh",
+                                padding: const EdgeInsets.only(left: 10.0),
+                                height: 150,
+                                items: backdrops,
+                                myItemBuilder: (context, index) {
+                                  return Container(
+                                    width: 150 * backdrops[index].aspectRatio,
+                                    margin: const EdgeInsets.only(left: 10.0),
+                                    child: Image.network(
+                                      "https://image.tmdb.org/t/p/original${backdrops[index].filePath}",
+                                      height: 150,
+                                      width: 150 * backdrops[index].aspectRatio,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                            ],
+                          );
                         },
                       ),
                       const SizedBox(

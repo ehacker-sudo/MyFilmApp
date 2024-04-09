@@ -42,7 +42,10 @@ class AdminClient {
 
   Future<User> loginUser() async {
     final SharedPreferences pref = await _prefs;
-    String? accessToken = pref.getString('token');
+    String accessToken = pref.getString('token') ?? "";
+    if (accessToken == "") {
+      throw Exception('Fail to Login');
+    }
     final response = await http.get(
       Uri.parse('${baseUrl}user'),
       headers: <String, String>{
@@ -54,7 +57,6 @@ class AdminClient {
     final results = jsonDecode(response.body) as Map<String, dynamic>;
     if (response.statusCode == 201 ||
         response.statusCode == 200 ||
-        accessToken != null ||
         accessToken != "") {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
