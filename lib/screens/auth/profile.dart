@@ -72,7 +72,7 @@ class _ProfileState extends State<Profile> {
                             )
                           ],
                         ),
-                        const DropdownHorizontal()
+                        if (snapshot.hasData) const DropdownHorizontal()
                       ],
                     );
                   }
@@ -174,31 +174,40 @@ class _ProfileState extends State<Profile> {
                                       itemBuilder: (context, index) {
                                         if (members[index].mediaType ==
                                             "episode") {
-                                          return CardBackdrop(
-                                            // film: snapshot.data!.items[index],
-                                            film: Film(
-                                              backdropPath: members[index]
-                                                  .episode
-                                                  .stillPath,
-                                              name: members[index].episode.name,
-                                              mediaType: "episode",
-                                              firstAirDate: members[index]
-                                                  .episode
-                                                  .airDate,
+                                          return Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: CardBackdrop(
+                                              // film: snapshot.data!.items[index],
+                                              film: Film(
+                                                backdropPath: members[index]
+                                                    .episode
+                                                    .stillPath,
+                                                name:
+                                                    members[index].episode.name,
+                                                mediaType: "episode",
+                                                firstAirDate: members[index]
+                                                    .episode
+                                                    .airDate,
+                                              ),
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  EpisodeDetail.routeName,
+                                                  arguments:
+                                                      members[index].episode,
+                                                );
+                                              },
                                             ),
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                context,
-                                                EpisodeDetail.routeName,
-                                                arguments:
-                                                    members[index].episode,
-                                              );
-                                            },
                                           );
                                         } else {
-                                          return CardBackdrop(
-                                            // film: snapshot.data!.items[index],
-                                            film: members[index].film,
+                                          return Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: CardBackdrop(
+                                              // film: snapshot.data!.items[index],
+                                              film: members[index].film,
+                                            ),
                                           );
                                         }
                                       },
@@ -256,31 +265,40 @@ class _ProfileState extends State<Profile> {
                                       itemBuilder: (context, index) {
                                         if (members[index].mediaType ==
                                             "episode") {
-                                          return CardBackdrop(
-                                            // film: snapshot.data!.items[index],
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                context,
-                                                EpisodeDetail.routeName,
-                                                arguments:
-                                                    members[index].episode,
-                                              );
-                                            },
-                                            film: Film(
-                                              name: members[index].episode.name,
-                                              mediaType: "episode",
-                                              firstAirDate: members[index]
-                                                  .episode
-                                                  .airDate,
-                                              backdropPath: members[index]
-                                                  .episode
-                                                  .stillPath,
+                                          return Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: CardBackdrop(
+                                              // film: snapshot.data!.items[index],
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  EpisodeDetail.routeName,
+                                                  arguments:
+                                                      members[index].episode,
+                                                );
+                                              },
+                                              film: Film(
+                                                name:
+                                                    members[index].episode.name,
+                                                mediaType: "episode",
+                                                firstAirDate: members[index]
+                                                    .episode
+                                                    .airDate,
+                                                backdropPath: members[index]
+                                                    .episode
+                                                    .stillPath,
+                                              ),
                                             ),
                                           );
                                         } else {
-                                          return CardBackdrop(
-                                            // film: snapshot.data!.items[index],
-                                            film: members[index].film,
+                                          return Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: CardBackdrop(
+                                              // film: snapshot.data!.items[index],
+                                              film: members[index].film,
+                                            ),
                                           );
                                         }
                                       },
