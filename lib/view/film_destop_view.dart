@@ -304,7 +304,7 @@ class FilmDestopView extends StatelessWidget {
                             casts = items;
                           }
                           return ListViewHorizontal(
-                            height: 310,
+                            height: 330,
                             title: "Diễn viên",
                             padding: const EdgeInsets.only(right: 10.0),
                             items: casts,
@@ -318,9 +318,6 @@ class FilmDestopView extends StatelessWidget {
                             },
                           );
                         },
-                      ),
-                      const SizedBox(
-                        height: 15,
                       ),
                       MyListView(
                         future: TheMovieDbClient().fetchImageResults(

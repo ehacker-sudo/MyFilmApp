@@ -293,7 +293,7 @@ class FilmMobileView extends StatelessWidget {
                           casts = items;
                         }
                         return ListViewHorizontal(
-                          height: 310,
+                          height: 330,
                           title: "Diễn viên",
                           padding: const EdgeInsets.only(left: 10.0),
                           items: casts,

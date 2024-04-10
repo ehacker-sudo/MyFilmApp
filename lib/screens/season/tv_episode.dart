@@ -21,19 +21,21 @@ class _TvEpisodeState extends State<TvEpisode> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Season;
-    return Theme(
-      data: ThemeData(
-        brightness: Brightness.dark,
+    return Scaffold(
+      backgroundColor: MyFilmAppColors.body,
+      extendBodyBehindAppBar: true,
+      appBar: Navbar(
+        backButton: true,
+        title: args.name,
       ),
-      child: Scaffold(
-        // backgroundColor: MyFilmAppColors.body,
-        extendBodyBehindAppBar: true,
-        appBar: Navbar(
-          backButton: true,
-          title: args.name,
-        ),
-        body: Container(
-          color: MyFilmAppColors.body,
+      body: Container(
+        color: const Color(0xFF3C3C3C).withOpacity(0.2),
+        child: ScrollbarTheme(
+          data: ScrollbarThemeData(
+            thumbColor: MaterialStateProperty.all(
+              Colors.grey,
+            ),
+          ),
           child: FutureBuilder<Season>(
             future: TheMovieDbClient().fetchSeasonResults(
               "tv/${args.seriesId}/season/${args.seasonNumber}?api_key=7bb0f209157f0bb4788ecb54be635d14",
@@ -83,8 +85,8 @@ class _TvEpisodeState extends State<TvEpisode> {
             },
           ),
         ),
-        bottomNavigationBar: const MyBottomNavigationBar(),
       ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }

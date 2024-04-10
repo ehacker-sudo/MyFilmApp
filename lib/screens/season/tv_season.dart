@@ -21,43 +21,49 @@ class _TvSeasonState extends State<TvSeason> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Film;
 
-    return Theme(
-      data: ThemeData(
-        brightness: Brightness.dark,
+    return Scaffold(
+      backgroundColor: MyFilmAppColors.body,
+      extendBodyBehindAppBar: true,
+      appBar: Navbar(
+        backButton: true,
+        title: "${args.name}${args.title}",
       ),
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: Navbar(
-          backButton: true,
-          title: "${args.name}${args.title}",
+      body: Container(
+        color: const Color(0xFF3C3C3C).withOpacity(0.2),
+        child: ScrollbarTheme(
+          data: ScrollbarThemeData(
+            thumbColor: MaterialStateProperty.all(
+              Colors.grey,
+            ),
+          ),
+          child: ListView.builder(
+            itemCount: args.seasons.length,
+            itemBuilder: (content, index) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                child: CardVertical(
+                  name: args.seasons[index].name,
+                  posterPath: args.seasons[index].posterPath,
+                  overview: args.seasons[index].overview,
+                  airDate: args.seasons[index].airDate,
+                  episodeCount: args.seasons[index].episodeCount,
+                  voteAverage: args.seasons[index].voteAverage,
+                  mediaType: "season",
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      TvEpisode.routeName,
+                      arguments: args.seasons[index],
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ),
-        body: ListView.builder(
-          itemCount: args.seasons.length,
-          itemBuilder: (content, index) {
-            return Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
-              child: CardVertical(
-                name: args.seasons[index].name,
-                posterPath: args.seasons[index].posterPath,
-                overview: args.seasons[index].overview,
-                airDate: args.seasons[index].airDate,
-                episodeCount: args.seasons[index].episodeCount,
-                voteAverage: args.seasons[index].voteAverage,
-                mediaType: "season",
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    TvEpisode.routeName,
-                    arguments: args.seasons[index],
-                  );
-                },
-              ),
-            );
-          },
-        ),
-        bottomNavigationBar: const MyBottomNavigationBar(),
       ),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }
