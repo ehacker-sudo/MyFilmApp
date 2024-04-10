@@ -72,9 +72,35 @@ class _RegisterState extends State<Register> {
                   color: const Color(0x33e5e5e5),
                   // Red border with the width is equal to 5
                   border: Border.all(width: 1, color: const Color(0xffe5e5e5))),
-              child: Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: const LogoApp(),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    child: const Center(
+                      child: LogoApp(),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    alignment: AlignmentDirectional.centerStart,
+                    width: 30,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: MyFilmAppColors.black,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -91,39 +117,13 @@ class _RegisterState extends State<Register> {
                           : MediaQuery.of(context).size.width,
                       child: Column(
                         children: [
-                          if (snapshot.hasError)
-                            Column(
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(15.0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Colors.red,
-                                    ),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(5.0),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    '${snapshot.error}',
-                                    style: const TextStyle(
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          const Text(
-                            "Đăng ký",
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
-                          ),
+                          if (snapshot.hasData)
+                            if (snapshot.data!.result)
+                              const Text(
+                                "Đăng ký",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
                           const SizedBox(
                             height: 30,
                           ),
@@ -342,13 +342,18 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                           ),
+                          const SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     );
                   }
 
                   // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
+                  return const Column(
+                    children: [CircularProgressIndicator()],
+                  );
                 }),
           ],
         ),

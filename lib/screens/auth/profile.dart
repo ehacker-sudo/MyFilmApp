@@ -91,8 +91,9 @@ class _ProfileState extends State<Profile> {
                   return const SizedBox();
                 } else if (snapshot.hasError) {
                   return Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, bottom: 20.0),
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, bottom: 20.0),
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -103,7 +104,7 @@ class _ProfileState extends State<Profile> {
                       },
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all(
-                            const EdgeInsets.only(top: 5, bottom: 5)),
+                            const EdgeInsets.only(top: 6, bottom: 6)),
                         backgroundColor: MaterialStateProperty.all(
                           MyFilmAppColors.submain,
                         ),
@@ -114,10 +115,15 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                       ),
-                      child: const Text(
-                        "Đăng nhập / Đăng ký",
-                        style: TextStyle(
-                            color: MyFilmAppColors.white, fontSize: 15),
+                      child: const Padding(
+                        padding: EdgeInsets.only(bottom: 4.0),
+                        child: Text(
+                          "Đăng nhập / đăng ký",
+                          style: TextStyle(
+                              color: MyFilmAppColors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
                   );

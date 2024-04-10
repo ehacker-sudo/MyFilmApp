@@ -36,7 +36,9 @@ class TheMovieDbClient {
     );
     final results = jsonDecode(response.body) as Map<String, dynamic>;
     print(results);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 ||
+        (response.statusCode == 401) ||
+        (response.statusCode == 404)) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       if (results["access_token"] != null) {
@@ -44,14 +46,6 @@ class TheMovieDbClient {
         pref.setString('token', results["access_token"]);
       }
       return Message.fromJson(results);
-    } else if (response.statusCode == 401) {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      if (results["message"] != null) {
-        throw Exception(results["message"]);
-      } else {
-        throw Exception('Failed to Login.');
-      }
     } else {
       throw Exception('Failed to Login.');
     }
@@ -72,18 +66,13 @@ class TheMovieDbClient {
     );
 
     final results = jsonDecode(response.body) as Map<String, dynamic>;
-    if (response.statusCode == 201 || response.statusCode == 200) {
+    if (response.statusCode == 201 ||
+        response.statusCode == 200 ||
+        response.statusCode == 401 ||
+        response.statusCode == 404) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       return Message.fromJson(results);
-    } else if (response.statusCode == 401) {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
-      if (results["message"] != null) {
-        throw Exception(results["message"]);
-      } else {
-        throw Exception('Failed to Login.');
-      }
     } else {
       throw Exception('Failed to Login.');
     }

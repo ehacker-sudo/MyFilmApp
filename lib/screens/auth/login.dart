@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:myfilmapp/api/film_api.dart';
 import 'package:myfilmapp/constants/theme.dart';
@@ -75,9 +77,35 @@ class _LoginState extends State<Login> {
                   color: const Color(0x33e5e5e5),
                   // Red border with the width is equal to 5
                   border: Border.all(width: 1, color: const Color(0xffe5e5e5))),
-              child: Container(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: const LogoApp(),
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    child: const Center(
+                      child: LogoApp(),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
+                    alignment: AlignmentDirectional.centerStart,
+                    width: 30,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: MyFilmAppColors.black,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Profile(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -94,34 +122,35 @@ class _LoginState extends State<Login> {
                         : MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
-                        if (snapshot.hasError)
-                          Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(15.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1,
-                                    color: Colors.red,
+                        if (snapshot.hasData)
+                          if (snapshot.data!.result)
+                            Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(15.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.red,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(5.0),
+                                    ),
                                   ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(5.0),
+                                  child: Text(
+                                    snapshot.data!.message,
+                                    style: const TextStyle(
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                                child: Text(
-                                  '${snapshot.error}',
-                                  style: const TextStyle(
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
                         const Text(
                           "Đăng nhập",
                           style: TextStyle(
@@ -286,13 +315,18 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
                       ],
                     ),
                   );
                 }
 
                 // By default, show a loading spinner.
-                return const CircularProgressIndicator();
+                return const Column(
+                  children: [CircularProgressIndicator()],
+                );
               },
             ),
           ],

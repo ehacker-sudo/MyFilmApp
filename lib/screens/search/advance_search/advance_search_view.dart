@@ -624,15 +624,15 @@ class _AdvanceSearchViewState extends State<AdvanceSearchView> {
         tooltip: 'Tìm kiếm',
         backgroundColor: MyFilmAppColors.submain,
         child: SizedBox(
-          width: 28,
+          width: 25,
           child: SvgPicture.asset(
             'assets/images/advance_search_outline.svg',
-            width: 28,
+            width: 25,
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: const MyBottomNavBar(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }
